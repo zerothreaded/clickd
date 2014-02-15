@@ -1,0 +1,9 @@
+
+
+{
+ "QuestionType" : "Binary",
+ "QuestionImage" : "images/eat_out",
+ "QuestionText" : "Do you like to eat out?" , 
+ "AnswerPositiveText" : "yes",
+ "AnswerNegativeText" : "no" 
+ 

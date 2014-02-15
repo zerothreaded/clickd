@@ -1,0 +1,139 @@
+
+db.users.drop()
+db.users.insert( { "values" : { "lastName" : "Masilamani", "email" : "ralph.masilamani@clickd.org", "firstName" : "Ralph", "password" : "rr00" } });
+db.users.insert( { "values" : { "lastName" : "Dodds", "email" : "john.dodds@clickd.org", "firstName" : "John", "password" : "jj00" } });
+db.users.insert( { "values" : { "lastName" : "Wagener", "email" : "simone@simonewagener.com", "firstName" : "Simone", "password" : "ss00" } });
+db.users.insert( { "values" : { "lastName" : "Weiss", "email" : "toby.weiss@clickd.org", "firstName" : "Toby", "password" : "tt00" } });
+db.users.insert( { "values" : { "lastName" : "Dodds", "email" : "edward.dodds@clickd.org", "firstName" : "Edward", "password" : "ee00" } });
+db.users.insert( { "values" : { "lastName" : "Mohammed", "email" : "mo.mohammed@clickd.org", "firstName" : "Mo", "password" : "mm00" } });
+db.users.insert( { "values" : { "lastName" : "Aslam", "email" : "mia.aslam@clickd.org", "firstName" : "Mia", "password" : "mm00" } });
+db.users.insert( { "values" : { "lastName" : "Sorling", "email" : "pether.sorling@clickd.org", "firstName" : "Pether", "password" : "pp00" } });
+db.users.insert( { "values" : { "lastName" : "Noble", "email" : "suzanne.noble@clickd.org", "firstName" : "Suzanne", "password" : "ss00" } });
+db.users.insert( { "values" : { "lastName" : "McGee", "email" : "tara.mcgee@clickd.org", "firstName" : "Tara", "password" : "tt00" } });
+
+db.userprofiles.drop()
+db.userprofiles.insert( { "values" : { "user_key" : "system@clickd.org", "name" : "system" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "ralph.masilamani@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "ralph.masilamani@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "ralph.masilamani@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "john.dodds@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "john.dodds@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "john.dodds@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "edward.dodds@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "edward.dodds@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "edward.dodds@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "toby.weiss@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "toby.weiss@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "toby.weiss@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "simone@simonewagener.com", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "simone@simonewagener.com", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "simone@simonewagener.com", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "mo.mohammed@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "mo.mohammed@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "mo.mohammed@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "mia.aslam@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "mia.aslam@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "mia.aslam@clickd.org", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "pether.sorling@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "pether.sorling@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "pether.sorling@clickd.orgg", "name" : "serious" } } );
+
+db.userprofiles.insert( { "values" : { "user_key" : "suzanne.noble@clickd.org", "name" : "general" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "suzanne.noble@clickd.org", "name" : "casual" } } );
+db.userprofiles.insert( { "values" : { "user_key" : "suzanne.noble@clickd.org", "name" : "serious" } } );
+
+
+db.topics.drop()
+db.topics.insert( { "values" : { "name" : "Food" , "key" : "topic.1", "imageName" : "food" } });
+db.topics.insert( { "values" : { "name" : "Fashion" , "key" : "topic.2", "imageName" : "fashion" } });
+db.topics.insert( { "values" : { "name" : "Night Life" , "key" : "topic.3", "imageName" : "nightlife" } });
+db.topics.insert( { "values" : { "name" : "Travel" , "key" : "topic.4", "imageName" : "travel" } });
+db.topics.insert( { "values" : { "name" : "Humour" , "key" : "topic.5", "imageName" : "humour" } });
+db.topics.insert( { "values" : { "name" : "Movies" , "key" : "topic.6", "imageName" : "movies" } });
+db.topics.insert( { "values" : { "name" : "Music" , "key" : "topic.7", "imageName" : "music" } });
+db.topics.insert( { "values" : { "name" : "Sports" , "key" : "topic.8", "imageName" : "sports" } });
+db.topics.insert( { "values" : { "name" : "Sports" , "key" : "topic.999", "imageName" : "user" } });
+
+db.questions.drop()
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.1", "source" : "clickd", "QuestionType" : "Binary", "QuestionImage" : "images/eat_out", "QuestionText" : "Do you like to eat out or eat at home?", "Topics" : "topic.1" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.3", "source" : "clickd", "QuestionType" : "Choice", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you prefer Chloe or Balenciaga?", "Topics" : "topic.2" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.6", "source" : "clickd", "QuestionType" : "Choice", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you prefer Clubs or Pubs?", "Topics" : "topic.3" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.7", "source" : "clickd", "QuestionType" : "Choice", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you prefer Familiar or Foreign?", "Topics" : "topic.4" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.8", "source" : "clickd", "QuestionType" : "Choice", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you prefer One Liners or Anecdotes?", "Topics" : "topic.5" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.5", "source" : "clickd", "QuestionType" : "Multiple", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you watch movies at the cinema or home?", "Topics" : "topic.6" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.2", "source" : "clickd", "QuestionType" : "Multiple", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you prefer Electronica or Bands?", "Topics" : "topic.7" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.4", "source" : "clickd", "QuestionType" : "Multiple", "QuestionImage" : "images/dining_frequency", "QuestionText" : "Do you watch sports at home or at the pub?", "Topics" : "topic.8" } });
+db.questions.insert( { "values" : { "profile" : "system", "key" : "q.9", "source" : "clickd", "QuestionType" : "Binary", "QuestionImage" : "images/eat_out", "QuestionText" : "Do you prefer Meat or Fish?", "Topics" : "topic.1" } });
+
+db.answers.drop()
+db.answers.insert( { "values" : { "key" : "a.0", "AnswerText" : "Don't care", "AnswerImage" : "glyph/forward" } });
+db.answers.insert( { "values" : { "key" : "a.1", "AnswerText" : "Eat Out", "AnswerImage" : "glyph/ok" } });
+db.answers.insert( { "values" : { "key" : "a.2", "AnswerText" : "Eat At Home", "AnswerImage" : "glyph/remove" } });
+db.answers.insert( { "values" : { "key" : "a.3", "AnswerText" : "Electronica", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.4", "AnswerText" : "Bands", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.5", "AnswerText" : "Chloe", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.6", "AnswerText" : "Balenciaga", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.7", "AnswerText" : "At my Home", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.8", "AnswerText" : "At the Cinema", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.9", "AnswerText" : "Clubs", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.10", "AnswerText" : "Pubs", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.11", "AnswerText" : "Familiar", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.12", "AnswerText" : "Foreign", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.13", "AnswerText" : "One Liners", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.14", "AnswerText" : "Anecdotes", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.15", "AnswerText" : "Meat", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.16", "AnswerText" : "Fish", "AnswerImage" : "" } });
+db.answers.insert( { "values" : { "key" : "a.17", "AnswerText" : "Sports at home", "AnswerImage" : "glyph/ok" } });
+db.answers.insert( { "values" : { "key" : "a.18", "AnswerText" : "Sports at the pub", "AnswerImage" : "glyph/remove" } });
+
+
+db.question_answers.drop()
+
+
+db.question_answers.insert( { "values" : { "key" : "qa.1", "question_key" : "q.1", "answer_key" : "a.1" } });
+db.question_answers.insert( { "values" : { "key" : "qa.2", "question_key" : "q.1", "answer_key" : "a.2" } });
+
+db.question_answers.insert( { "values" : { "key" : "qa.3", "question_key" : "q.2", "answer_key" : "a.3" } });
+db.question_answers.insert( { "values" : { "key" : "qa.3", "question_key" : "q.2", "answer_key" : "a.4" } });
+db.question_answers.insert( { "values" : { "key" : "qa.4", "question_key" : "q.3", "answer_key" : "a.5" } });
+db.question_answers.insert( { "values" : { "key" : "qa.5", "question_key" : "q.3", "answer_key" : "a.6" } });
+db.question_answers.insert( { "values" : { "key" : "qa.6", "question_key" : "q.4", "answer_key" : "a.17" } });
+db.question_answers.insert( { "values" : { "key" : "qa.7", "question_key" : "q.4", "answer_key" : "a.18" } });
+db.question_answers.insert( { "values" : { "key" : "qa.8", "question_key" : "q.5", "answer_key" : "a.7" } });
+db.question_answers.insert( { "values" : { "key" : "qa.9", "question_key" : "q.5", "answer_key" : "a.8" } });
+db.question_answers.insert( { "values" : { "key" : "qa.10", "question_key" : "q.6", "answer_key" : "a.9" } });
+db.question_answers.insert( { "values" : { "key" : "qa.11", "question_key" : "q.6", "answer_key" : "a.10" } });
+db.question_answers.insert( { "values" : { "key" : "qa.12", "question_key" : "q.7", "answer_key" : "a.11" } });
+db.question_answers.insert( { "values" : { "key" : "qa.13", "question_key" : "q.7", "answer_key" : "a.12" } });
+db.question_answers.insert( { "values" : { "key" : "qa.14", "question_key" : "q.8", "answer_key" : "a.13" } });
+db.question_answers.insert( { "values" : { "key" : "qa.15", "question_key" : "q.8", "answer_key" : "a.14" } });
+db.question_answers.insert( { "values" : { "key" : "qa.16", "question_key" : "q.9", "answer_key" : "a.15" } });
+db.question_answers.insert( { "values" : { "key" : "qa.17", "question_key" : "q.9", "answer_key" : "a.16" } });
+
+db.question_answers.insert( { "values" : { "key" : "qa.n1", "question_key" : "q.1", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n2", "question_key" : "q.2", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n3", "question_key" : "q.3", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n4", "question_key" : "q.4", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n5", "question_key" : "q.5", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n6", "question_key" : "q.6", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n7", "question_key" : "q.7", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n8", "question_key" : "q.8", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n9", "question_key" : "q.9", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n10", "question_key" : "q.10", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n11", "question_key" : "q.11", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n12", "question_key" : "q.12", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n13", "question_key" : "q.13", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n14", "question_key" : "q.14", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n15", "question_key" : "q.15", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n16", "question_key" : "q.16", "answer_key" : "a.0" } });
+db.question_answers.insert( { "values" : { "key" : "qa.n17	", "question_key" : "q.17", "answer_key" : "a.0" } });
+
+db.choices.drop()
+
