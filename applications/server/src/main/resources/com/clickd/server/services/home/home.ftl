@@ -81,36 +81,36 @@ function fadeOut2()
 				</div>
 				
 				<div class="col-xs-12 col-md-4 col-md-offset-1 col-sm-6 col-sm-offset-6 signup-group">
-					<form role="form" action="/assets/app/user/register" method="post" id="sign-up-form" class="has-validation-callback">
+					<form role="form" action="/members/register" method="post" id="sign-up-form" class="has-validation-callback">
 						<h2>
 							Sign Up<small> to see who you click with</small>
 						</h2>
 						<hr>
-						<span id="signupfailed" class="label label-warning hidden">Sorry, your sign up failed.</span>
+						<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-6">
-								<div class="form-group has-success">
+								<div class="form-group">
 									<input type="text" name="first_name" id="first_name" class="form-control input-md valid" placeholder="First Name" tabindex="1" data-validation="length" data-validation-length="min2" style="">
 								</div>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6">
-								<div class="form-group has-success">
+								<div class="form-group">
 									<input type="text" name="last_name" id="last_name" class="form-control input-md valid" placeholder="Last Name" tabindex="2" data-validation="length" data-validation-length="min2" style="">
 								</div>
 							</div>
 						</div>
-						<div class="form-group has-success">
+						<div class="form-group">
 							<input type="email" name="email" id="email" class="form-control input-md valid" placeholder="Email Address" tabindex="4" data-validation="email">
 						</div>
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-6">
-								<div class="form-group has-error">
-									<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md error" placeholder="Password" tabindex="5" data-validation="strength" data-validation-strength="1" style="border-color: red;">
+								<div class="form-group">
+									<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md" placeholder="Password" tabindex="5" data-validation="strength" data-validation-strength="1">
 								</div>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6">
-								<div class="form-group has-error">
-									<input type="password" name="password" id="password" class="form-control input-md error" placeholder="Confirm Password" tabindex="6" data-validation="confirmation" style="border-color: red;">
+								<div class="form-group">
+									<input type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password" tabindex="6" data-validation="confirmation">
 								</div>	
 							</div>
 						</div>

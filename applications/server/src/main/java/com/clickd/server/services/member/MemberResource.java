@@ -107,6 +107,48 @@ public class MemberResource {
         }
     	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
     }
+    
+    @POST
+    @Timed
+    @Path("/register")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response register(
+    		String body, 
+    		@QueryParam("foo") String foo, 
+    		@HeaderParam("X-Auth-Token") String authToken, 
+    		@Context HttpServletRequest request) throws URISyntaxException
+    {
+
+        Map<String, String> formParameters = extractFormParameters(body);
+        String email = formParameters.get("email");
+        String firstName = formParameters.get("firstName");
+        String lastName = formParameters.get("lastName");
+        String password = formParameters.get("password");
+        
+        //check if member exists
+        Entity member = entityDao.findMemberByEmailAddress(email);
+
+        
+        Entity response = new Entity();
+        
+        if (member == null)
+        {
+        	Entity newMember = new Entity();
+        	newMember.setValue("email", email);
+        	newMember.setValue("firstName", firstName);
+        	newMember.setValue("lastName", lastName);
+        	newMember.setValue("password", password);
+        	entityDao.save("users", newMember);
+        	
+        	
+
+        	return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
+        }
+        else
+        {
+        	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
+        }
+    }
 
 	private Map<String, String> extractFormParameters(String body)
 			throws URISyntaxException {

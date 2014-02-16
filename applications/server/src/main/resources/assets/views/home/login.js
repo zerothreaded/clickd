@@ -1,4 +1,5 @@
 	$(document).ready(function() {
+
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
@@ -32,9 +33,9 @@
 			return false;
 		});
 		
-		$("#register-form").submit(function() {
-			var data = $("#login-nav").serialize();
-			var url = "/users/signin";
+		$("#sign-up-form").submit(function() {
+			var data = $("#sign-up-form").serialize();
+			var url = "/members/register";
 			
 			var request = $.ajax({
 				  url: url,
@@ -43,21 +44,31 @@
 				  dataType: "json"
 				});
 				 
-				request.done(function( msg ) {
-				 if (msg.values.status == "ok")
-					 {
-					 	window.location = '/users';
-					 }
-				 else
-					 {
-					 	
+				request.done(function( msg )
+				{
+					if (msg.status == "ok")
+					{
+						var request2 = $.ajax({
+						  url: "/members/signin",
+						  type: "POST",
+						  data: data,
+						  dataType: "json"
+						});
+						 
+						request2.done(function( msg2 ) {
+						 if (msg2.values.status == "ok")
+							 {
+							 	var user_token = msg2.values.user_token;
+							 	window.location = "/users/"+user_token+"/home";
+							 }
+					
+						});
 					 }
 				});
 				 
 				request.fail(function( jqXHR, textStatus ) {
-					$("#login-email-input").addClass("has-error");
-				 	$("#login-password-input").addClass("has-error");
-				 	$("#invalid-username-password-field").show();
+					$("#email").addClass("has-error");
+				 	$("#sign-up-failed").removeClass("hidden");
 				});
 			
 			return false;
