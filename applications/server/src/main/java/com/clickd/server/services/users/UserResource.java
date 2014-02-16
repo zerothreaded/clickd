@@ -38,6 +38,7 @@ public class UserResource
 		} else {
 	    	UserHomeView view = new UserHomeView("User Home");
 	    	view.setMemberEmail(session.getStringValue("member_email"));
+	    	view.setToken(token);
 	    	return view;
 		}
     }
