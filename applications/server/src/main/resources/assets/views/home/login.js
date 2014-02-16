@@ -1,6 +1,5 @@
 	$(document).ready(function() {
 		
-		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
 			var url = "/members/signin";
@@ -16,8 +15,7 @@
 				 if (msg.values.status == "ok")
 					 {
 					 	var user_token = msg.values.user_token;
-					 	
-					 	window.location = "/user/"+user_token+"/home";
+					 	window.location = "/users/"+user_token+"/home";
 					 }
 				 else
 					 {
@@ -31,7 +29,6 @@
 			
 			return false;
 		});
-		
 		
 		$("#register-form").submit(function() {
 			var data = $("#login-nav").serialize();

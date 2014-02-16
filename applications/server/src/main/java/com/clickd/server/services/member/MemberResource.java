@@ -22,7 +22,9 @@ import javax.ws.rs.core.Response;
 
 import com.clickd.server.dao.EntityDao;
 import com.clickd.server.model.Entity;
+import com.clickd.server.services.home.HomeView;
 import com.clickd.server.utilities.Utilities;
+import com.yammer.dropwizard.views.View;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/members")
@@ -74,7 +76,6 @@ public class MemberResource {
         String email = formParameters.get("email");
         Entity member = entityDao.findMemberByEmailAddress(email);
 
-        
         if (member != null) {
         	if (member.getValue("password").equals(formParameters.get("password"))) {
         		// User Authentication OK
@@ -91,7 +92,7 @@ public class MemberResource {
             	session = new Entity();
             	session.setValue("status", "ok");
         		session.setValue("member_email", email);
-        		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
+        		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()).toString());
         		session.setValue("created_on", now);
         		session.setValue("last_modified", now);
         		session.setValue("user_data", new HashMap<String, Object>());
@@ -101,11 +102,10 @@ public class MemberResource {
         		entityDao.save("sessions", session);
         		
               	return Response.status(200).entity(session).build();
+        		
         	}
         }
-
-    	return Response.status(300).entity(" {\"status\" : \"failed\" }").build();
-
+    	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
     }
 
 	private Map<String, String> extractFormParameters(String body)

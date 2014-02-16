@@ -89,6 +89,11 @@ public class EntityDao {
 		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.user_email").is(email)), Entity.class, "sessions");
 		return user;
 	}
+	
+	public Entity findSessionByToken(String token) {
+		Entity session = mongoOperations.findOne(new Query(Criteria.where("values.user_token").is(token)), Entity.class, "sessions");
+		return session;
+	}
 
 	public Entity findAnswerById(String answerKey) {
 		Entity answer = mongoOperations.findOne(new Query(Criteria.where("values.key").is(answerKey)), Entity.class, "answers");
@@ -328,4 +333,5 @@ public class EntityDao {
 		}
 		return false;
 	}
+
 }
