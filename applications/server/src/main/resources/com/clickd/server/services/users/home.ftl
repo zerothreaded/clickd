@@ -72,7 +72,7 @@ function fadeOut2()
 
 	<!-- Wrap all page content here -->
 	<div id="wrap">
-		<#include "../../../common/home_header.ftl">
+		<#include "../../../common/header.ftl">
 		<div class="container" >
 			Welcome Member : ${memberEmail?html} <hr/>
 		</div>
@@ -83,11 +83,11 @@ function fadeOut2()
 
 	<div class="container">
 		<div class="row">
-			Welcome Member : 
+			
 		</div>
 	</div>
 
-	<#include "../../../common/home_footer.ftl">
+	<#include "../../../common/footer.ftl">
 	<script>
 		$("sign-up-form").submit(function() {
 

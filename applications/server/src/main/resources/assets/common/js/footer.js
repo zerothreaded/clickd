@@ -4,17 +4,18 @@ $(document).ready(function () {
 
 function footerUpdate()
 {
-	 $.getJSON('/users/signedinuser', function(user) {
+	 $.getJSON('/members/signedinuser', function(user) {
          $('#signed-in-user').html(user.email);
       });
 
-	 $.getJSON('/users/numberofsignedinusers', function(count) {
+	 $.getJSON('/members/numberofsignedinmembers', function(count) {
 	         $('#total-users-online').html(count.value);
 	 });
 	 
-	 $.getJSON('/users/numberofregisteredusers', function(count) {
+	 $.getJSON('/members/numberofregisteredmembers', function(count) {
          $('#total-registered-users').html(count.value);
 
 	 });
-	 setTimeOut(footerUpdate, 5*1000);
+	 
+	 setTimeOut("footerUpdate", 5*1000);
 }
