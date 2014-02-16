@@ -1,8 +1,9 @@
 package com.clickd.server.services.user;
 
-import com.yammer.dropwizard.config.Configuration;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yammer.dropwizard.config.Configuration;
 
 public class UserConfiguration extends Configuration {
 	@NotEmpty

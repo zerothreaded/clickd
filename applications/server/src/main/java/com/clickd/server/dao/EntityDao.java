@@ -11,7 +11,6 @@ import java.util.Set;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 
 import com.clickd.server.model.Entity;
 import com.clickd.server.utilities.Utilities;

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
@@ -33,14 +32,8 @@ public class UserResource {
 	
 	private EntityDao entityDao;
 	
-    private final String template;
-    private final String defaultName;
-    private final AtomicLong counter;
-
     public UserResource(String template, String defaultName) {
-        this.template = template;
-        this.defaultName = defaultName;
-        this.counter = new AtomicLong();
+    	
     }
 
     @GET
