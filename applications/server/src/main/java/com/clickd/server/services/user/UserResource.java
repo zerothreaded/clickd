@@ -63,25 +63,18 @@ public class UserResource {
     @Timed
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response signIn(@PathParam("id") long id, 
+    public Response signIn(
     		String body, 
     		@QueryParam("foo") String foo, 
-    		@HeaderParam("X-Auth-Token") String token, 
+    		@HeaderParam("X-Auth-Token") String authToken, 
     		@Context HttpServletRequest request) throws URISyntaxException
     {
-//        String response;
-//        response  = "id = " + id + "\n";
-//        response += "body = " + body + "\n";
-//        response += "foo = " + foo + "\n";
-//        response += "token = " + token + "\n";
-//        response += "ip = " + request.getRemoteAddr() + "\n";
-        
         StringTokenizer tokenizer = new StringTokenizer(body, "&");
-        System.out.println("COUNT = " + tokenizer.countTokens());
+        // System.out.println("COUNT = " + tokenizer.countTokens());
         Map<String, String> formParameters = new HashMap<String, String>();
         while (tokenizer.hasMoreTokens()) {
         	String element = tokenizer.nextToken();
-        	System.out.println("ELEMENT = " + element);
+        	// System.out.println("ELEMENT = " + element);
         	String key = element.substring(0, element.indexOf("="));
         	String value = element.substring(element.indexOf("=") + 1);
         	value = new URI(value).getPath();
@@ -91,7 +84,16 @@ public class UserResource {
         Entity user = entityDao.findUserByEmailAddress(formParameters.get("email"));
         if (user != null) {
         	if (user.getValue("password").equals(formParameters.get("password"))) {
-              	return Response.status(200).entity(user).build();
+        		// User Sign In OK
+        		
+        		// Create a session for the user and the user TOKEN
+        		Entity session = new Entity();
+        		session.setValue("user", formParameters.get("email"));
+        		session.setValue("token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
+        		session.setValue("data", new HashMap<String, Object>());
+        		entityDao.save("sessions", session);
+        		
+              	return Response.status(200).entity(session).build();
         	}
         }
     	return Response.status(300).entity(" { \"status\" : \"failed\" }").build();

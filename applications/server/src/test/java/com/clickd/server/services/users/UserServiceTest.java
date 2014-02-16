@@ -65,8 +65,7 @@ public class UserServiceTest {
         String jsonResponse = httpclient.execute(httpget, responseHandler);
         @SuppressWarnings("unchecked")
 		List<Entity> allUsers = new Gson().fromJson(jsonResponse, List.class);
-        System.out.println("----------------------------------------");
-        System.out.println(allUsers.size());
+	    System.out.println("GET /users returned \n" + jsonResponse);
     }
 
 	@Test
@@ -92,8 +91,7 @@ public class UserServiceTest {
 	
 	    };
 	    String jsonResponse = httpclient.execute(login, responseHandler);
-	    System.out.println("POST /users/signin");
-	    System.out.println(jsonResponse);
+	    System.out.println("POST /users/signin returned \n" + jsonResponse);
 	}
 	
 	@Test

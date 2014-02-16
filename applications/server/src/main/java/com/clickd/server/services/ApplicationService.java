@@ -30,9 +30,14 @@ public class ApplicationService extends Service<UserConfiguration> {
         
         context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
         EntityDao entityDao = (EntityDao) context.getBean("entityDao");
+        // Create REST End Points
         UserResource userResource = new UserResource(template, defaultName);
         userResource.setEntityDao(entityDao);
         environment.addResource(userResource);
+        
+        MemberService memberService = new MemberService();
+        memberService.setUserResource(userResource);
+        environment.addResource(memberService);
         environment.addHealthCheck(new ApplicationHealthCheck("application"));
     }
 
