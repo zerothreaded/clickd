@@ -3,7 +3,7 @@
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
-			var url = "/users/signin";
+			var url = "/members/signin";
 			
 			var request = $.ajax({
 				  url: url,
@@ -15,7 +15,9 @@
 				request.done(function( msg ) {
 				 if (msg.values.status == "ok")
 					 {
-					 	window.location = '/member';
+					 	var user_token = msg.values.user_token;
+					 	
+					 	window.location = "/user/"+user_token+"/home";
 					 }
 				 else
 					 {
@@ -45,7 +47,7 @@
 				request.done(function( msg ) {
 				 if (msg.values.status == "ok")
 					 {
-					 	window.location = '/member';
+					 	window.location = '/users';
 					 }
 				 else
 					 {
@@ -54,7 +56,7 @@
 				});
 				 
 				request.fail(function( jqXHR, textStatus ) {
-				  alert( "Request failed: " + textStatus );
+					alert("Bad username/password");
 				});
 			
 			return false;

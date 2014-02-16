@@ -1,4 +1,4 @@
-package com.clickd.server.services.user;
+package com.clickd.server.services.member;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +14,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -26,36 +25,36 @@ import com.clickd.server.model.Entity;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/users")
+@Path("/members")
 @Produces(MediaType.APPLICATION_JSON)
-public class UserResource {
+public class MemberResource {
 	
 	private EntityDao entityDao;
 	
-    public UserResource(String template, String defaultName) {
+    public MemberResource(String template, String defaultName) {
     	
     }
 
     @GET
     @Timed
     public String getAll() {
-    	List<Entity> allUsers = entityDao.getAll("users");
-    	String result = Utilities.toJson(allUsers);
+    	List<Entity> allMembers = entityDao.getAll("members");
+    	String result = Utilities.toJson(allMembers);
     	return result;
     }
     
     @GET
-    @Path("/numberofregisteredusers")
+    @Path("/numberofregisteredmembers")
     @Timed
-    public String getNumberOfRegisteredUsers() {
-    	int count = entityDao.getAll("users").size();
+    public String getNumberOfRegisteredMembers() {
+    	int count = entityDao.getAll("members").size();
     	return "{ \"value\" : \"" + count + "\" }";
     }
 
     @GET
-    @Path("/numberofsignedinusers")
+    @Path("/numberofsignedinmembers")
     @Timed
-    public String getNumberOfSignedInUsers() {
+    public String getNumberOfSignedInMembers() {
     	int count = entityDao.getAll("sessions").size();
     	return "{ \"value\" : \"" + count + "\" }";
     }
@@ -73,11 +72,11 @@ public class UserResource {
 
         Map<String, String> formParameters = extractFormParameters(body);
         String email = formParameters.get("email");
-        Entity user = entityDao.findUserByEmailAddress(email);
+        Entity member = entityDao.findMemberByEmailAddress(email);
 
         
-        if (user != null) {
-        	if (user.getValue("password").equals(formParameters.get("password"))) {
+        if (member != null) {
+        	if (member.getValue("password").equals(formParameters.get("password"))) {
         		// User Authentication OK
         		
         		// Lookup Existing Session to purge it
@@ -91,7 +90,7 @@ public class UserResource {
             	Date now = new Date();
             	session = new Entity();
             	session.setValue("status", "ok");
-        		session.setValue("user_email", email);
+        		session.setValue("member_email", email);
         		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
         		session.setValue("created_on", now);
         		session.setValue("last_modified", now);
@@ -127,8 +126,8 @@ public class UserResource {
     
     @DELETE
     @Timed
-    public void deleteUsers() {
-    	entityDao.dropCollection("users");
+    public void deleteMembers() {
+    	entityDao.dropCollection("members");
     }
     
 	public void setEntityDao(EntityDao entityDao) {

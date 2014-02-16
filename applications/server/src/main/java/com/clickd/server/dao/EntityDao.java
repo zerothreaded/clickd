@@ -79,7 +79,7 @@ public class EntityDao {
 			return userChoicesForQuestion.size() > 0;
 	}
 	
-	public Entity findUserByEmailAddress(String emailAddress) {
+	public Entity findMemberByEmailAddress(String emailAddress) {
 		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.email").is(emailAddress)), Entity.class, "users");
 		// Utilities.logAsJson("findUserByEmailAddress() returned : ", user);
 		return user;
@@ -163,7 +163,7 @@ public class EntityDao {
 				
 				if (!cliqueMemberEmail.equals(email))
 				{
-					Entity user = findUserByEmailAddress(cliqueMemberEmail);
+					Entity user = findMemberByEmailAddress(cliqueMemberEmail);
 					cliqueMembers.add(user);
 				}
 			}

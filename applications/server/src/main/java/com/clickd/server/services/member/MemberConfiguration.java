@@ -1,11 +1,11 @@
-package com.clickd.server.services.user;
+package com.clickd.server.services.member;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 
-public class UserConfiguration extends Configuration {
+public class MemberConfiguration extends Configuration {
 	@NotEmpty
 	@JsonProperty
 	private String template;
