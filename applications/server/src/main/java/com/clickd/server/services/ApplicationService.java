@@ -7,7 +7,6 @@ import com.clickd.server.dao.EntityDao;
 import com.clickd.server.services.home.HomeResource;
 import com.clickd.server.services.user.UserConfiguration;
 import com.clickd.server.services.user.UserResource;
-import com.yammer.dropwizard.Bundle;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
@@ -42,15 +41,11 @@ public class ApplicationService extends Service<UserConfiguration> {
         userResource.setEntityDao(entityDao);
         environment.addResource(userResource);
         
-        // /members/*
-        MemberService memberService = new MemberService();
-        memberService.setUserResource(userResource);
-        environment.addResource(memberService);
-        
         // /home/*
         HomeResource homeResource = new HomeResource(template, defaultName);
         environment.addResource(homeResource);
         
+        // Health Checks
         environment.addHealthCheck(new ApplicationHealthCheck("application"));
     }
 

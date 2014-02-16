@@ -25,6 +25,9 @@ import com.google.gson.Gson;
 
 public class UserServiceTest {
 
+	private ResponseHandler<String> successResponseHandler;
+	private ResponseHandler<String> failureResponseHandler;	
+	
 	static {
 		// Start the Service
 		try {
@@ -36,10 +39,30 @@ public class UserServiceTest {
 	
 	@Before
 	public void setup() throws Exception {
+		successResponseHandler = new ResponseHandler<String>() {
+			public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+				int status = response.getStatusLine().getStatusCode();
+				Assert.assertEquals(true, status == 200);
+				if (status >= 200 && status < 300) {
+					HttpEntity entity = response.getEntity();
+					return entity != null ? EntityUtils.toString(entity) : null;
+				} else {
+					throw new ClientProtocolException( "Unexpected response status: " + status);
+				}
+			}
+		};
+		failureResponseHandler = new ResponseHandler<String>() {
+			public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+				int status = response.getStatusLine().getStatusCode();
+				Assert.assertEquals(true, status == 300);
+				HttpEntity entity = response.getEntity();
+				return entity != null ? EntityUtils.toString(entity) : null;
+			}
+		};
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	// @Ignore
 	public void getAllUsersReturnsCorrectUsers() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		URI uri = new URIBuilder()
@@ -48,22 +71,7 @@ public class UserServiceTest {
 	        .setPath("/users")
 	        .build();
 		HttpGet httpget = new HttpGet(uri);
-	
-        // Create a custom response handler
-        ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-            public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-                int status = response.getStatusLine().getStatusCode();
-            	Assert.assertEquals(true, status == 200);
-                if (status >= 200 && status < 300) {
-                    HttpEntity entity = response.getEntity();
-                    return entity != null ? EntityUtils.toString(entity) : null;
-                } else {
-                    throw new ClientProtocolException("Unexpected response status: " + status);
-                }
-            }
-        };
-        String jsonResponse = httpclient.execute(httpget, responseHandler);
-        @SuppressWarnings("unchecked")
+        String jsonResponse = httpclient.execute(httpget, successResponseHandler);
 		List<Entity> allUsers = new Gson().fromJson(jsonResponse, List.class);
 	    System.out.println("GET /users returned \n" + jsonResponse);
     }
@@ -76,21 +84,8 @@ public class UserServiceTest {
                    .addParameter("email", "ralph.masilamani@clickd.org")
                    .addParameter("password", "rr00")
                    .build();
-	    // Create a custom response handler
-	    ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-	        public String handleResponse( final HttpResponse response) throws ClientProtocolException, IOException {
-	            int status = response.getStatusLine().getStatusCode();
-                Assert.assertEquals(true, status == 200);
-                if (status >= 200 && status < 300) {
-	                HttpEntity entity = response.getEntity();
-	                return entity != null ? EntityUtils.toString(entity) : null;
-	            } else {
-	                throw new ClientProtocolException("Unexpected response status: " + status);
-	            }
-	        }
-	
-	    };
-	    String jsonResponse = httpclient.execute(login, responseHandler);
+
+	    String jsonResponse = httpclient.execute(login, successResponseHandler);
 	    System.out.println("POST /users/signin returned \n" + jsonResponse);
 	}
 	
@@ -102,16 +97,8 @@ public class UserServiceTest {
                    .addParameter("email", "ralph.masilamani@clickd.org")
                    .addParameter("password", "BAD_PASSWORD")
                    .build();
-	    // Create a custom response handler
-	    ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-	        public String handleResponse( final HttpResponse response) throws ClientProtocolException, IOException {
-	            int status = response.getStatusLine().getStatusCode();
-                Assert.assertEquals(true, status == 300);
-				return "NOTHING";
-	        }
-	
-	    };
-	    httpclient.execute(login, responseHandler);
+
+	    httpclient.execute(login, failureResponseHandler);
 	}
 	
 }
