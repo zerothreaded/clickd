@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import com.clickd.server.dao.EntityDao;
 import com.clickd.server.model.Entity;
 import com.clickd.server.services.home.HomeView;
+import com.clickd.server.utilities.Utilities;
 import com.yammer.dropwizard.views.View;
 import com.yammer.metrics.annotation.Timed;
 
@@ -39,6 +40,27 @@ public class UserResource
 	    	view.setMemberEmail(session.getStringValue("member_email"));
 	    	return view;
 		}
+    }
+	
+	@GET
+    @Path("/{token}/details")
+    @Timed
+    public String getUserDetails(@PathParam("token") String token) {
+		Entity session = entityDao.findSessionByToken(token);
+		String email = session.getStringValue("member_email");
+		String result = "";
+		if (session == null) {
+			Entity error = new Entity();
+			error.setValue("status", "fail");
+			result = Utilities.toJson(error);
+		} else {
+			Entity response = new Entity();
+			response.setValue("status", "ok");
+			response.setValue("member_email", email);
+			result = Utilities.toJson(response);
+		}
+		
+		return result;
     }
 
 

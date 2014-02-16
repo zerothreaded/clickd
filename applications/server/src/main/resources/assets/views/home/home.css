@@ -25,9 +25,10 @@ blockquote
 	padding: 2px 2px;
 }
 
-.form-col
+.form-group .navbar-form-group
 {
 	padding-left:0px;
+	margin-bottom:0px;
 }
 .login-form
 {
@@ -147,3 +148,9 @@ background-position-y: -200px;
   	top:400px;
   	font-size:100pt;
   }
+  
+  .navbar-error
+  {
+  	padding-top:15px;
+  }
+  

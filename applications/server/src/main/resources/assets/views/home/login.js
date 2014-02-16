@@ -24,7 +24,9 @@
 				});
 				 
 				request.fail(function( jqXHR, textStatus ) {
-				  alert( "Request failed: " + textStatus );
+					$("#login-email-group").addClass("has-error");
+				 	$("#login-password-group").addClass("has-error");
+				 	$("#invalid-username-password-field").removeClass("hidden");
 				});
 			
 			return false;
@@ -48,12 +50,14 @@
 					 }
 				 else
 					 {
-					 	alert("Bad username/password");
+					 	
 					 }
 				});
 				 
 				request.fail(function( jqXHR, textStatus ) {
-					alert("Bad username/password");
+					$("#login-email-input").addClass("has-error");
+				 	$("#login-password-input").addClass("has-error");
+				 	$("#invalid-username-password-field").show();
 				});
 			
 			return false;
