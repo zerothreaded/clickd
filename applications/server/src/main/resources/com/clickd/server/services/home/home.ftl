@@ -31,7 +31,7 @@
 <link href="/assets/components/responsive-quote-carousel/carousel.css" rel="stylesheet">
 <script src="/assets/components/nav-bar-with-popup-sign-in/login.js"></script>
 <script src="/assets/components/responsive-quote-carousel/carousel.js"></script>
-<script src="/assets/common/footer.js"></script>
+<script src="/assets/common/js/footer.js"></script>
 
 <script>
 function fadeOut()

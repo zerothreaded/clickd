@@ -45,12 +45,21 @@ public class UserResource {
     }
     
     @GET
-    @Path("/{id}")
+    @Path("/numberofregisteredusers")
     @Timed
-    public String getUser(@PathParam("id") String id) {
-    	return "{ \"id\" : \"" + id + "\" }";
+    public String getNumberOfRegisteredUsers() {
+    	int count = entityDao.getAll("users").size();
+    	return "{ \"value\" : \"" + count + "\" }";
     }
 
+    @GET
+    @Path("/numberofsignedinusers")
+    @Timed
+    public String getNumberOfSignedInUsers() {
+    	int count = entityDao.getAll("sessions").size();
+    	return "{ \"value\" : \"" + count + "\" }";
+    }
+    
     @POST
     @Timed
     @Path("/signin")

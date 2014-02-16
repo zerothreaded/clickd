@@ -16,5 +16,5 @@ function footerUpdate()
          $('#total-registered-users').html(count.value);
 
 	 });
-	 setTimeout(footerUpdate, 50*1000);
+	 setTimeOut(footerUpdate, 5*1000);
 }
