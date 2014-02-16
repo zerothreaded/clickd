@@ -9,6 +9,11 @@ public class HomeView extends View {
 		super("home.ftl");
 		this.name = name;
 	}
+	
+	public String getTitle()
+	{
+		return "CLICKD HOME";
+	}
 
 	public String getName() {
 		return name;

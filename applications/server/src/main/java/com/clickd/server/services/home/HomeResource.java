@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import com.clickd.server.dao.EntityDao;
 import com.yammer.metrics.annotation.Timed;
 
+import freemarker.template.Configuration;
+
 @Path("/home")
 @Produces(MediaType.TEXT_HTML)
 public class HomeResource {
@@ -24,11 +26,13 @@ public class HomeResource {
 		this.template = template;
 		this.defaultName = defaultName;
 		this.counter = new AtomicLong();
+		
+	//	Configuration.getDefaultConfiguration().setDirectoryForTemplateLoading("src/main/resources/com/clickd/common");
 	}
 
 	@GET
 	@Timed
-	public HomeView getPerson() {
+	public HomeView getHome() {
 		return new HomeView("clickd title");
 	}
 

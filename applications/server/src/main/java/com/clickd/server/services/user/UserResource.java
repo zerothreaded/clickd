@@ -2,7 +2,6 @@ package com.clickd.server.services.user;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,48 +63,13 @@ public class UserResource {
     @Timed
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response signIn(String body,  @Context HttpServletRequest request) throws URISyntaxException
+    public Response signIn(
+    		String body, 
+    		@QueryParam("foo") String foo, 
+    		@HeaderParam("X-Auth-Token") String authToken, 
+    		@Context HttpServletRequest request) throws URISyntaxException
     {
-        Map<String, String> formParameters = extractFormParameters(body);
-        String email = formParameters.get("email");
-        Entity user = entityDao.findUserByEmailAddress(email);
-
-        
-        if (user != null) {
-        	if (user.getValue("password").equals(formParameters.get("password"))) {
-        		// User Authentication OK
-        		
-        		// Lookup Existing Session 
-                Entity session = entityDao.findSessionByUserEmail(email);
-                if (session == null) {
-               		// Create a NEW session for the user 
-                	Date now = new Date();
-                	session = new Entity();
-            		session.setValue("user_email", email);
-            		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
-            		session.setValue("created_on", now);
-            		session.setValue("last_modified", now);
-            		session.setValue("user_data", new HashMap<String, Object>());
-            		session.setValue("user_loggedin", Boolean.TRUE);
-            		
-                } else {
-                	// Update existing session
-                	
-                }
- 
-
-        		// Persist 
-        		entityDao.save("sessions", session);
-        		
-              	return Response.status(200).entity(session).build();
-        	}
-        }
-    	return Response.status(300).entity(" { \"status\" : \"failed\" }").build();
-    }
-
-	private Map<String, String> extractFormParameters(String body)
-			throws URISyntaxException {
-		StringTokenizer tokenizer = new StringTokenizer(body, "&");
+        StringTokenizer tokenizer = new StringTokenizer(body, "&");
         // System.out.println("COUNT = " + tokenizer.countTokens());
         Map<String, String> formParameters = new HashMap<String, String>();
         while (tokenizer.hasMoreTokens()) {
@@ -116,8 +80,24 @@ public class UserResource {
         	value = new URI(value).getPath();
         	formParameters.put(key, value);
         }
-		return formParameters;
-	}
+        
+        Entity user = entityDao.findUserByEmailAddress(formParameters.get("email"));
+        if (user != null) {
+        	if (user.getValue("password").equals(formParameters.get("password"))) {
+        		// User Sign In OK
+        		
+        		// Create a session for the user and the user TOKEN
+        		Entity session = new Entity();
+        		session.setValue("user", formParameters.get("email"));
+        		session.setValue("token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
+        		session.setValue("data", new HashMap<String, Object>());
+        		entityDao.save("sessions", session);
+        		
+              	return Response.status(200).entity(session).build();
+        	}
+        }
+    	return Response.status(300).entity(" {n \"status\" : \"failed\" }").build();
+    }
     
     @DELETE
     @Timed

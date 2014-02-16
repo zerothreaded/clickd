@@ -11,9 +11,11 @@ import java.util.Set;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.clickd.server.model.Entity;
 import com.clickd.server.utilities.Utilities;
+
 
 public class EntityDao {
 
@@ -31,11 +33,6 @@ public class EntityDao {
 		this.mongoOperations = mongoOperations;
 	}
 
-	public Entity findSessionByUserEmail(String emailAddress) {
-		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.user_email").is(emailAddress)), Entity.class, "sessions");
-		return user;
-	}
-	
 	public List<Entity> getAll(String collectionName) {
 		// System.out.println("getAll() called for collection : " + collectionName);
 		return mongoOperations.findAll(Entity.class, collectionName);

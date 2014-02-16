@@ -1,7 +1,7 @@
 package com.clickd.server.model;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,7 +15,7 @@ public class Entity {
 	protected Map<String, Object> values;
 	
 	public Entity() {
-		this.values = new TreeMap<String, Object>();
+		this.values = new HashMap<String, Object>();
 	}
 	
 	public String getId() {
