@@ -4,8 +4,11 @@ $(document).ready(function () {
 
 function footerUpdate()
 {
-	 $.getJSON('/members/signedinuser', function(user) {
-         $('#signed-in-user').html(user.email);
+	var urlChunks = location.href.split('/');
+	var token = urlChunks[urlChunks.length-2];
+
+	 $.getJSON('/users/'+token+'/details', function(user) {
+         $('#signed-in-user').html(user.values.member_email);
       });
 
 	 $.getJSON('/members/numberofsignedinmembers', function(count) {

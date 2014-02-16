@@ -25,7 +25,7 @@
 <link href="/assets/common/css/navbar.css" rel="stylesheet">
 <link href="/assets/common/css/sticky-footer-navbar.css" rel="stylesheet">
 
-<link href="/assets/views/home/home.css" rel="stylesheet">
+<link href="/assets/views/members/home.css" rel="stylesheet">
 <link href="/assets/components/nav-bar-with-popup-sign-in/login.css" rel="stylesheet">
 <link href="/assets/components/modified-modal-buttons/modal.css" rel="stylesheet">
 <link href="/assets/components/responsive-quote-carousel/carousel.css" rel="stylesheet">
