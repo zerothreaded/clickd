@@ -1,5 +1,7 @@
 package com.clickd.server.services;
 
+import javax.servlet.Filter;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -54,6 +56,8 @@ public class ApplicationService extends Service<MemberConfiguration> {
         environment.addResource(homeResource);
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));
+        Filter filter = new TokenCheckFilter();
+		environment.addFilter(filter, "*");
     }
 
 }

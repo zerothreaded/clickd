@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -66,18 +67,16 @@ public class MemberResource {
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
     public Response signIn(
-    		String body, 
-    		@QueryParam("foo") String foo, 
-    		@HeaderParam("X-Auth-Token") String authToken, 
-    		@Context HttpServletRequest request) throws URISyntaxException
+    		@FormParam(value = "email") String email,
+     		@FormParam(value = "password") String password) throws URISyntaxException
     {
 
-        Map<String, String> formParameters = extractFormParameters(body);
-        String email = formParameters.get("email");
+        // Map<String, String> formParameters = extractFormParameters(body);
+        // String email = formParameters.get("email");
         Entity member = entityDao.findMemberByEmailAddress(email);
 
         if (member != null) {
-        	if (member.getValue("password").equals(formParameters.get("password"))) {
+        	if (member.getValue("password").equals(password)) {
         		// User Authentication OK
         		
         		// Lookup Existing Session to purge it
