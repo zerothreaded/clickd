@@ -48,14 +48,12 @@ public class UserResource
     @Timed
     public View signOut(@PathParam("token") String token) {
 		Entity session = entityDao.findSessionByToken(token);
-		if (session == null) {
-			HomeView view = new HomeView("HOME");
-			return view;
-		} else {
-	    	UserHomeView view = new UserHomeView("User Home");
-	    	view.setMemberEmail(session.getStringValue("member_email"));
-	    	return view;
-		}
+		if (session != null) {
+			 entityDao.deleteObject("sessions", session);
+		} 
+		
+	    HomeView view = new HomeView("HOME");
+		return view;
     }
 	
 	@GET
@@ -63,13 +61,14 @@ public class UserResource
     @Timed
     public String getUserDetails(@PathParam("token") String token) {
 		Entity session = entityDao.findSessionByToken(token);
-		String email = session.getStringValue("member_email");
+
 		String result = "";
-		if (session == null) {
+		if (null == session) {
 			Entity error = new Entity();
 			error.setValue("status", "fail");
 			result = Utilities.toJson(error);
 		} else {
+			String email = session.getStringValue("member_email");
 			Entity response = new Entity();
 			response.setValue("status", "ok");
 			response.setValue("member_email", email);
