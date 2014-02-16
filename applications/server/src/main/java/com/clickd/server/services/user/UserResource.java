@@ -96,7 +96,7 @@ public class UserResource {
               	return Response.status(200).entity(session).build();
         	}
         }
-    	return Response.status(300).entity(" {n \"status\" : \"failed\" }").build();
+    	return Response.status(300).entity(" {\"status\" : \"failed\" }").build();
     }
     
     @DELETE
