@@ -6,6 +6,7 @@ public class UserHomeView extends View {
 
 	private String title;
 	private String memberEmail;
+	private String token;
 	
 	public UserHomeView(String title) {
 		super("home.ftl");
@@ -23,6 +24,14 @@ public class UserHomeView extends View {
 	
 	public void setMemberEmail(String memberEmail) {
 		this.memberEmail = memberEmail;
+	}
+	
+	public String getToken() {
+		return this.token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 }
