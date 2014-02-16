@@ -2,25 +2,19 @@ $(document).ready(function () {
 	footerUpdate();
 });
 
-
 function footerUpdate()
 {
-	
-
-	 $.getJSON('/clickd/app/user/signedinuser', function(user) {
+	 $.getJSON('/users/signedinuser', function(user) {
          $('#signed-in-user').html(user.email);
       });
 
-	 $.getJSON('/clickd/app/user/numberofsignedinusers', function(count) {
+	 $.getJSON('/users/numberofsignedinusers', function(count) {
 	         $('#total-users-online').html(count.value);
 	 });
 	 
-	 
-	 $.getJSON('/clickd/app/user/numberofregisteredusers', function(count) {
+	 $.getJSON('/users/numberofregisteredusers', function(count) {
          $('#total-registered-users').html(count.value);
 
 	 });
- 
-	 setTimeout(footerUpdate, 50*1000);
-	    
+	 setTimeOut(footerUpdate, 5*1000);
 }

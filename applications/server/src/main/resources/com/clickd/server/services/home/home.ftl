@@ -32,7 +32,37 @@
 <script src="/assets/components/nav-bar-with-popup-sign-in/login.js"></script>
 <script src="/assets/components/responsive-quote-carousel/carousel.js"></script>
 <script src="/assets/views/home/login.js"></script>
+<script src="/assets/common/js/footer.js"></script>
 
+<script>
+function fadeOut()
+{
+	$("#overlay").addClass("overlay2");
+	$("#overlay").removeClass("overlay");
+	window.setTimeOut(1, 'fadeOut2');
+}
+	
+function fadeOut2()
+{
+	$("#overlay2").removeClass("overlay2");	
+}
+	
+	$(document).ready(function() {
+		var hash = window.location.hash;
+		if (hash=='#signupfailed')
+			$('span#signupfailed').removeClass('hidden');
+		
+		
+		window.setTimeOut(3, 'fadeOut');
+		
+		$("#btn-form-sign-in").click(function() {
+			//change the form target
+			$("#sign-up-form").attr("action", "/assets/app/user/signin");
+			//then submit the form
+			$("#sign-up-form").submit();
+		})
+	});
+</script>
 
 
 </head>

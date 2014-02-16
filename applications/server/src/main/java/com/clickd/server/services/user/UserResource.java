@@ -45,12 +45,21 @@ public class UserResource {
     }
     
     @GET
-    @Path("/{id}")
+    @Path("/numberofregisteredusers")
     @Timed
-    public String getUser(@PathParam("id") String id) {
-    	return "{ \"id\" : \"" + id + "\" }";
+    public String getNumberOfRegisteredUsers() {
+    	int count = entityDao.getAll("users").size();
+    	return "{ \"value\" : \"" + count + "\" }";
     }
 
+    @GET
+    @Path("/numberofsignedinusers")
+    @Timed
+    public String getNumberOfSignedInUsers() {
+    	int count = entityDao.getAll("sessions").size();
+    	return "{ \"value\" : \"" + count + "\" }";
+    }
+    
     @POST
     @Timed
     @Path("/signin")
@@ -71,9 +80,11 @@ public class UserResource {
         	if (user.getValue("password").equals(formParameters.get("password"))) {
         		// User Authentication OK
         		
-        		// Lookup Existing Session 
+        		// Lookup Existing Session to purge it
                 Entity session = entityDao.findSessionByUserEmail(email);
+                Long numberOfLogins = 1L;
                 if (session != null) {
+                	numberOfLogins = session.getLongValue("number_of_logins") + 1;
                		// DELETE the old session
                 	entityDao.deleteObject("sessions", session);
                 }
@@ -86,6 +97,7 @@ public class UserResource {
         		session.setValue("last_modified", now);
         		session.setValue("user_data", new HashMap<String, Object>());
         		session.setValue("user_loggedin", Boolean.TRUE);
+        		session.setValue("number_of_logins", numberOfLogins);
         		// Persist 
         		entityDao.save("sessions", session);
         		

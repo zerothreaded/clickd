@@ -86,7 +86,7 @@ public class EntityDao {
 	}
 	
 	public Entity findSessionByUserEmail(String email) {
-		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.user_email").is(email)), Entity.class, "session");
+		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.user_email").is(email)), Entity.class, "sessions");
 		return user;
 	}
 
