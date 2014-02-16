@@ -79,6 +79,7 @@ public class UserResource {
                 }
             	Date now = new Date();
             	session = new Entity();
+            	session.setValue("status", "ok");
         		session.setValue("user_email", email);
         		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
         		session.setValue("created_on", now);

@@ -17,7 +17,7 @@
 				</div>
 
 				<div class="col-md-1 col-sm-1 form-col">
-					<button class="btn btn-default" type="submit">Sign In</button>
+					<button class="btn btn-default" type="submit" id="login-submit">Sign In</button>
 				</div>
 			</div>
 		</form>
