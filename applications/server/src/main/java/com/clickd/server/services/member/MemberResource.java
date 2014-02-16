@@ -112,23 +112,14 @@ public class MemberResource {
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(
-    		String body, 
-    		@QueryParam("foo") String foo, 
-    		@HeaderParam("X-Auth-Token") String authToken, 
-    		@Context HttpServletRequest request) throws URISyntaxException
+    		@FormParam("email") String email,
+     		@FormParam("firstName") String firstName,
+     		@FormParam("lastName") String lastName,
+     		@FormParam("password") String password ) throws URISyntaxException
     {
-
-        Map<String, String> formParameters = extractFormParameters(body);
-        String email = formParameters.get("email");
-        String firstName = formParameters.get("firstName");
-        String lastName = formParameters.get("lastName");
-        String password = formParameters.get("password");
         
         //check if member exists
         Entity member = entityDao.findMemberByEmailAddress(email);
-
-        
-        Entity response = new Entity();
         
         if (member == null)
         {
@@ -139,8 +130,6 @@ public class MemberResource {
         	newMember.setValue("password", password);
         	entityDao.save("users", newMember);
         	
-        	
-
         	return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
         }
         else
@@ -149,8 +138,7 @@ public class MemberResource {
         }
     }
 
-	private Map<String, String> extractFormParameters(String body)
-			throws URISyntaxException {
+	private Map<String, String> extractFormParameters(String body) throws URISyntaxException {
 		StringTokenizer tokenizer = new StringTokenizer(body, "&");
         // System.out.println("COUNT = " + tokenizer.countTokens());
         Map<String, String> formParameters = new HashMap<String, String>();
