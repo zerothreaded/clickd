@@ -2,7 +2,6 @@ package com.clickd.server.services.users;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,9 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clickd.server.model.Entity;
 import com.clickd.server.services.ApplicationService;
-import com.google.gson.Gson;
 
 public class UserServiceTest {
 
@@ -61,7 +58,7 @@ public class UserServiceTest {
 		};
 	}
 	
-	@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	@Test
 	public void getAllUsersReturnsCorrectUsers() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -72,7 +69,7 @@ public class UserServiceTest {
 	        .build();
 		HttpGet httpget = new HttpGet(uri);
         String jsonResponse = httpclient.execute(httpget, successResponseHandler);
-		List<Entity> allUsers = new Gson().fromJson(jsonResponse, List.class);
+		// List<Entity> allUsers = new Gson().fromJson(jsonResponse, List.class);
 	    System.out.println("GET /users returned \n" + jsonResponse);
     }
 

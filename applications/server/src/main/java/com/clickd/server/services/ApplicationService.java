@@ -7,7 +7,6 @@ import com.clickd.server.dao.EntityDao;
 import com.clickd.server.services.home.HomeResource;
 import com.clickd.server.services.user.UserConfiguration;
 import com.clickd.server.services.user.UserResource;
-import com.yammer.dropwizard.Bundle;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;

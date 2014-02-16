@@ -11,7 +11,6 @@ import java.util.Set;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 
 import com.clickd.server.model.Entity;
 import com.clickd.server.utilities.Utilities;
@@ -38,10 +37,14 @@ public class EntityDao {
 		return mongoOperations.findAll(Entity.class, collectionName);
 	}
 	
-	public void delete(String name) {
+	public void dropCollection(String name) {
 		mongoOperations.dropCollection(name);
 	}
-
+	
+	public void deleteObject(String collectionName, Entity object) {
+		mongoOperations.remove(object, collectionName);
+	}
+	
 	public Entity save(String collectionName, Entity entity) {
 		mongoOperations.save(entity, collectionName);
 		return entity;
@@ -82,6 +85,11 @@ public class EntityDao {
 		return user;
 	}
 	
+	public Entity findSessionByUserEmail(String email) {
+		Entity user = mongoOperations.findOne(new Query(Criteria.where("values.user_email").is(email)), Entity.class, "session");
+		return user;
+	}
+
 	public Entity findAnswerById(String answerKey) {
 		Entity answer = mongoOperations.findOne(new Query(Criteria.where("values.key").is(answerKey)), Entity.class, "answers");
 		// Utilities.logAsJson("findAnswerById() returned : ", answer);

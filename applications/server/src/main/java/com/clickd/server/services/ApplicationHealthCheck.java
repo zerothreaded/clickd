@@ -10,10 +10,6 @@ public class ApplicationHealthCheck extends HealthCheck {
 
 	@Override
 	protected Result check() throws Exception {
-		if (1 == 1) {
-			return Result.healthy();
-		} else {
-			return Result.unhealthy("BAD HEALTH CHECK");
-		}
+		return Result.healthy();
 	}
 }
