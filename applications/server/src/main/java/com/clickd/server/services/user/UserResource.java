@@ -22,8 +22,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringEscapeUtils;
-
 import com.clickd.server.dao.EntityDao;
 import com.clickd.server.model.Entity;
 import com.clickd.server.utilities.Utilities;
@@ -64,8 +62,13 @@ public class UserResource {
     @Timed
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response signIn(String body,  @Context HttpServletRequest request) throws URISyntaxException
+    public Response signIn(
+    		String body, 
+    		@QueryParam("foo") String foo, 
+    		@HeaderParam("X-Auth-Token") String authToken, 
+    		@Context HttpServletRequest request) throws URISyntaxException
     {
+
         Map<String, String> formParameters = extractFormParameters(body);
         String email = formParameters.get("email");
         Entity user = entityDao.findUserByEmailAddress(email);
@@ -111,7 +114,7 @@ public class UserResource {
         	value = new URI(value).getPath();
         	formParameters.put(key, value);
         }
-		return formParameters;
+        return formParameters;
 	}
     
     @DELETE
