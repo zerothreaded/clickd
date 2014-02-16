@@ -77,23 +77,18 @@ public class UserResource {
         		
         		// Lookup Existing Session 
                 Entity session = entityDao.findSessionByUserEmail(email);
-                if (session == null) {
-               		// Create a NEW session for the user 
-                	Date now = new Date();
-                	session = new Entity();
-            		session.setValue("user_email", email);
-            		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
-            		session.setValue("created_on", now);
-            		session.setValue("last_modified", now);
-            		session.setValue("user_data", new HashMap<String, Object>());
-            		session.setValue("user_loggedin", Boolean.TRUE);
-            		
-                } else {
-                	// Update existing session
-                	
+                if (session != null) {
+               		// DELETE the old session
+                	entityDao.deleteObject("sessions", session);
                 }
- 
-
+            	Date now = new Date();
+            	session = new Entity();
+        		session.setValue("user_email", email);
+        		session.setValue("user_token", new Integer(new Double(Math.random() * 1000 * 1000).intValue()));
+        		session.setValue("created_on", now);
+        		session.setValue("last_modified", now);
+        		session.setValue("user_data", new HashMap<String, Object>());
+        		session.setValue("user_loggedin", Boolean.TRUE);
         		// Persist 
         		entityDao.save("sessions", session);
         		
@@ -122,7 +117,7 @@ public class UserResource {
     @DELETE
     @Timed
     public void deleteUsers() {
-    	entityDao.delete("users");
+    	entityDao.dropCollection("users");
     }
     
 	public void setEntityDao(EntityDao entityDao) {

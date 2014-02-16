@@ -41,10 +41,14 @@ public class EntityDao {
 		return mongoOperations.findAll(Entity.class, collectionName);
 	}
 	
-	public void delete(String name) {
+	public void dropCollection(String name) {
 		mongoOperations.dropCollection(name);
 	}
-
+	
+	public void deleteObject(String collectionName, Entity object) {
+		mongoOperations.remove(object, collectionName);
+	}
+	
 	public Entity save(String collectionName, Entity entity) {
 		mongoOperations.save(entity, collectionName);
 		return entity;
