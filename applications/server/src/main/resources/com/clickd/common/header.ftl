@@ -1,6 +1,6 @@
 	<div class="navbar navbar-default" role="navigation">
 	<div class="col-md-3 col-sm-6 col-md-offset-1">
-				<a class="navbar-brand">dating &nbsp;@&nbsp; clickd</a>
+				<a class="navbar-brand"><img src="${profileImage?html}" class="member-img"/>${firstName?html} is dating &nbsp;@&nbsp; clickd</a>
 	</div>
 <div class="col-xs-1 col-sm-1 col-sm-offset-3 col-md-4 login-group text-right">
 		<div class="navbar-form">

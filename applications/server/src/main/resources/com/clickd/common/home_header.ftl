@@ -2,7 +2,52 @@
 	<div class="col-md-3 col-sm-6 col-md-offset-1">
 				<a class="navbar-brand">dating &nbsp;@&nbsp; clickd</a>
 	</div>
-	<div class="col-md-2 col-md-offset-1 text-right navbar-error"><div class="label label-danger hidden" id="invalid-username-password-field">Invalid username/password</div></div>
+	
+	<script>
+		function signinRalph() {
+			$("#login-email-input").attr("value", "ralph.masilamani@clickd.org");
+			$("#login-password-input").attr("value", "rr00");
+			$("#login-nav").submit();
+		}
+		function signinJohn() {
+			$("#login-email-input").attr("value", "john.dodds@clickd.org");
+			$("#login-password-input").attr("value", "jj00");
+			$("#login-nav").submit();
+		}
+		function signinEdward() {
+			$("#autosignin").attr("action", "/clickd/app/user/signin");
+			$("#login-email-input").attr("value", "edward.dodds@clickd.org");
+			$("#login-password-input").attr("value", "ee00");
+			$("#login-nav").submit();
+		}
+		function signinToby() {
+			$("#login-email-input").attr("value", "toby.weiss@clickd.org");
+			$("#login-password-input").attr("value", "tt00");
+			$("#login-nav").submit();
+		}
+		function signinSimone() {
+			$("#login-email-input").attr("value", "simone@simonewagener.com");
+			$("#login-password-input").attr("value", "ss00");
+			$("#login-nav").submit();
+		}
+		function signinSuzanne() {
+			$("#login-email-input").attr("value", "suzanne.noble@clickd.org");
+			$("#login-password-input").attr("value", "ss00");
+			$("#login-nav").submit();
+		}
+	</script>
+	
+	<div class="col-md-3">
+
+			<img class="img-circle login-img" type="image"  onclick="signinRalph()" src="/assets/images/members/facebook_ralph.jpg" />
+			<img class="img-circle login-img" type="image"  onclick="signinJohn()" src="/assets/images/members/facebook_john.jpg" />
+			<img class="img-circle login-img" type="image"  onclick="signinEdward()" src="/assets/images/members/facebook_edward.jpg" />
+			<img class="img-circle login-img" type="image"  onclick="signinToby()" src="/assets/images/members/facebook_toby.jpg" />
+			<img class="img-circle login-img" type="image"  onclick="signinSimone()" src="/assets/images/members/facebook_simone.jpg" />
+			<img class="img-circle login-img" type="image"  onclick="signinSuzanne()" src="/assets/images/members/facebook_suzanne.jpg" />
+	</div>
+	
+	<div class="col-md-2 col-md-offset-1 text-right navbar-error hidden" id="invalid-username-password-field"><div class="label label-danger" >Invalid username/password</div></div>
 	<div class="col-xs-12 col-sm-6 col-md-4  login-group">
 		<h2 class="visible-xs">
 			Sign in <small>to clickd.</small>
