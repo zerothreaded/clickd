@@ -101,6 +101,12 @@ public class EntityDao {
 		return answer;
 	}
 	
+	public Entity findAnswerById(String answerKey) {
+		Entity answer = mongoOperations.findOne(new Query(Criteria.where("values.key").is(answerKey)), Entity.class, "answers");
+		// Utilities.logAsJson("findAnswerById() returned : ", answer);
+		return answer;
+	}
+
 	public List<Entity> findPossibleAnswersForQuestions(String questionKey) {
 		List<Entity> answersForQuestions = mongoOperations.find(new Query(
 			Criteria.where("values.question_key").is(questionKey)), 

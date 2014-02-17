@@ -47,12 +47,13 @@ public class ApplicationService extends Service<MemberConfiguration> {
         environment.addResource(memberResource);
         
         // /users/*
-       UserResource userResource = new UserResource();
-       userResource.setEntityDao(entityDao);
-       environment.addResource(userResource);
+        UserResource userResource = new UserResource();
+        userResource.setEntityDao(entityDao);
+        environment.addResource(userResource);
         
         // /home/*
         HomeResource homeResource = new HomeResource(template, defaultName);
+        homeResource.setEntityDao(entityDao);
         environment.addResource(homeResource);
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));

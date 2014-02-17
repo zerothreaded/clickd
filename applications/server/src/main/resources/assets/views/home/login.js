@@ -13,7 +13,7 @@
 				});
 				 
 				request.done(function( msg ) {
-
+				// alert(msg);
 				 if (msg.values.status == "ok")
 					 {
 					 	var user_token = msg.values.user_token;

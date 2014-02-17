@@ -13,14 +13,16 @@ public class TokenCheckFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-		String accessToken = request.getParameter("apikey");
-		if (accessToken != null) {
-			System.out.println("TOKEN = " + accessToken);
-			filterChain.doFilter(request, response);
-		} else {
-			System.out.println("TOKEN = " + "NOT PRESENT");
-			filterChain.doFilter(request, response);
-		}
+//		String accessToken = request.getParameter("apikey");
+//		if (accessToken != null) {
+//			// System.out.println("TOKEN = " + accessToken);
+//			filterChain.doFilter(request, response);
+//		} else {
+//			// System.out.println("TOKEN = " + "NOT PRESENT");
+//			filterChain.doFilter(request, response);
+//		}
+
+		filterChain.doFilter(request, response);
 	}
 	
 	@Override
