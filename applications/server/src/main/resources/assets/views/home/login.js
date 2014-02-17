@@ -1,5 +1,9 @@
 	$(document).ready(function() {
-
+		var n = Math.floor(Math.random()*10+1);
+		var s = "/assets/images/home/background"+n+".jpg";
+		$("#wrap").css('background-image', 'url('+s+')');
+		
+		//alert(s);
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();

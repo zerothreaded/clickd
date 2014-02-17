@@ -1,15 +1,16 @@
-	<div class="navbar navbar-default" role="navigation">
-	<div class="col-md-3 col-sm-6 col-md-offset-1">
-				<a class="navbar-brand">dating &nbsp;@&nbsp; clickd</a>
-	</div>
-	<div class="col-md-2 col-md-offset-1 text-right navbar-error"><div class="label label-danger hidden" id="invalid-username-password-field">Invalid username/password</div></div>
-	<div class="col-xs-12 col-sm-6 col-md-4  login-group">
-		<h2 class="visible-xs">
-			Sign in <small>to clickd.</small>
-		</h2>
-		
+		<div id="top-nav" class="fixed skin-6">
+			<a href="#" class="brand">
+				<span>dating @ clickd</span>
+			</a><!-- /brand -->					
+			<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<div class="pull-right login-group">
+
 		<form class="form-group login-form has-validation-callback" role="form" method="post" action="/users/signin" accept-charset="UTF-8" id="login-nav">
-			<div class="input-group">
+			<div class="form-group-navbar">
 				<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-email-group">
 					<input type="email" class="form-control col-md-3 col-sm-3" placeholder="Email" name="email" id="login-email-input">
 				</div>
@@ -23,4 +24,4 @@
 			</div>
 		</form>
 	</div>
-	</div>
+		</div><!-- /top-nav-->

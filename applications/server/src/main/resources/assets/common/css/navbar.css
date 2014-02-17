@@ -34,10 +34,23 @@ body {
 	background-image: none;
 }
 
+.login-img
+{
+	width:34px;
+	height:34px;
+	border-radius:17px;
+	margin-right:2px;
+	margin-top:10px;
+	cursor:pointer;
+}
+
+
 .member-img
 {
-	width:40px;
-	height:40px;
+	width:34px;
+	height:34px;
+	border-radius:17px;
+	margin-right:12px;
 }
 
 .navbar-inverse .navbar-inner {

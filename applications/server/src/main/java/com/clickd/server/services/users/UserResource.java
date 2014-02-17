@@ -36,9 +36,14 @@ public class UserResource
 			HomeView view = new HomeView("HOME");
 			return view;
 		} else {
+			String email = session.getStringValue("member_email");
+			Entity member = entityDao.findMemberByEmailAddress(email);
+			String firstName = member.getStringValue("firstName").toLowerCase();
 	    	UserHomeView view = new UserHomeView("User Home");
-	    	view.setMemberEmail(session.getStringValue("member_email"));
+	    	view.setFirstName(firstName);
+	    	view.setMemberEmail(email);
 	    	view.setToken(token);
+	    	view.setProfileImage("/assets/images/members/facebook_"+firstName+".jpg");
 	    	return view;
 		}
     }
