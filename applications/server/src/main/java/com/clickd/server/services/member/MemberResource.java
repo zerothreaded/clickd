@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import com.clickd.server.dao.SessionDao;
@@ -82,18 +83,13 @@ public class MemberResource {
      		@Context HttpServletRequest request,
      		@Context HttpServletResponse response) throws URISyntaxException
     {
-
-        // Map<String, String> formParameters = extractFormParameters(body);
-        // String email = formParameters.get("email");
         User user = userDao.findByEmail(email);
-
         if (user != null) {
         	if (user.getPassword().equals(password)) {
         		// User Authentication OK
         		
         		// Lookup Existing Sessions for this user
         		List <Link> sessionLinks = user.getSessionLinks();
-        		
         		for (Link link : sessionLinks)
         		{
         			String sessionHref = link.getHref();
@@ -115,9 +111,9 @@ public class MemberResource {
             	
             	userDao.update(user);
               	
-            	//	NewCookie newCookie = new NewCookie("token", token, "/", "", "", 60*60, false);
-            	//	return Response.status(200).cookie(newCookie).entity(session).build();
-            	}
+        		NewCookie newCookie = new NewCookie("token", session.getToken().toString(), "/", "", "", 60*60, false);
+        		return Response.status(200).cookie(newCookie).entity(session).build();
+        	}
         }
     	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
     }
