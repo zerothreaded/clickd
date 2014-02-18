@@ -1,12 +1,8 @@
 package com.clickd.server.services.member;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-import com.clickd.server.dao.EntityDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.Entity;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;

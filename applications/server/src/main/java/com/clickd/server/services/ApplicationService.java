@@ -5,7 +5,6 @@ import javax.servlet.Filter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.clickd.server.dao.EntityDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.home.HomeResource;

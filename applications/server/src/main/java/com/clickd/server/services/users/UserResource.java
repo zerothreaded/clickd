@@ -8,10 +8,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.clickd.server.dao.EntityDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.Entity;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.services.home.HomeView;

@@ -1,19 +1,8 @@
 package com.clickd.server.dao;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Entity;
-import com.clickd.server.utilities.Utilities;
 
 
 public class EntityDao {

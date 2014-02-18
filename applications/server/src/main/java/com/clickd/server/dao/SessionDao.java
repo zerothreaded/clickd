@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Session;
-import com.clickd.server.model.User;
 
 public class SessionDao {
 

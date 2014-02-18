@@ -1,6 +1,5 @@
 package com.clickd.server.services.home;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -11,8 +10,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import com.clickd.server.dao.EntityDao;
-import com.clickd.server.model.Entity;
-import com.clickd.server.services.users.UserHomeView;
 import com.yammer.dropwizard.views.View;
 import com.yammer.metrics.annotation.Timed;
 
