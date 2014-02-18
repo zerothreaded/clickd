@@ -70,10 +70,10 @@
 						});
 						 
 						request2.done(function( msg2 ) {
-						 if (msg2.values.status == "ok")
+						 if (msg2.isLoggedIn == true)
 							 {
 							 	var user_token = msg2.values.user_token;
-							 	window.location = "/users/"+user_token+"/home";
+							 	window.location = "/users/home";
 							 }
 					
 						});
