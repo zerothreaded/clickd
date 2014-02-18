@@ -18,10 +18,9 @@
 				 
 				request.done(function( msg ) {
 				// alert(msg);
-				 if (msg.values.status == "ok")
+				 if (msg.isLoggedIn == true)
 					 {
-					 	var user_token = msg.values.user_token;
-					 	window.location = "/users/"+user_token+"/home";
+					 	window.location = "/users/home";
 					 }
 				 else
 					 {
