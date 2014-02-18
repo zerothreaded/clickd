@@ -72,7 +72,6 @@
 						request2.done(function( msg2 ) {
 						 if (msg2.isLoggedIn == true)
 							 {
-							 	var user_token = msg2.values.user_token;
 							 	window.location = "/users/home";
 							 }
 					
