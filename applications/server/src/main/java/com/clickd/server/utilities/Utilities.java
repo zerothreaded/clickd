@@ -1,5 +1,8 @@
 package com.clickd.server.utilities;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,6 +19,21 @@ public class Utilities {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(object);
 		return json;
+	}
+	
+	public static Date dateFromString(String s)
+	{
+		SimpleDateFormat format =
+		        new SimpleDateFormat("dd-mm-yyyy");
+		
+		Date parsed = new Date();
+		try
+		{
+		    parsed = format.parse(s);
+		}
+		catch (Exception e){}
+		
+		return parsed;
 	}
 
 }

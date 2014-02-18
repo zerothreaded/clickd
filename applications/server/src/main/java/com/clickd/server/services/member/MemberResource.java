@@ -128,7 +128,11 @@ public class MemberResource {
     		@FormParam("email") String email,
      		@FormParam("firstName") String firstName,
      		@FormParam("lastName") String lastName,
-     		@FormParam("password") String password ) throws URISyntaxException
+     		@FormParam("password") String password,
+     		@FormParam("dateOfBirth") String dateOfBirth,
+     		@FormParam("gender") String gender,
+     		@FormParam("postcode") String postcode)
+     		throws URISyntaxException
     {
         
         //check if member exists
@@ -141,6 +145,9 @@ public class MemberResource {
         	newMember.setFirstName(firstName);
         	newMember.setLastName(lastName);
         	newMember.setPassword(password);
+        	newMember.setDateOfBirth(Utilities.dateFromString(dateOfBirth));
+        	newMember.setGender(gender);
+        	newMember.setPostCode(postcode);
         	userDao.create(newMember);
         	
         	return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();

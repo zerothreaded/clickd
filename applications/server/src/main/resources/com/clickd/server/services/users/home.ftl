@@ -55,9 +55,9 @@
 			<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;"><div class="sidebar-inner scrollable-sidebar" style="overflow: hidden; width: auto; height: 100%;">
 				<!-- /size-toggle -->	
 				<div class="user-block clearfix">
-					<img src="${profileImage?html}" alt="User Avatar">
+					<img src="" alt="User Avatar" id="user-avatar-img">
 					<div class="detail">
-						<strong>${firstName?html} </strong>
+						<strong id="user-full-name"> </strong>
 						<ul class="list-inline">
 							<li class=""><a href="profile.html">Profile</a></li>
 							<li class=""><a href="inbox.html" class="no-margin">Inbox</a></li>

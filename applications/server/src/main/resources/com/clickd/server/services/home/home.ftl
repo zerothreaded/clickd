@@ -10,7 +10,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 	
 	<!-- Jquery -->
-	<script src="/assets/common/js/jquery-1.10.2.min.js"></scr`ipt>
+	<script src="/assets/common/js/jquery-1.10.2.min.js"></script>
 
 	<!-- Bootstrap -->
     <script src="/assets/dist/js/bootstrap.js"></script>
@@ -161,7 +161,7 @@
 						<div class="row">
 									<div class="col-xs-6 col-sm-6 col-md-12">
 										<div class="form-group">
-											<input type="text" name="birthday" id="birthday"
+											<input type="text" name="dateOfBirth" id="dateOfBirth"
 												class="form-control input-md valid"
 												placeholder="When's your birthday?" tabindex="1"
 												data-validation="length"  data-date="01-01-1989" data-date-format="dd-mm-yyyy" data-validation-length="min2" data-date-viewMode="years" 

@@ -41,7 +41,7 @@
 		
 
 			
-		$("#birthday").datepicker();
+		$("#dateOfBirth").datepicker();
 		
 		$("#sign-up-form-page-1-submit").click(function () {
 			$("#form-page-1").addClass("hidden");
