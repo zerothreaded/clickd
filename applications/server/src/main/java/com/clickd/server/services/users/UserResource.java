@@ -14,7 +14,6 @@ import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
-import com.clickd.server.services.home.HomeView;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.dropwizard.views.View;
 import com.yammer.metrics.annotation.Timed;
@@ -41,29 +40,6 @@ public class UserResource
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
-	
-	
-	@GET
-    @Path("/{token}/home")
-    @Timed
-    public View getHome(@PathParam("token") Long token) {
-		Session session = sessionDao.findByToken(token);
-	//	if (session == null) {
-			HomeView view = new HomeView("HOME");
-			return view;
-//		} else {
-//			String email = session.getStringValue("member_email");
-//			Entity member = entityDao.findMemberByEmailAddress(email);
-//			String firstName = member.getStringValue("firstName").toLowerCase();
-//	    	UserHomeView view = new UserHomeView("User Home");
-//	    	view.setFirstName(firstName);
-//	    	view.setMemberEmail(email);
-//	    	view.setToken(token);
-//	    	view.setProfileImage("/assets/images/members/facebook_"+firstName+".jpg");
-//	    	return view;
-//		}
-    }
 	
 	
 	@GET

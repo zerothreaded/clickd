@@ -7,7 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.services.home.HomeResource;
 import com.clickd.server.services.member.MemberConfiguration;
 import com.clickd.server.services.member.MemberResource;
 import com.clickd.server.services.users.UserResource;
@@ -30,6 +29,8 @@ public class ApplicationService extends Service<MemberConfiguration> {
         bootstrap.setName("application");
         bootstrap.addBundle(new ViewBundle());
         bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
+        bootstrap.addBundle(new AssetsBundle("/html/home", "/home", "index.html"));
+        bootstrap.addBundle(new AssetsBundle("/html/members", "/users/home", "index.html"));
     }
 
     @Override
@@ -54,11 +55,7 @@ public class ApplicationService extends Service<MemberConfiguration> {
         userResource.setUserDao(userDao);
         userResource.setSessionDao(sessionDao);
         environment.addResource(userResource);
-        
-        // /home/*
-        HomeResource homeResource = new HomeResource(template, defaultName);
-        homeResource.setSessionDao(sessionDao);
-        environment.addResource(homeResource);
+
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));
         Filter filter = new TokenCheckFilter();
