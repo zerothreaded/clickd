@@ -30,7 +30,7 @@ public class ApplicationService extends Service<MemberConfiguration> {
         bootstrap.addBundle(new ViewBundle());
         bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
         bootstrap.addBundle(new AssetsBundle("/html/home", "/home", "index.html"));
-        bootstrap.addBundle(new AssetsBundle("/html/members", "/users/home", "index.html"));
+        bootstrap.addBundle(new AssetsBundle("/html/users", "/users/home", "index.html"));
     }
 
     @Override
