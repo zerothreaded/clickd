@@ -1,5 +1,6 @@
 package com.clickd.server.services.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -10,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.model.Link;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.services.home.HomeView;
@@ -65,16 +67,23 @@ public class UserResource
 	
 	
 	@GET
-    @Path("/{token}/signout")
+    @Path("/{ref}/signout")
     @Timed
-    public View signOut(@PathParam("token") String token) {
-//		Entity session = entityDao.findSessionByToken(token);
-//		if (session != null) {
-//			 entityDao.deleteObject("sessions", session);
-//		} 
+    public String signOut(@PathParam("ref") String ref) {
+		User user = userDao.findByRef("/users/" + ref);
 		
-	    HomeView view = new HomeView("HOME");
-		return view;
+		List <Link> sessionLinks = user.getSessionLinks();
+		
+		ArrayList <Session> sessions = new ArrayList <Session>();
+		for (Link sessionLink : sessionLinks)
+		{
+			Session session = sessionDao.findByRef(sessionLink.getHref());
+			session.setIsLoggedIn(false);
+			sessionDao.update(session);
+			sessions.add(session);
+		}
+		
+		return Utilities.toJson(sessions);
     }
 	
 	@GET
@@ -98,11 +107,20 @@ public class UserResource
 	@GET
     @Path("/{userRef}/sessions/")
     @Timed
-    public String getUserSessions(@PathParam("userRef") String userRef) {
-		//User user = userDao.findByRef("/users/" + userRef);
-		//Session session = sessionDao.findByRef("/users/"+userRef+"/sessions/"+sessionRef);
-		return "{\"implementme\" : 1}";
-		//return Utilities.toJson(session);
+    public String getUserSessions(@PathParam("userRef") String userRef)
+	{
+		User user = userDao.findByRef("/users/" + userRef);
+		
+		List <Link> sessionLinks = user.getSessionLinks();
+		
+		ArrayList <Session> sessions = new ArrayList <Session>();
+		for (Link sessionLink : sessionLinks)
+		{
+			Session session = sessionDao.findByRef(sessionLink.getHref());
+			sessions.add(session);
+		}
+		
+		return Utilities.toJson(sessions);
     }
 
 	

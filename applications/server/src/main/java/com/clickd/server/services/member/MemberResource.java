@@ -52,6 +52,8 @@ public class MemberResource {
     	return result;
     }
     
+
+    
     @GET
     @Path("/numberofregisteredmembers")
     @Timed

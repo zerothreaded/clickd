@@ -38,6 +38,16 @@
 			return false;
 		});
 		
+		
+
+			
+		$("#birthday").datepicker();
+		
+		$("#sign-up-form-page-1-submit").click(function () {
+			$("#form-page-1").addClass("hidden");
+			$("#form-page-2").removeClass("hidden");
+		});
+		
 		$("#sign-up-form").submit(function() {
 			var data = $("#sign-up-form").serialize();
 			var url = "/members/register";

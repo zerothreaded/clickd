@@ -10,7 +10,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 	
 	<!-- Jquery -->
-	<script src="/assets/common/js/jquery-1.10.2.min.js"></script>
+	<script src="/assets/common/js/jquery-1.10.2.min.js"></scr`ipt>
 
 	<!-- Bootstrap -->
     <script src="/assets/dist/js/bootstrap.js"></script>
@@ -42,11 +42,11 @@
 	<script src="/assets/common/js/jquery.cookie.min.js"></script>
 	
 	<!-- Endless -->
-	<script src="/assets/common/js/endless/endless.js"></script>
+	<!--<script src="/assets/common/js/endless/endless.js"></script>-->
 	
-	<script src="/assets/views/home/login.js"></script>
+	<script src="/assets/views/home/home.js"></script>
 	
-	
+	<script src="/assets/components/datepicker/bootstrap-datepicker.js"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -67,7 +67,9 @@
 	<link href="/assets/common/css/endless-home.css" rel="stylesheet">
 	<link href="/assets/common/css/endless-skin.css" rel="stylesheet">
 	
-  <style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+	<link href="/assets/components/datepicker/datepicker.css" rel="stylesheet">
+	
+  <style type="text/css">.jstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
 
   <body style="" class=" pace-done"><div class="pace  pace-inactive"><div class="pace-progress" data-progress-text="100%" data-progress="99" style="width: 100%;">
   <div class="pace-progress-inner"></div>
@@ -103,11 +105,11 @@
 			
 						<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
 					<form role="form" action="/members/register" method="post" id="sign-up-form" class="has-validation-callback">
+					<div class="panel" id="form-page-1">
 						<h2>
 							Sign Up<small> to see who you click with</small>
 						</h2>
 						<hr>
-						<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="form-group">
@@ -137,6 +139,60 @@
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12">
+								Click register to get started on clickd!
+							</div>
+						</div>
+
+						<hr>
+						<div class="row">
+							<div class="col-xs-6 col-md-12">
+								<button id="sign-up-form-page-1-submit" class="btn btn-primary btn-block btn-lg" tabindex="7" type="button">Get Started</button>
+							</div>
+
+						</div>
+						</div>
+						
+						<div class="panel hidden" id="form-page-2">
+							<h2>
+							Almost there... 
+						</h2>
+						<hr>
+						<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
+						<div class="row">
+									<div class="col-xs-6 col-sm-6 col-md-12">
+										<div class="form-group">
+											<input type="text" name="birthday" id="birthday"
+												class="form-control input-md valid"
+												placeholder="When's your birthday?" tabindex="1"
+												data-validation="length"  data-date="01-01-1989" data-date-format="dd-mm-yyyy" data-validation-length="min2" data-date-viewMode="years" 
+												style="">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6 col-sm-6 col-md-12">
+										<div class="form-group">
+											<input type="text" name="postcode" id="postcode"
+												class="form-control input-md valid"
+												placeholder="What's your postcode?" tabindex="2"
+												data-validation="length" data-validation-length="min2"
+												style="">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6 col-sm-6 col-md-12">
+										<div class="form-group">
+											<select class="form-control" name="gender" id="gender">
+											    <option value="" disabled selected>What's your gender?</option>
+											  <option>Male</option>
+											  <option>Female</option>
+											</select>
+										</div>
+									</div>
+								</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
 								By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#" data-toggle="modal" data-target="#t_and_c_m">Terms
 									and Conditions</a> set out by this site, including our Cookie Use.
 							</div>
@@ -148,6 +204,7 @@
 								<input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
 							</div>
 
+						</div>
 						</div>
 					</form>
 				</div>
