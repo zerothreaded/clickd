@@ -45,10 +45,10 @@ public class EntityDao {
 //		mongoOperations.remove(object, collectionName);
 //	}
 //	
-//	public Entity save(String collectionName, Entity entity) {
-//		mongoOperations.save(entity, collectionName);
-//		return entity;
-//	}
+	public Entity save(String collectionName, Entity entity) {
+		mongoOperations.save(entity, collectionName);
+		return entity;
+	}
 //
 //	public List<Entity> findQuestionsByMemberEmail(String memberEmail) {
 //		// Get answered questions;

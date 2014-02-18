@@ -1,6 +1,9 @@
 package com.clickd.server.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
@@ -8,6 +11,7 @@ public class User {
 
 	@Id
 	protected String id;
+	protected String ref;
 
 	protected String firstName;
 	protected String lastName;
@@ -18,6 +22,29 @@ public class User {
 
 	protected String email;
 	protected String password;
+		
+	protected List<Link> sessionLinks = new ArrayList<Link>();
+
+	public User()
+	{
+		super();
+	}
+	
+	public User(String firstName, String lastName, Date dateOfBirth,
+			String gender, String postCode, String email, String password) {
+		super();
+
+		UUID uuid = UUID.randomUUID();
+		String ref = "/clickd/users/" + ((Long)uuid.getMostSignificantBits()).toString();
+		
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
+		this.postCode = postCode;
+		this.email = email;
+		this.password = password;
+	}
 
 	public String getId() {
 		return id;
@@ -27,6 +54,14 @@ public class User {
 		this.id = id;
 	}
 
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -81,6 +116,24 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public void addSession(Link sessionLink)
+	{
+		sessionLinks.add(sessionLink);
+	}
+	
+	public void removeSessionLink(Link sessionLink)
+	{
+		sessionLinks.remove(sessionLink);
+	}
+
+	public List<Link> getSessionLinks() {
+		return sessionLinks;
+	}
+	
+	public void setSessionLinks(List <Link> sessionLinks) {
+		this.sessionLinks = sessionLinks;
 	}
 
 }

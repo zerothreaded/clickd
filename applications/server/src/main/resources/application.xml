@@ -29,4 +29,11 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 
+	<bean id="userDao" class="com.clickd.server.dao.UserDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="sessionDao" class="com.clickd.server.dao.SessionDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 </beans>

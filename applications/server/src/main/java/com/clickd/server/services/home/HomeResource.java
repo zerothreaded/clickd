@@ -32,37 +32,37 @@ public class HomeResource {
 			@Context HttpServletResponse response,
 			@Context HttpHeaders headers) 
 	{
-		for (String key : headers.getCookies().keySet()) {
-			javax.ws.rs.core.Cookie cookie = headers.getCookies().get(key);
-			System.out.println("cookie.name=" + cookie.getName());
-		}
-		
-		Cookie[] allCookies = request.getCookies();
-		for (int i = 0; i < allCookies.length; i++) {
-			Cookie cookie = allCookies[i];
-			if (cookie.getName().equals("token")) {
-				// Found TOKEN - someone has logged in before
-				String token = cookie.getValue();
-				System.out.println("FOUND TOKEN Cookie : " + token);
-				Entity session = entityDao.findSessionByToken(token);
-				if (session != null) {
-					// Session exists
-					
-					// TODO : Check if valid
-					
-					return new UserHomeView("User Home");
-					
-				} else {
-					// OLD session
-				}
-				
-			} else {
-				// NO TOKEN - new user 
-				System.out.println("FOUND NON TOKEN Cookie:" + cookie.getName());
-							
-				
-			}
-		}
+//		for (String key : headers.getCookies().keySet()) {
+//			javax.ws.rs.core.Cookie cookie = headers.getCookies().get(key);
+//			System.out.println("cookie.name=" + cookie.getName());
+//		}
+//		
+//		Cookie[] allCookies = request.getCookies();
+//		for (int i = 0; i < allCookies.length; i++) {
+//			Cookie cookie = allCookies[i];
+//			if (cookie.getName().equals("token")) {
+//				// Found TOKEN - someone has logged in before
+//				String token = cookie.getValue();
+//				System.out.println("FOUND TOKEN Cookie : " + token);
+//				Entity session = entityDao.findSessionByToken(token);
+//				if (session != null) {
+//					// Session exists
+//					
+//					// TODO : Check if valid
+//					
+//					return new UserHomeView("User Home");
+//					
+//				} else {
+//					// OLD session
+//				}
+//				
+//			} else {
+//				// NO TOKEN - new user 
+//				System.out.println("FOUND NON TOKEN Cookie:" + cookie.getName());
+//							
+//				
+//			}
+//		}
 		return new HomeView("clickd title");
 	}
 
