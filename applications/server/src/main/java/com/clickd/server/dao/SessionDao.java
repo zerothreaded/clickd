@@ -26,20 +26,21 @@ public class SessionDao {
 		this.mongoOperations = mongoOperations;
 	}
 	
-	public Session create(Session Session) {
-		mongoOperations.save(Session, collectionName);
-		return Session;
+	public Session create(Session session) {
+		mongoOperations.save(session, collectionName);
+		return session;
 	}
 	
-	public Session update(Session Session)
+	public Session update(Session session)
 	{
-		mongoOperations.save(Session);
-		return Session;
+		delete(session);
+		create(session);
+		return session;
 	}
 	
-	public void delete(Session Session)
+	public void delete(Session session)
 	{
-		mongoOperations.remove(Session);
+		mongoOperations.remove(session);
 	}
 	
 	public Session findById(String id)

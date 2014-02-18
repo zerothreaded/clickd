@@ -96,10 +96,17 @@ public class MemberResource {
         		
         		for (Link link : sessionLinks)
         		{
-        			
+        			String sessionHref = link.getHref();
+        			Session session = sessionDao.findByRef(sessionHref);
+        			if (session != null && session.getIsLoggedIn()) {
+        				// EXISTING session - user did not log out or time out 
+        				// FORCE LOG OUT of session
+        				session.setIsLoggedIn(Boolean.FALSE);
+        				sessionDao.update(session);
+        			}
         		}
         		
-      
+        		// Previous sessions terminated - create a new one
             	Session session = new Session(user, Session.createToken(), new Date(), new Date(), 1L, true);
             	sessionDao.create(session);
             	
