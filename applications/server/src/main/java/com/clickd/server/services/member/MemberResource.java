@@ -91,7 +91,7 @@ public class MemberResource {
         	if (user.getPassword().equals(password)) {
         		// User Authentication OK
         		
-        		// Lookup Existing Session to purge it
+        		// Lookup Existing Sessions for this user
         		List <Link> sessionLinks = user.getSessionLinks();
         		
         		for (Link link : sessionLinks)
@@ -102,9 +102,14 @@ public class MemberResource {
       
             	Session session = new Session(user, Session.createToken(), new Date(), new Date(), 1L, true);
             	sessionDao.create(session);
+            	
+            	Link userSessionLink = new Link(session.getRef(), "user_session");
+            	user.getSessionLinks().add(userSessionLink);
+            	
+            	userDao.update(user);
               	
-        	//NewCookie newCookie = new NewCookie("token", token, "/", "", "", 60*60, false);
-        	//	return Response.status(200).cookie(newCookie).entity(session).build();
+            	//	NewCookie newCookie = new NewCookie("token", token, "/", "", "", 60*60, false);
+            	//	return Response.status(200).cookie(newCookie).entity(session).build();
             	}
         }
     	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();

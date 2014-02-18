@@ -33,7 +33,8 @@ public class UserDao {
 	
 	public User update(User user)
 	{
-		mongoOperations.save(user);
+		delete(user);
+		create(user);
 		return user;
 	}
 	
@@ -42,14 +43,14 @@ public class UserDao {
 		mongoOperations.remove(user);
 	}
 	
+	public List<User> findAll() {
+		return mongoOperations.findAll(User.class, collectionName);
+	}
+
 	public User findById(String id)
 	{
 		User user = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), User.class, collectionName);
 		return user;
-	}
-
-	public List<User> findAll() {
-		return mongoOperations.findAll(User.class, collectionName);
 	}
 
 	public User findByEmail(String email) {

@@ -38,8 +38,7 @@ public class User {
 		this.ref = ref;
 	}
 	
-	public User(String firstName, String lastName, Date dateOfBirth,
-			String gender, String postCode, String email, String password) {
+	public User(String firstName, String lastName, Date dateOfBirth, String gender, String postCode, String email, String password) {
 		super();
 
 		createRef();
