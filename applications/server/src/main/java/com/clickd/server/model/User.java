@@ -28,15 +28,21 @@ public class User {
 	public User()
 	{
 		super();
+		createRef();
+	}
+	
+	private void createRef()
+	{
+		UUID uuid = UUID.randomUUID();
+		String ref = "/users/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		this.ref = ref;
 	}
 	
 	public User(String firstName, String lastName, Date dateOfBirth,
 			String gender, String postCode, String email, String password) {
 		super();
 
-		UUID uuid = UUID.randomUUID();
-		String ref = "/clickd/users/" + ((Long)uuid.getMostSignificantBits()).toString();
-		
+		createRef();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;

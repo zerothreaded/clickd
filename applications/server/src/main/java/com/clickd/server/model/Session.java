@@ -11,6 +11,7 @@ public class Session {
 
 	@Id
 	protected String id;
+	protected String ref;
 
 	protected Long token;
 
@@ -24,9 +25,11 @@ public class Session {
 		super();
 	}
 	
-	public Session(Long token, Date createdOn, Date lastModified,
+	public Session(User user, Long token, Date createdOn, Date lastModified,
 			Long numberOfLogins, Boolean isLoggedIn) {
 		super();
+		
+		createRef(user.getRef());
 		this.token = token;
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
@@ -34,6 +37,14 @@ public class Session {
 		this.isLoggedIn = isLoggedIn;
 	}
 
+	private void createRef(String userRef)
+	{
+		UUID uuid = UUID.randomUUID();
+		String ref = userRef + "/sessions/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		this.ref = ref;
+	}
+	
+	
 	public static Long createToken()
 	{
 		UUID uuid = UUID.randomUUID();
@@ -46,6 +57,14 @@ public class Session {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
 	}
 
 	public Long getToken() {

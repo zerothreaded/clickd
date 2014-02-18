@@ -58,4 +58,9 @@ public class UserDao {
 		return user;
 	}
 
+	public User findByRef(String ref) {
+		User user = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), User.class, collectionName);
+		return user;
+	}
+
 }

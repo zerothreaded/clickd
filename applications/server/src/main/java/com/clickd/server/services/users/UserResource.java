@@ -1,5 +1,7 @@
 package com.clickd.server.services.users;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,13 +13,14 @@ import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Entity;
 import com.clickd.server.model.Session;
+import com.clickd.server.model.User;
 import com.clickd.server.services.home.HomeView;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.dropwizard.views.View;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/users")
-@Produces(MediaType.TEXT_HTML)
+@Produces(MediaType.APPLICATION_JSON)
 public class UserResource
 {
 	private UserDao userDao;
@@ -77,25 +80,42 @@ public class UserResource
     }
 	
 	@GET
-    @Path("/{token}/details")
+    @Path("/{ref}")
     @Timed
-    public String getUserDetails(@PathParam("token") String token) {
-//		Entity session = entityDao.findSessionByToken(token);
-//
-//		String result = "";
-//		if (null == session) {
-//			Entity error = new Entity();
-//			error.setValue("status", "fail");
-//			result = Utilities.toJson(error);
-//		} else {
-//			String email = session.getStringValue("member_email");
-//			Entity response = new Entity();
-//			response.setValue("status", "ok");
-//			response.setValue("member_email", email);
-//			result = Utilities.toJson(response);
-//		}
+    public String getUserDetails(@PathParam("ref") String ref) {
+		User user = userDao.findByRef("/users/" + ref);
 		
-		return "";
+		return Utilities.toJson(user);
+    }
+	
+	@GET
+    @Path("/")
+    @Timed
+    public String getAll() {
+		List<User> users = userDao.findAll();
+		return Utilities.toJson(users);
+    }
+
+
+	@GET
+    @Path("/{userRef}/sessions/")
+    @Timed
+    public String getUserSessions(@PathParam("userRef") String userRef) {
+		//User user = userDao.findByRef("/users/" + userRef);
+		//Session session = sessionDao.findByRef("/users/"+userRef+"/sessions/"+sessionRef);
+		return "{\"implementme\" : 1}";
+		//return Utilities.toJson(session);
+    }
+
+	
+	@GET
+    @Path("/{userRef}/sessions/{sessionRef}")
+    @Timed
+    public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
+		User user = userDao.findByRef("/users/" + userRef);
+		Session session = sessionDao.findByRef("/users/"+userRef+"/sessions/"+sessionRef);
+		
+		return Utilities.toJson(session);
     }
 
 }

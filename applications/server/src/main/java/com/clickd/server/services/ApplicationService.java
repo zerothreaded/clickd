@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.dao.EntityDao;
+import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.home.HomeResource;
 import com.clickd.server.services.member.MemberConfiguration;
@@ -39,17 +40,20 @@ public class ApplicationService extends Service<MemberConfiguration> {
         
         context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
         UserDao userDao = (UserDao) context.getBean("userDao");
+        SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
        
         // Create REST End Points
        
         // /members/*
         MemberResource memberResource = new MemberResource(template, defaultName);
         memberResource.setUserDao(userDao);
+        memberResource.setSessionDao(sessionDao);
         environment.addResource(memberResource);
         
         // /users/*
         UserResource userResource = new UserResource();
         userResource.setUserDao(userDao);
+        userResource.setSessionDao(sessionDao);
         environment.addResource(userResource);
         
         // /home/*

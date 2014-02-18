@@ -58,4 +58,9 @@ public class SessionDao {
 	public List<Session> findAll() {
 		return mongoOperations.findAll(Session.class, collectionName);
 	}
+
+	public Session findByRef(String ref) {
+		Session Session = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Session.class, collectionName);
+		return Session;
+	}
 }

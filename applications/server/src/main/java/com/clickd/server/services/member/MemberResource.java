@@ -107,7 +107,7 @@ public class MemberResource {
         		}
         		
       
-            	Session session = new Session(Session.createToken(), new Date(), new Date(), 1L, true);
+            	Session session = new Session(user, Session.createToken(), new Date(), new Date(), 1L, true);
             	sessionDao.create(session);
               	
         	//NewCookie newCookie = new NewCookie("token", token, "/", "", "", 60*60, false);
@@ -158,5 +158,10 @@ public class MemberResource {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
+	
+	public void setSessionDao(SessionDao sessionDao) {
+		this.sessionDao = sessionDao;
+	}
+    
     
 }
