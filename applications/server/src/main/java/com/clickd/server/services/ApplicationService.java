@@ -57,7 +57,7 @@ public class ApplicationService extends Service<MemberConfiguration> {
         
         // /home/*
         HomeResource homeResource = new HomeResource(template, defaultName);
-       // homeResource.setEntityDao(entityDao);
+        homeResource.setSessionDao(sessionDao);
         environment.addResource(homeResource);
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));

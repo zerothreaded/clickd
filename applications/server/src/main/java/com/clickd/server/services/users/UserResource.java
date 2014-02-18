@@ -129,7 +129,7 @@ public class UserResource
     @Timed
     public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
 		User user = userDao.findByRef("/users/" + userRef);
-		Session session = sessionDao.findByRef("/users/"+userRef+"/sessions/"+sessionRef);
+		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
 		
 		return Utilities.toJson(session);
     }
