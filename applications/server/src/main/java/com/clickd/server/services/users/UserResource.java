@@ -120,8 +120,8 @@ public class UserResource
 	        	Map<String, String> cookieData = new HashMap<String, String>();
 	        	cookieData.put("sessionRef", session.getRef().toString());
 	        	cookieData.put("userRef", user.getRef());
-	        	cookieData.put("clickd-session", Utilities.toJsonNoPretty(session));
-	        	cookieData.put("clickd-users", Utilities.toJsonNoPretty(user));
+//	        	cookieData.put("clickd-session", Utilities.toJsonNoPretty(session));
+//	        	cookieData.put("clickd-users", Utilities.toJsonNoPretty(user));
 	        	
 	    		NewCookie newCookie = new NewCookie("userSession", Utilities.toJson(cookieData), "/", "", "", 60*60, false);
 	    		

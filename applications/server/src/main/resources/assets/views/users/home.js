@@ -36,7 +36,7 @@
 					
 					var signOutCall = $.ajax({
 						  url: signOutUrl,
-						  type: "GET",
+						  type: "PUT",
 						  dataType: "json"
 						});
 						 
