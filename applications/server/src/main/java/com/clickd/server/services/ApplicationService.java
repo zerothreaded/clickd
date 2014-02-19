@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.services.application.ApplicationResource;
 import com.clickd.server.services.users.UserResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
@@ -43,6 +44,12 @@ public class ApplicationService extends Service<UserConfiguration> {
         SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
        
         // Create REST End Points
+
+        // Application
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setSessionDao(sessionDao);
+        applicationResource.setUserDao(userDao);
+        environment.addResource(applicationResource);
         
         // /users/*
         UserResource userResource = new UserResource();

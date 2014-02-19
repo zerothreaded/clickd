@@ -20,6 +20,12 @@ public class Utilities {
 		String json = gson.toJson(object);
 		return json;
 	}
+
+	public static String toJsonNoPretty(Object object) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String json = gson.toJson(object);
+		return json;
+	}
 	
 	public static Date dateFromString(String s)
 	{

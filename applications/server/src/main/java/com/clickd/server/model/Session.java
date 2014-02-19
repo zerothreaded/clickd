@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Session {
+public class Session extends Resource {
 
 	@Id
 	protected String id;
@@ -23,8 +23,7 @@ public class Session {
 		super();
 	}
 	
-	public Session(User user, Date createdOn, Date lastModified,
-			Long numberOfLogins, Boolean isLoggedIn) {
+	public Session(User user, Date createdOn, Date lastModified, Long numberOfLogins, Boolean isLoggedIn) {
 		super();
 		
 		createRef(user.getRef());
