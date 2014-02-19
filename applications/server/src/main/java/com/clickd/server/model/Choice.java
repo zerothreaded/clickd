@@ -4,15 +4,13 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class Answer extends Resource {
+public class Choice extends Resource {
 
 	@Id
 	protected String id;
 	protected String ref;
 
-	protected String answerText;
-		
-	public Answer()
+	public Choice()
 	{
 		super();
 		createRef();
@@ -21,15 +19,13 @@ public class Answer extends Resource {
 	private void createRef()
 	{
 		UUID uuid = UUID.randomUUID();
-		String ref = "/answers/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/choices/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	
-	public Answer(String answerText) {
+	public Choice(String questionText, String source) {
 		super();
-
 		createRef();
-		this.answerText = answerText;
 	}
 
 	public String getId() {
@@ -48,12 +44,4 @@ public class Answer extends Resource {
 		this.ref = ref;
 	}
 	
-	public String getAnswerText() {
-		return answerText;
-	}
-
-	public void setAnswerText(String answerText) {
-		this.answerText = answerText;
-	}
-
 }

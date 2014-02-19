@@ -44,5 +44,9 @@
 	<bean id="answerDao" class="com.clickd.server.dao.AnswerDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
+	
+	<bean id="choiceDao" class="com.clickd.server.dao.ChoiceDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 
 </beans>

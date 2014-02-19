@@ -1,64 +1,68 @@
 package com.clickd.server.dao;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Resource;
 
-public class ResourceDao implements CrudRepository<Resource, String>{
+public class ResourceDao implements IDao<Resource, String>{
 
+	private MongoOperations mongoOperations;
+	protected String collectionName;
+	
 	@Override
-	public long count() {
-		return 0;
+	public Resource create(Resource type) {
+		mongoOperations.save(type, collectionName);
+		return type;
 	}
 
 	@Override
-	public void delete(String arg0) {
-		
+	public Resource update(Resource type) {
+		delete(type);
+		create(type);
+		return type;
 	}
 
 	@Override
-	public void delete(Resource arg0) {
-		
+	public void delete(Resource type) {
+		mongoOperations.remove(type, collectionName);
 	}
 
 	@Override
-	public void delete(Iterable<? extends Resource> arg0) {
-		
+	public Resource findOneByKey(String key) {
+		Resource resource = mongoOperations.findOne(new Query(Criteria.where("_id").is(key)), Resource.class, collectionName);
+		return resource;
 	}
 
 	@Override
-	public void deleteAll() {
-		
+	public Resource findOneByPropertyValue(String property, Object value) {
+		Resource resource = mongoOperations.findOne(new Query(Criteria.where(property).is(value)), Resource.class, collectionName);
+		return resource;
 	}
 
 	@Override
-	public boolean exists(String arg0) {
-		return false;
+	public List<Resource> findAllByPropertyValue(String property, Object value) {
+		List<Resource> resource = mongoOperations.find(new Query(Criteria.where(property).is(value)), Resource.class, collectionName);
+		return resource;
+
 	}
 
-	@Override
-	public Iterable<Resource> findAll() {
-		return null;
+	public String getCollectionName() {
+		return collectionName;
 	}
 
-	@Override
-	public Iterable<Resource> findAll(Iterable<String> arg0) {
-		return null;
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
 	}
 
-	@Override
-	public Resource findOne(String arg0) {
-		return null;
+	public MongoOperations getMongoOperations() {
+		return mongoOperations;
 	}
 
-	@Override
-	public <S extends Resource> S save(S arg0) {
-		return null;
+	public void setMongoOperations(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
-
-	@Override
-	public <S extends Resource> Iterable<S> save(Iterable<S> arg0) {
-		return null;
-	}
-
 }
