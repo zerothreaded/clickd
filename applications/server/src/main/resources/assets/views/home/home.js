@@ -7,7 +7,7 @@
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
-			var url = "/members/signin";
+			var url = "/users/signin";
 			
 			var request = $.ajax({
 				  url: url,
@@ -49,7 +49,7 @@
 		
 		$("#sign-up-form").submit(function() {
 			var data = $("#sign-up-form").serialize();
-			var url = "/members/register";
+			var url = "/users/register";
 			
 			var request = $.ajax({
 				  url: url,
@@ -63,7 +63,7 @@
 					if (msg.status == "ok")
 					{
 						var request2 = $.ajax({
-						  url: "/members/signin",
+						  url: "/users/signin",
 						  type: "POST",
 						  data: data,
 						  dataType: "json"

@@ -24,7 +24,7 @@ public class Utilities {
 	public static Date dateFromString(String s)
 	{
 		SimpleDateFormat format =
-		        new SimpleDateFormat("dd-mm-yyyy");
+		        new SimpleDateFormat("dd-MM-yyyy");
 		
 		Date parsed = new Date();
 		try
