@@ -28,6 +28,24 @@
 						window.location="/home";
 				});
 			}
+			
+			if (cookie.hasOwnProperty('userRef'))
+			{
+				$("#link-sign-out").click(function() {
+					var signOutUrl = cookie.userRef+"/signout";
+					
+					var signOutCall = $.ajax({
+						  url: signOutUrl,
+						  type: "GET",
+						  dataType: "json"
+						});
+						 
+					signOutCall.done(function( msg ) {
+								window.location="/home";
+						});
+				});
+				
+			}
 		}
 		
 		

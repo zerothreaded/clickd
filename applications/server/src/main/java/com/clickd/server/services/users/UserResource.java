@@ -130,7 +130,7 @@ public class UserResource
 	            	userDao.update(user);
 	            	
 	            	Map<String, String> cookieData = new HashMap<String, String>();
-	            	cookieData.put("sessionRef", session.getRef().toString());
+	            	cookieData.put("sessionRef", session.getRef());
 	            	cookieData.put("userRef", user.getRef());
 	              	
 	        		NewCookie newCookie = new NewCookie("userSession", Utilities.toJson(cookieData), "/", "", "", 60*60, false);
