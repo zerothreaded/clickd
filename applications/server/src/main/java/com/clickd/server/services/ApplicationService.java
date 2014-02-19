@@ -1,14 +1,18 @@
- 	package com.clickd.server.services;
+package com.clickd.server.services;
 
 import javax.servlet.Filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ApplicationDao;
+import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.application.ApplicationResource;
+import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
 import com.clickd.server.services.users.UserResource;
 import com.yammer.dropwizard.Service;
@@ -44,7 +48,9 @@ public class ApplicationService extends Service<UserConfiguration> {
         UserDao userDao = (UserDao) context.getBean("userDao");
         SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
         ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
-       
+        QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
+        AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
+        
         // Create REST End Points
 
         // Application
@@ -59,6 +65,16 @@ public class ApplicationService extends Service<UserConfiguration> {
         userResource.setUserDao(userDao);
         userResource.setSessionDao(sessionDao);
         environment.addResource(userResource);
+        
+        // /questions/*
+        QuestionResource questionResource = new QuestionResource();
+        questionResource.setQuestionDao(questionDao);
+        environment.addResource(questionResource);
+        
+        // /answers/*
+        AnswerResource answerResource = new AnswerResource();
+        answerResource.setAnswerDao(answerDao);
+        environment.addResource(answerResource);
 
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));

@@ -48,7 +48,6 @@ public class QuestionResource
 		return result;
 	}
 
-	
 	@GET
     @Path("/{ref}")
     @Timed
@@ -56,9 +55,7 @@ public class QuestionResource
 		Question question = questionDao.findByRef("/questions/" + ref);
 		
 		return Utilities.toJson(question);
-    }
-
-
+	}
 
 	public QuestionDao getQuestionDao() {
 		return questionDao;
