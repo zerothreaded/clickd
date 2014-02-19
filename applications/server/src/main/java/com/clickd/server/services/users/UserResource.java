@@ -121,7 +121,7 @@ public class UserResource
 	        		}
 	        		
 	        		// Previous sessions terminated - create a new one
-	            	Session session = new Session(user, Session.createToken(), new Date(), new Date(), 1L, true);
+	            	Session session = new Session(user,  new Date(), new Date(), 1L, true);
 	            	sessionDao.create(session);
 	            	
 	            	Link userSessionLink = new Link(session.getRef(), "user_session");
@@ -130,7 +130,7 @@ public class UserResource
 	            	userDao.update(user);
 	            	
 	            	Map<String, String> cookieData = new HashMap<String, String>();
-	            	cookieData.put("token", session.getToken().toString());
+	            	cookieData.put("sessionRef", session.getRef().toString());
 	            	cookieData.put("userRef", user.getRef());
 	              	
 	        		NewCookie newCookie = new NewCookie("userSession", Utilities.toJson(cookieData), "/", "", "", 60*60, false);

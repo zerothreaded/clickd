@@ -26,8 +26,7 @@ public class SessionDaoTest {
 	@Test
 	public void createSucceeds()
 	{
-		Long token = Session.createToken();
-		session = new Session(new User(), token, new Date(), new Date(), 0l, false);
+		session = new Session(new User(),  new Date(), new Date(), 0l, false);
 		sessionDao.create(session);
 		Session session2 = sessionDao.findById(session.getId());
 		assert (session2.equals(session));
