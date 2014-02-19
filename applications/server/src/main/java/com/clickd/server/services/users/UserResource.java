@@ -173,7 +173,6 @@ public class UserResource
 	{
 		List<User> allUsers = userDao.findAll();
 		return " { \"count\" : " + allUsers.size() + " }";
-		
 	}
 	    
 	@GET
@@ -183,14 +182,6 @@ public class UserResource
     	int count = sessionDao.findAll().size();
     	return "{ \"value\" : \"" + count + "\" }";
     }
-
-	public SessionDao getSessionDao() {
-		return sessionDao;
-	}
-
-	public void setSessionDao(SessionDao sessionDao) {
-		this.sessionDao = sessionDao;
-	}
 
 	@GET
     @Path("/{ref}")
@@ -217,7 +208,6 @@ public class UserResource
 		return Utilities.toJson(userSessions);
     }
 
-	
 	@GET
     @Path("/{userRef}/sessions/{sessionRef}")
     @Timed
@@ -225,6 +215,14 @@ public class UserResource
 		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
 		return Utilities.toJson(session);
     }
+
+	public SessionDao getSessionDao() {
+		return sessionDao;
+	}
+
+	public void setSessionDao(SessionDao sessionDao) {
+		this.sessionDao = sessionDao;
+	}
 
 	public UserDao getUserDao() {
 		return userDao;
