@@ -1,4 +1,31 @@
-	$(document).ready(function() {
+function loadNextQuestion()
+{
+	var nextQuestionUrl = "/questions/next/1";
+	
+	var nextQuestionCall = $.ajax({
+		  url: nextQuestionUrl,
+		  type: "GET",
+		  dataType: "json"
+		});
+		 
+	nextQuestionCall.done(function( msg ) {
+			var answers = msg["_embedded"]["question-answer-list"];
+			
+			var questionText = msg.questionText;
+			
+			$("#click-panel-question").html(questionText);
+			
+			for (var i = 0; i < answers.length; i++)
+			{
+				var j = i+1;
+				var answer = answers[i];
+				
+				$("#click-panel-answer-"+j).html(answer.answerText);
+			}
+		});
+}
+
+$(document).ready(function() {
 		//check cookie status
 		var cookie1 = $.cookie("userSession");
 		
@@ -46,6 +73,8 @@
 				});
 				
 			}
+			
+			loadNextQuestion();
 		}
 		
 		
