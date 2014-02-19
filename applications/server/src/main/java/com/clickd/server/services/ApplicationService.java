@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ApplicationDao;
+import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
@@ -51,7 +52,7 @@ public class ApplicationService extends Service<UserConfiguration> {
         ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
         QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
         AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
-        AnswerDao choiceDao = (AnswerDao) context.getBean("choiceDao");
+        ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
         
         // Create REST End Points
 
