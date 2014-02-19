@@ -184,11 +184,20 @@ public class UserResource
     	return "{ \"value\" : \"" + count + "\" }";
     }
 
+	public SessionDao getSessionDao() {
+		return sessionDao;
+	}
+
+	public void setSessionDao(SessionDao sessionDao) {
+		this.sessionDao = sessionDao;
+	}
+
 	@GET
     @Path("/{ref}")
     @Timed
     public String getUser(@PathParam("ref") String ref) {
 		User user = userDao.findByRef("/users/" + ref);
+		
 		return Utilities.toJson(user);
     }
 
@@ -223,14 +232,6 @@ public class UserResource
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
-	}
-
-	public SessionDao getSessionDao() {
-		return sessionDao;
-	}
-
-	public void setSessionDao(SessionDao sessionDao) {
-		this.sessionDao = sessionDao;
 	}
 
 }
