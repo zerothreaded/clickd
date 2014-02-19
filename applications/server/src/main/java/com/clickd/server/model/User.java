@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class User {
+public class User extends Resource {
 
 	@Id
 	protected String id;
@@ -23,7 +23,7 @@ public class User {
 	protected String email;
 	protected String password;
 		
-	protected List<Link> sessionLinks = new ArrayList<Link>();
+	// protected List<Link> sessionLinks = new ArrayList<Link>();
 
 	public User()
 	{
@@ -123,22 +123,22 @@ public class User {
 		this.password = password;
 	}
 	
-	public void addSession(Link sessionLink)
-	{
-		sessionLinks.add(sessionLink);
-	}
-	
-	public void removeSessionLink(Link sessionLink)
-	{
-		sessionLinks.remove(sessionLink);
-	}
-
-	public List<Link> getSessionLinks() {
-		return sessionLinks;
-	}
-	
-	public void setSessionLinks(List <Link> sessionLinks) {
-		this.sessionLinks = sessionLinks;
-	}
+//	public void addSession(Link sessionLink)
+//	{
+//		sessionLinks.add(sessionLink);
+//	}
+//	
+//	public void removeSessionLink(Link sessionLink)
+//	{
+//		sessionLinks.remove(sessionLink);
+//	}
+//
+//	public List<Link> getSessionLinks() {
+//		return sessionLinks;
+//	}
+//	
+//	public void setSessionLinks(List <Link> sessionLinks) {
+//		this.sessionLinks = sessionLinks;
+//	}
 
 }
