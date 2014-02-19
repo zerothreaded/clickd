@@ -292,3 +292,117 @@ img.connect-profile-img
 	overflow-y:scroll;
 	height:160px;
 }
+
+.content-well
+{
+	height:100%	
+}
+
+.chat-well
+{
+	height:100%
+}
+
+.click-well
+{
+	height:100%
+}
+
+.content-row
+{
+	  height: 50%;
+    padding: 10px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+.chat-row
+{
+	    height: 50%;
+    padding: 10px;
+    padding-right: 0px;
+}
+
+.click-col
+{
+	    padding: 10px;
+}
+
+.click-panel
+{
+	border-radius: 4px; padding: 5px;
+}
+
+.click-panel-heading
+{
+	height: 120px; 
+	text-transform: uppercase;
+	background-color: cyan;
+	color: white;
+	border-radius: 4px;
+}
+
+.click-panel-heading-h3
+{
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	line-height: 24pt;
+	text-shadow: 0.1em 0.1em 0.02em rgba(0, 0, 0, 0.2);
+}
+
+.click-panel-body
+{
+	padding-left:0px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.click-answer-panel
+{
+	height: 90px;
+	border: 1px solid rgb(201, 201, 201);
+	padding: 5px;
+	border-radius: 4px;
+	background-color: #EBEBEB;
+	text-transform: uppercase;
+		cursor:pointer;
+		transition: background-color 0.1s;
+		
+}
+
+.click-answer-panel:hover
+{
+	background-color: #CBCBCB
+
+}
+
+.click-answer-panel-body
+{
+	background-color: lightsteelblue;
+	height: 100%;
+	border-radius: 2px;
+	border: 1px solid rgb(150, 157, 172);
+	line-height: 90px;
+}
+
+.click-answer-span
+{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 45px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.click-answer-col
+{
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.click-answer-row
+{
+	padding-left:11px;
+	margin-bottom:12px;
+}

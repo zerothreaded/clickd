@@ -7305,9 +7305,6 @@ input[type="radio"]:active + .custom-radio {
 
 .click-window
 {
-  background-color: #495B6C;
-  color: #BECFDF;
-  border-left: 1px solid #415160;
       float: right;
   height: 100%;
 }
