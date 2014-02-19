@@ -173,18 +173,62 @@ public class UserResource
 			@Context HttpServletResponse response,
 			@Context HttpHeaders headers) 
 	{
-	
-		int count = userDao.findAll().size();
-		return "{ \"value\" : \"" + count + "\" }";
+		return null;
+		
 	}
-
+	    
 	@GET
-	@Path("/numberofsignedinusers")
-	@Timed
-	public String getNumberOfSignedInUsers() {
-		int count = sessionDao.findAll().size();
-		return "{ \"value\" : \"" + count + "\" }";
-	}
+    @Path("/numberofsignedinusers")
+    @Timed
+    public String getNumberOfSignedInUsers() {
+    	int count = sessionDao.findAll().size();
+    	return "{ \"value\" : \"" + count + "\" }";
+    }
+	    
+	    //	    
+//	    @POST
+//	    @Timed
+//	    @Path("/register")
+//	    @Produces(MediaType.APPLICATION_JSON)
+//	    public Response register(
+//	    		@FormParam("email") String email,
+//	     		@FormParam("firstName") String firstName,
+//	     		@FormParam("lastName") String lastName,
+//	     		@FormParam("password") String password,
+//	     		@FormParam("dateOfBirth") String dateOfBirth,
+//	     		@FormParam("gender") String gender,
+//	     		@FormParam("postcode") String postcode)
+//	     		throws URISyntaxException
+//	    {
+//	        
+//	        //check if user exists
+//	        User user = userDao.findByEmail(email);
+//	        
+//	        if (user == null)
+//	        {
+//	        	User newUser = new User();
+//	        	newUser.setEmail(email);
+//	        	newUser.setFirstName(firstName);
+//	        	newUser.setLastName(lastName);
+//	        	newUser.setPassword(password);
+//	        	newUser.setDateOfBirth(Utilities.dateFromString(dateOfBirth));
+//	        	newUser.setGender(gender);
+//	        	newUser.setPostCode(postcode);
+//	        	userDao.create(newUser);
+//	        	
+//	        	return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
+//	        }
+//	        else
+//	        {
+//	        	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
+//	        }
+//	    }
+//	
+//		int count = userDao.findAll().size();
+//		return "{ \"value\" : \"" + count + "\" }";
+//	}
+
+
 
 	public SessionDao getSessionDao() {
 		return sessionDao;

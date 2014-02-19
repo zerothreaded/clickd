@@ -1,9 +1,28 @@
 	$(document).ready(function() {
-		var n = Math.floor(Math.random()*10+1);
-		var s = "/assets/images/home/background"+n+".jpg";
-		$("#wrap").css('background-image', 'url('+s+')');
+		//check cookie status
 		
-		//alert(s);
+		var cookie1 = $.cookie("userSession");
+		
+		
+		if (typeof cookie1 != "undefined")
+		{
+			var cookie = jQuery.parseJSON(cookie1);
+			
+			if (cookie.hasOwnProperty('sessionRef'))
+			{	var validateSignIn = $.ajax({
+				  url: cookie.sessionRef,
+				  type: "GET",
+				  dataType: "json"
+				});
+				 
+				validateSignIn.done(function( msg ) {
+					if (msg.isLoggedIn)
+					{
+						window.location="/users/home";
+					}
+				});
+			}
+		}
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
@@ -17,7 +36,6 @@
 				});
 				 
 				request.done(function( msg ) {
-				// alert(msg);
 				 if (msg.isLoggedIn == true)
 					 {
 					 	window.location = "/users/home";
