@@ -23,6 +23,10 @@
 						window.location="/home";
 					}
 				});
+				
+				validateSignIn.fail(function( jqXHR, textStatus ){
+						window.location="/home";
+				});
 			}
 		}
 		

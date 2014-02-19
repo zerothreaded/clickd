@@ -1,22 +1,31 @@
 	$(document).ready(function() {
 		//check cookie status
-		var cookie = jQuery.parseJSON($.cookie("userSession"));
 		
-		if (cookie.hasOwnProperty('sessionRef'))
-		{	var validateSignIn = $.ajax({
-			  url: cookie.sessionRef,
-			  type: "GET",
-			  dataType: "json"
-			});
-			 
-			validateSignIn.done(function( msg ) {
-				if (msg.isLoggedIn)
-				{
-					window.location="/users/home";
-				}
-			});
+		var cookie1 = $.cookie("userSession");
+		
+		if (typeof cookie1 == "undefined")
+		{
+			window.location="/home";
 		}
-		
+		else
+		{
+			var cookie = jQuery.parseJSON(cookie1);
+			
+			if (cookie.hasOwnProperty('sessionRef'))
+			{	var validateSignIn = $.ajax({
+				  url: cookie.sessionRef,
+				  type: "GET",
+				  dataType: "json"
+				});
+				 
+				validateSignIn.done(function( msg ) {
+					if (msg.isLoggedIn)
+					{
+						window.location="/users/home";
+					}
+				});
+			}
+		}
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
@@ -30,7 +39,6 @@
 				});
 				 
 				request.done(function( msg ) {
-				// alert(msg);
 				 if (msg.isLoggedIn == true)
 					 {
 					 	window.location = "/users/home";
