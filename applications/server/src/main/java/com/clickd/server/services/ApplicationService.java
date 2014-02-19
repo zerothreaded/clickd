@@ -12,6 +12,7 @@ import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.application.ApplicationResource;
+import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
 import com.clickd.server.services.users.UserResource;
@@ -50,6 +51,7 @@ public class ApplicationService extends Service<UserConfiguration> {
         ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
         QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
         AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
+        AnswerDao choiceDao = (AnswerDao) context.getBean("choiceDao");
         
         // Create REST End Points
 
@@ -76,6 +78,10 @@ public class ApplicationService extends Service<UserConfiguration> {
         answerResource.setAnswerDao(answerDao);
         environment.addResource(answerResource);
 
+        // /choices/*
+        ChoiceResource choiceResource = new ChoiceResource();
+        choiceResource.setChoiceDao(choiceDao);
+        environment.addResource(choiceResource);
         
         environment.addHealthCheck(new ApplicationHealthCheck("application"));
         Filter filter = new TokenCheckFilter();
