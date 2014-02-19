@@ -22,8 +22,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.QuestionDao;
+import com.clickd.server.model.Answer;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
@@ -36,6 +38,8 @@ import com.yammer.metrics.annotation.Timed;
 public class QuestionResource
 {
 	private QuestionDao questionDao;
+	private AnswerDao answerDao;
+
 
 	@GET
 	@Timed
@@ -57,12 +61,41 @@ public class QuestionResource
 		return Utilities.toJson(question);
 	}
 
+	@GET
+    @Path("/next/{userRef}")
+    @Timed
+    public String getNextQuestion(@PathParam("userRef") String userRef) {
+		List<Question> questions = questionDao.findAll();
+		int idx = (int)(Math.random() * (questions.size()-1));
+		Question question = questions.get(idx);
+		
+		ArrayList<Answer> answerList = new ArrayList<Answer>();
+		
+		List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
+		
+		for (Link answerLink : answerLinks)
+		{
+			Answer answer = answerDao.findByRef(answerLink.getHref());
+			answerList.add(answer);
+			
+		}
+		
+		question.get_Embedded().put("question-answer-list", answerList);
+		
+		return Utilities.toJson(question);
+	}
+	
 	public QuestionDao getQuestionDao() {
 		return questionDao;
 	}
 
 	public void setQuestionDao(QuestionDao questionDao) {
 		this.questionDao = questionDao;
+	}
+
+	public void setAnswerDao(AnswerDao answerDao) {
+		this.answerDao = answerDao;
+		
 	}
 
 }

@@ -69,6 +69,7 @@ public class ApplicationService extends Service<UserConfiguration> {
         // /questions/*
         QuestionResource questionResource = new QuestionResource();
         questionResource.setQuestionDao(questionDao);
+        questionResource.setAnswerDao(answerDao);
         environment.addResource(questionResource);
         
         // /answers/*
