@@ -1,4 +1,4 @@
-package com.clickd.server.services.questions;
+package com.clickd.server.services.application;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
