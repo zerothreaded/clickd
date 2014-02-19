@@ -92,7 +92,7 @@ public class UserResource
 	    	if (user.getPassword().equals(password)) {
 	    		// User Authentication OK
 	    		// Lookup Existing Sessions for this user
-	    		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_SESSION_LIST);
+	    		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
 	        	if (sessionLinks == null) {
 	        		sessionLinks = new ArrayList<Link>();
 	        	}
@@ -114,7 +114,7 @@ public class UserResource
 	        	Link userSessionLink = new Link(user.getRef(), "self");
 	        	user.get_Links().put(Resource.KEY_LINK_SELF, userSessionLink);
 	        	sessionLinks.add( new Link(session.getRef(), "user-session"));
-	        	user.get_Links().put(Resource.KEY_LINK_SESSION_LIST, sessionLinks);
+	        	user.get_Links().put(Resource.KEY_LINK_USER_SESSION_LIST, sessionLinks);
 	        	userDao.update(user);
 	        	
 	        	Map<String, String> cookieData = new HashMap<String, String>();
@@ -138,7 +138,7 @@ public class UserResource
 	public String signOut(@PathParam("ref") String ref) {
 		User user = userDao.findByRef("/users/" + ref);
 		ArrayList <Session> userSessions = new ArrayList <Session>();
-		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_SESSION_LIST);
+		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
 		for (Link sessionLink : sessionLinks) {
 			Session session = sessionDao.findByRef(sessionLink.getHref());
 			if (session.getIsLoggedIn()) {
@@ -264,7 +264,7 @@ public class UserResource
 	{
 		User user = userDao.findByRef("/users/" + userRef);
 		ArrayList <Session> userSessions = new ArrayList <Session>();
-		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_SESSION_LIST);
+		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
 		for (Link sessionLink : sessionLinks) {
 			Session session = sessionDao.findByRef(sessionLink.getHref());
 			userSessions.add(session);

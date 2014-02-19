@@ -1,3 +1,6 @@
+db.applications.drop()
+db.applications.insert ( { "name" : "clickd", "version" : "1.0", "baseUrl" : "http://localhost:8080", "_links" : { "self" : { "href" : "http://localhost:8080/application/v1.0", "rel" : "self", "_class" : "com.clickd.server.model.Link" } }, "_embedded" : {  }   } );
+
 
 db.users.drop()
 db.users.insert( { "values" : { "lastName" : "Masilamani", "email" : "ralph.masilamani@clickd.org", "firstName" : "Ralph", "password" : "rr00" } });

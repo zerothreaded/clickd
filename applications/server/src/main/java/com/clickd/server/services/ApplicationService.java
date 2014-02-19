@@ -5,6 +5,7 @@ import javax.servlet.Filter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.clickd.server.dao.ApplicationDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.application.ApplicationResource;
@@ -42,11 +43,13 @@ public class ApplicationService extends Service<UserConfiguration> {
         context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
         UserDao userDao = (UserDao) context.getBean("userDao");
         SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
+        ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
        
         // Create REST End Points
 
         // Application
         ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setApplicationDao(applicationDao);
         applicationResource.setSessionDao(sessionDao);
         applicationResource.setUserDao(userDao);
         environment.addResource(applicationResource);

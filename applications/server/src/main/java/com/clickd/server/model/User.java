@@ -1,8 +1,6 @@
 package com.clickd.server.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -23,8 +21,6 @@ public class User extends Resource {
 	protected String email;
 	protected String password;
 		
-	// protected List<Link> sessionLinks = new ArrayList<Link>();
-
 	public User()
 	{
 		super();
@@ -122,23 +118,5 @@ public class User extends Resource {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-//	public void addSession(Link sessionLink)
-//	{
-//		sessionLinks.add(sessionLink);
-//	}
-//	
-//	public void removeSessionLink(Link sessionLink)
-//	{
-//		sessionLinks.remove(sessionLink);
-//	}
-//
-//	public List<Link> getSessionLinks() {
-//		return sessionLinks;
-//	}
-//	
-//	public void setSessionLinks(List <Link> sessionLinks) {
-//		this.sessionLinks = sessionLinks;
-//	}
 
 }
