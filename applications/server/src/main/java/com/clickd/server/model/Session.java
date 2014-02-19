@@ -12,9 +12,7 @@ public class Session {
 	@Id
 	protected String id;
 	protected String ref;
-
-	protected Long token;
-
+	
 	protected Date createdOn;
 	protected Date lastModified;
 	protected Long numberOfLogins;
@@ -25,12 +23,12 @@ public class Session {
 		super();
 	}
 	
-	public Session(User user, Long token, Date createdOn, Date lastModified,
+	public Session(User user, Date createdOn, Date lastModified,
 			Long numberOfLogins, Boolean isLoggedIn) {
 		super();
 		
 		createRef(user.getRef());
-		this.token = token;
+		
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
 		this.numberOfLogins = numberOfLogins;
@@ -44,13 +42,7 @@ public class Session {
 		this.ref = ref;
 	}
 	
-	
-	public static Long createToken()
-	{
-		UUID uuid = UUID.randomUUID();
-		return uuid.getMostSignificantBits();
-	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -67,13 +59,6 @@ public class Session {
 		this.ref = ref;
 	}
 
-	public Long getToken() {
-		return token;
-	}
-
-	public void setToken(Long token) {
-		this.token = token;
-	}
 
 	public Date getCreatedOn() {
 		return createdOn;
