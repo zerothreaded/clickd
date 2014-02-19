@@ -3,11 +3,8 @@
 		
 		var cookie1 = $.cookie("userSession");
 		
-		if (typeof cookie1 == "undefined")
-		{
-			window.location="/home";
-		}
-		else
+		
+		if (typeof cookie1 != "undefined")
 		{
 			var cookie = jQuery.parseJSON(cookie1);
 			
