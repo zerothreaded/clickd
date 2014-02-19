@@ -1,9 +1,22 @@
 	$(document).ready(function() {
-		var n = Math.floor(Math.random()*10+1);
-		var s = "/assets/images/home/background"+n+".jpg";
-		$("#wrap").css('background-image', 'url('+s+')');
+		//check cookie status
+		var cookie = jQuery.parseJSON($.cookie("userSession"));
 		
-		//alert(s);
+		if (cookie.hasOwnProperty('sessionRef'))
+		{	var validateSignIn = $.ajax({
+			  url: cookie.sessionRef,
+			  type: "GET",
+			  dataType: "json"
+			});
+			 
+			validateSignIn.done(function( msg ) {
+				if (msg.isLoggedIn)
+				{
+					window.location="/users/home";
+				}
+			});
+		}
+		
 		
 		$("#login-nav").submit(function() {
 			var data = $("#login-nav").serialize();
