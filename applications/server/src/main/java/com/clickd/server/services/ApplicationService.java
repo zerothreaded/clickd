@@ -9,11 +9,11 @@ import com.clickd.server.dao.ApplicationDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.application.ApplicationResource;
+import com.clickd.server.services.users.UserConfiguration;
 import com.clickd.server.services.users.UserResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
-import com.clickd.server.services.users.UserConfiguration;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewBundle;
 

@@ -120,8 +120,6 @@ public class UserResource
 	        	Map<String, String> cookieData = new HashMap<String, String>();
 	        	cookieData.put("sessionRef", session.getRef().toString());
 	        	cookieData.put("userRef", user.getRef());
-//	        	cookieData.put("clickd-session", Utilities.toJsonNoPretty(session));
-//	        	cookieData.put("clickd-users", Utilities.toJsonNoPretty(user));
 	        	
 	    		NewCookie newCookie = new NewCookie("userSession", Utilities.toJson(cookieData), "/", "", "", 60*60, false);
 	    		
@@ -173,7 +171,8 @@ public class UserResource
 			@Context HttpServletResponse response,
 			@Context HttpHeaders headers) 
 	{
-		return null;
+		List<User> allUsers = userDao.findAll();
+		return " { \"count\" : " + allUsers.size() + " }";
 		
 	}
 	    
@@ -184,77 +183,14 @@ public class UserResource
     	int count = sessionDao.findAll().size();
     	return "{ \"value\" : \"" + count + "\" }";
     }
-	    
-	    //	    
-//	    @POST
-//	    @Timed
-//	    @Path("/register")
-//	    @Produces(MediaType.APPLICATION_JSON)
-//	    public Response register(
-//	    		@FormParam("email") String email,
-//	     		@FormParam("firstName") String firstName,
-//	     		@FormParam("lastName") String lastName,
-//	     		@FormParam("password") String password,
-//	     		@FormParam("dateOfBirth") String dateOfBirth,
-//	     		@FormParam("gender") String gender,
-//	     		@FormParam("postcode") String postcode)
-//	     		throws URISyntaxException
-//	    {
-//	        
-//	        //check if user exists
-//	        User user = userDao.findByEmail(email);
-//	        
-//	        if (user == null)
-//	        {
-//	        	User newUser = new User();
-//	        	newUser.setEmail(email);
-//	        	newUser.setFirstName(firstName);
-//	        	newUser.setLastName(lastName);
-//	        	newUser.setPassword(password);
-//	        	newUser.setDateOfBirth(Utilities.dateFromString(dateOfBirth));
-//	        	newUser.setGender(gender);
-//	        	newUser.setPostCode(postcode);
-//	        	userDao.create(newUser);
-//	        	
-//	        	return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
-//	        }
-//	        else
-//	        {
-//	        	return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
-//	        }
-//	    }
-//	
-//		int count = userDao.findAll().size();
-//		return "{ \"value\" : \"" + count + "\" }";
-//	}
 
-
-
-	public SessionDao getSessionDao() {
-		return sessionDao;
-	}
-
-	public void setSessionDao(SessionDao sessionDao) {
-		this.sessionDao = sessionDao;
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-	
 	@GET
     @Path("/{ref}")
     @Timed
-    public String getUserDetails(@PathParam("ref") String ref) {
+    public String getUser(@PathParam("ref") String ref) {
 		User user = userDao.findByRef("/users/" + ref);
-		
 		return Utilities.toJson(user);
     }
-
 
 	@SuppressWarnings("unchecked")
 	@GET
@@ -280,5 +216,21 @@ public class UserResource
 		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
 		return Utilities.toJson(session);
     }
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public SessionDao getSessionDao() {
+		return sessionDao;
+	}
+
+	public void setSessionDao(SessionDao sessionDao) {
+		this.sessionDao = sessionDao;
+	}
 
 }

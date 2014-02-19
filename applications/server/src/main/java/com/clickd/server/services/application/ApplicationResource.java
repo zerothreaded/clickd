@@ -15,7 +15,6 @@ import com.clickd.server.dao.ApplicationDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Application;
-import com.clickd.server.model.Session;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 

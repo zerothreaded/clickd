@@ -25,9 +25,7 @@ public class Session extends Resource {
 	
 	public Session(User user, Date createdOn, Date lastModified, Long numberOfLogins, Boolean isLoggedIn) {
 		super();
-		
 		createRef(user.getRef());
-		
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
 		this.numberOfLogins = numberOfLogins;
@@ -41,7 +39,6 @@ public class Session extends Resource {
 		this.ref = ref;
 	}
 	
-
 	public String getId() {
 		return id;
 	}
