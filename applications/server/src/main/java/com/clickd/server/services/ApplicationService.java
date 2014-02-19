@@ -7,16 +7,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.services.member.MemberConfiguration;
-import com.clickd.server.services.member.MemberResource;
 import com.clickd.server.services.users.UserResource;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
+import com.clickd.server.services.users.UserConfiguration;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewBundle;
 
-public class ApplicationService extends Service<MemberConfiguration> {
+public class ApplicationService extends Service<UserConfiguration> {
     
 	private ApplicationContext context;
 	
@@ -25,7 +24,7 @@ public class ApplicationService extends Service<MemberConfiguration> {
     }
 
     @Override
-    public void initialize(Bootstrap<MemberConfiguration> bootstrap) {
+    public void initialize(Bootstrap<UserConfiguration> bootstrap) {
         bootstrap.setName("application");
         bootstrap.addBundle(new ViewBundle());
         bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
@@ -34,7 +33,8 @@ public class ApplicationService extends Service<MemberConfiguration> {
     }
 
     @Override
-    public void run(MemberConfiguration configuration, Environment environment) {
+    public void run(UserConfiguration configuration, Environment environment) {
+        
     	final String template = configuration.getTemplate();
         final String defaultName = configuration.getDefaultName();
         
@@ -43,12 +43,6 @@ public class ApplicationService extends Service<MemberConfiguration> {
         SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
        
         // Create REST End Points
-       
-        // /members/*
-        MemberResource memberResource = new MemberResource(template, defaultName);
-        memberResource.setUserDao(userDao);
-        memberResource.setSessionDao(sessionDao);
-        environment.addResource(memberResource);
         
         // /users/*
         UserResource userResource = new UserResource();
