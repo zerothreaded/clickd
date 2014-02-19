@@ -53,10 +53,6 @@ public class QuestionDao {
 		return question;
 	}
 
-	public Question findByEmail(String email) {
-		Question question = mongoOperations.findOne(new Query(Criteria.where("email").is(email)), Question.class, collectionName);
-		return question;
-	}
 
 	public Question findByRef(String ref) {
 		Question question = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Question.class, collectionName);

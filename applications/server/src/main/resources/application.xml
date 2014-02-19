@@ -36,5 +36,13 @@
 	<bean id="applicationDao" class="com.clickd.server.dao.ApplicationDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
+	
+	<bean id="questionDao" class="com.clickd.server.dao.QuestionDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="answerDao" class="com.clickd.server.dao.AnswerDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 
 </beans>

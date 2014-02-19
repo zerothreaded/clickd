@@ -13,10 +13,8 @@ public class Answer extends Resource {
 	protected String id;
 	protected String ref;
 
-	protected String answer;
+	protected String answerText;
 		
-	// protected List<Link> sessionLinks = new ArrayList<Link>();
-
 	public Answer()
 	{
 		super();
@@ -26,15 +24,15 @@ public class Answer extends Resource {
 	private void createRef()
 	{
 		UUID uuid = UUID.randomUUID();
-		String ref = "/users/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/answers/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	
-	public Answer(String answer) {
+	public Answer(String answerText) {
 		super();
 
 		createRef();
-		this.answer = answer;
+		this.answerText = answerText;
 	}
 
 	public String getId() {
@@ -53,12 +51,12 @@ public class Answer extends Resource {
 		this.ref = ref;
 	}
 	
-	public String getAnswer() {
-		return answer;
+	public String getAnswerText() {
+		return answerText;
 	}
 
-	public void setAnswer(String answer) {
-		this.answer = answer;
+	public void setAnswerText(String answerText) {
+		this.answerText = answerText;
 	}
 
 }
