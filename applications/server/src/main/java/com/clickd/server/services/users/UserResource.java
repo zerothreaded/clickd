@@ -188,7 +188,6 @@ public class UserResource
     @Timed
     public String getUser(@PathParam("ref") String ref) {
 		User user = userDao.findByRef("/users/" + ref);
-		
 		return Utilities.toJson(user);
     }
 
