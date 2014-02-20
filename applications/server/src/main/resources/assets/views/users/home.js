@@ -2,8 +2,7 @@ var answers;
 var questionRef;
 var userRef;
 
-function loadUser()
-{
+function loadUser() {
 	var cookie1 = $.cookie("userSession");
 	var cookie = jQuery.parseJSON(cookie1);
 
@@ -13,19 +12,19 @@ function loadUser()
 
 	var getUserUrl = "/users/" + userRef;
 	var getUserCall = $.ajax({
-		  url: getUserUrl,
-		  type: "GET",
-		  dataType: "json"
-		});
-		 
+		url : getUserUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
 	getUserCall.done(function(userdata) {
 		var userFirstName = userdata["firstName"];
-		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
+		$('#user-image').attr("src",
+				'/assets/images/members/facebook_' + userFirstName + '.jpg');
 	});
 }
 
-function loadNextQuestion()
-{
+function loadNextQuestion() {
 	var cookie1 = $.cookie("userSession");
 	var cookie = jQuery.parseJSON(cookie1);
 
@@ -35,24 +34,24 @@ function loadNextQuestion()
 
 	var nextQuestionUrl = "/questions/next/" + userRef;
 	var nextQuestionCall = $.ajax({
-		  url: nextQuestionUrl,
-		  type: "GET",
-		  dataType: "json"
-		});
-		 
+		url : nextQuestionUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
 	nextQuestionCall.done(function(msg) {
-		if (typeof msg["status"] == 'undefined' ) {
+		if (typeof msg["status"] == 'undefined') {
 			answers = msg["_embedded"]["question-answer-list"];
 			questionRef = msg["ref"];
 			questionRef = questionRef.split("/")[2];
 			var questionText = msg.questionText;
 			$("#click-panel-question").html(questionText);
-			for (var i = 0; i < answers.length; i++)
-			{
+			for ( var i = 0; i < answers.length; i++) {
 				var j = i + 1;
 				var answer = answers[i];
-				var image = '<img  src="/assets/images/answers/' + answer["imageName"] + '.jpg" />';
-				$("#click-panel-answer-" + j).html(image + 	answer.answerText);
+				var image = '<img  src="/assets/images/answers/'
+						+ answer["imageName"] + '.jpg" />';
+				$("#click-panel-answer-" + j).html(image + answer.answerText);
 				// $("#click-panel-answer-" + j).html(image);
 			}
 		} else {
@@ -64,27 +63,26 @@ function loadNextQuestion()
 	});
 }
 
-function onAnswerClick(data) 
-{
+function onAnswerClick(data) {
 	var answer = answers[data - 1];
 	var substr = answer.ref.split('/');
-	var answerRef  = substr[2];
+	var answerRef = substr[2];
 	var cookie1 = $.cookie("userSession");
 	var cookie = jQuery.parseJSON(cookie1);
-	if (cookie.hasOwnProperty('userRef'))
-	{
+	if (cookie.hasOwnProperty('userRef')) {
 		userRef = cookie.userRef;
 		var substr = userRef.split('/');
 		userRef = substr[2];
 	}
-	var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef + "";
-	
+	var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/"
+			+ answerRef + "";
+
 	var createChoiceCall = $.ajax({
-		  url: createChoiceUrl,
-		  type: "POST",
-		  dataType: "json"
-		});
-		 
+		url : createChoiceUrl,
+		type : "POST",
+		dataType : "json"
+	});
+
 	createChoiceCall.done(function(msg) {
 		// alert(msg);
 		loadNextQuestion();
@@ -92,50 +90,47 @@ function onAnswerClick(data)
 }
 
 $(document).ready(function() {
-		// check cookie status
-		var cookie1 = $.cookie("userSession");
-		if (typeof cookie1 == "undefined")
-		{
-			window.location="/home";
-		} else {
-			loadUser();
-			var cookie = jQuery.parseJSON(cookie1);
-			if (cookie.hasOwnProperty('sessionRef'))
-			{	var validateSignIn = $.ajax({
-				  url: cookie.sessionRef,
-				  type: "GET",
-				  dataType: "json"
-				});
-				validateSignIn.done(function( msg ) {
-					if (!msg.isLoggedIn)
-					{
-						window.location="/home";
-					}
-				});
-				
-				validateSignIn.fail(function( jqXHR, textStatus ){
-						window.location="/home";
-				});
-			}
-			
-			if (cookie.hasOwnProperty('userRef'))
-			{
-				$("#link-sign-out").click(function() {
-					var signOutUrl = cookie.userRef + "/signout";
-					
-					var signOutCall = $.ajax({
-						  url: signOutUrl,
-						  type: "PUT",
-						  dataType: "json"
-						});
-						 
-					signOutCall.done(function( msg ) {
-								window.location="/home";
-						});
-				});
-			}
+	// check cookie status
+	var cookie1 = $.cookie("userSession");
+	if (typeof cookie1 == "undefined") {
+		window.location = "/home";
+	} else {
+		loadUser();
+		var cookie = jQuery.parseJSON(cookie1);
+		if (cookie.hasOwnProperty('sessionRef')) {
+			var validateSignIn = $.ajax({
+				url : cookie.sessionRef,
+				type : "GET",
+				dataType : "json"
+			});
+			validateSignIn.done(function(msg) {
+				if (!msg.isLoggedIn) {
+					window.location = "/home";
+				}
+			});
 
-			loadNextQuestion();
+			validateSignIn.fail(function(jqXHR, textStatus) {
+				window.location = "/home";
+			});
 		}
-		
-	});
+
+		if (cookie.hasOwnProperty('userRef')) {
+			$("#link-sign-out").click(function() {
+				var signOutUrl = cookie.userRef + "/signout";
+
+				var signOutCall = $.ajax({
+					url : signOutUrl,
+					type : "PUT",
+					dataType : "json"
+				});
+
+				signOutCall.done(function(msg) {
+					window.location = "/home";
+				});
+			});
+		}
+
+		loadNextQuestion();
+	}
+
+});
