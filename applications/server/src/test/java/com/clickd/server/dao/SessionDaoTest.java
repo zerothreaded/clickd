@@ -15,18 +15,15 @@ public class SessionDaoTest {
 	private Session session;
 	private ApplicationContext context;
 
-	
 	@Before
-	public void setup()
-	{
-		this.context =  new ClassPathXmlApplicationContext(new String[] { "application.xml" });
-		this.sessionDao = (SessionDao)context.getBean("sessionDao");
+	public void setup() {
+		this.context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
+		this.sessionDao = (SessionDao) context.getBean("sessionDao");
 	}
-	
+
 	@Test
-	public void createSucceeds()
-	{
-		session = new Session(new User(),  new Date(), new Date(), 0l, false);
+	public void createSucceeds() {
+		session = new Session(new User(), new Date(), new Date(), 0l, false);
 		sessionDao.create(session);
 		Session session2 = sessionDao.findById(session.getId());
 		assert (session2.equals(session));
