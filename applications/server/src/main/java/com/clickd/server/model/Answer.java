@@ -11,6 +11,7 @@ public class Answer extends Resource {
 	protected String ref;
 
 	protected String answerText;
+	protected String imageName;
 		
 	public Answer()
 	{
@@ -54,6 +55,14 @@ public class Answer extends Resource {
 
 	public void setAnswerText(String answerText) {
 		this.answerText = answerText;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
 	}
 
 }
