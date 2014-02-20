@@ -19,8 +19,7 @@ function loadUser() {
 
 	getUserCall.done(function(userdata) {
 		var userFirstName = userdata["firstName"];
-		$('#user-image').attr("src",
-				'/assets/images/members/facebook_' + userFirstName + '.jpg');
+		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
 	});
 }
 
@@ -49,8 +48,7 @@ function loadNextQuestion() {
 			for ( var i = 0; i < answers.length; i++) {
 				var j = i + 1;
 				var answer = answers[i];
-				var image = '<img  src="/assets/images/answers/'
-						+ answer["imageName"] + '.jpg" />';
+				var image = '<img  src="/assets/images/answers/' + answer["imageName"] + '.jpg" />';
 				$("#click-panel-answer-" + j).html(image + answer.answerText);
 				// $("#click-panel-answer-" + j).html(image);
 			}
@@ -74,8 +72,7 @@ function onAnswerClick(data) {
 		var substr = userRef.split('/');
 		userRef = substr[2];
 	}
-	var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/"
-			+ answerRef + "";
+	var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef + "";
 
 	var createChoiceCall = $.ajax({
 		url : createChoiceUrl,
