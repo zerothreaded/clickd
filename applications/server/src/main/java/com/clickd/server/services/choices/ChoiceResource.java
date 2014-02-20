@@ -17,7 +17,6 @@ import com.clickd.server.model.Choice;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/users/")
 @Produces(MediaType.APPLICATION_JSON)
 public class ChoiceResource
 {
