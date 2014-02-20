@@ -20,20 +20,16 @@ import com.yammer.metrics.annotation.Timed;
 
 @Path("/application")
 @Produces(MediaType.APPLICATION_JSON)
-public class ApplicationResource
-{
+public class ApplicationResource {
 	private ApplicationDao applicationDao;
 	private UserDao userDao;
 	private SessionDao sessionDao;
-	
+
 	@GET
 	@Timed
-	public String getAll(@Context HttpServletRequest request, 
-			@Context HttpServletResponse response,
-			@Context HttpHeaders headers)
-	{
+	public String getAll(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
 		List<Application> allApplications = applicationDao.findAll();
-		String applicationJson =  Utilities.toJson(allApplications);
+		String applicationJson = Utilities.toJson(allApplications);
 		return applicationJson;
 	}
 

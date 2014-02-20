@@ -25,36 +25,32 @@ public class SessionDao {
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
 	}
-	
+
 	public Session create(Session session) {
 		mongoOperations.save(session, collectionName);
 		return session;
 	}
-	
-	public Session update(Session session)
-	{
+
+	public Session update(Session session) {
 		delete(session);
 		create(session);
 		return session;
 	}
-	
-	public void delete(Session session)
-	{
+
+	public void delete(Session session) {
 		mongoOperations.remove(session);
 	}
-	
-	public Session findById(String id)
-	{
+
+	public Session findById(String id) {
 		Session Session = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), Session.class, collectionName);
 		return Session;
 	}
-	
-	public Session findByToken(Long token)
-	{
+
+	public Session findByToken(Long token) {
 		Session Session = mongoOperations.findOne(new Query(Criteria.where("token").is(token)), Session.class, collectionName);
 		return Session;
 	}
-	
+
 	public List<Session> findAll() {
 		return mongoOperations.findAll(Session.class, collectionName);
 	}

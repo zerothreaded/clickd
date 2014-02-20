@@ -25,34 +25,30 @@ public class QuestionDao {
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
 	}
-	
+
 	public Question create(Question question) {
 		mongoOperations.save(question, collectionName);
 		return question;
 	}
-	
-	public Question update(Question question)
-	{
+
+	public Question update(Question question) {
 		delete(question);
 		create(question);
 		return question;
 	}
-	
-	public void delete(Question question)
-	{
+
+	public void delete(Question question) {
 		mongoOperations.remove(question);
 	}
-	
+
 	public List<Question> findAll() {
 		return mongoOperations.findAll(Question.class, collectionName);
 	}
 
-	public Question findById(String id)
-	{
+	public Question findById(String id) {
 		Question question = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), Question.class, collectionName);
 		return question;
 	}
-
 
 	public Question findByRef(String ref) {
 		Question question = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Question.class, collectionName);

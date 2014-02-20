@@ -25,34 +25,30 @@ public class AnswerDao {
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
 	}
-	
+
 	public Answer create(Answer answer) {
 		mongoOperations.save(answer, collectionName);
 		return answer;
 	}
-	
-	public Answer update(Answer answer)
-	{
+
+	public Answer update(Answer answer) {
 		delete(answer);
 		create(answer);
 		return answer;
 	}
-	
-	public void delete(Answer answer)
-	{
+
+	public void delete(Answer answer) {
 		mongoOperations.remove(answer);
 	}
-	
+
 	public List<Answer> findAll() {
 		return mongoOperations.findAll(Answer.class, collectionName);
 	}
 
-	public Answer findById(String id)
-	{
+	public Answer findById(String id) {
 		Answer answer = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), Answer.class, collectionName);
 		return answer;
 	}
-
 
 	public Answer findByRef(String ref) {
 		Answer answer = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Answer.class, collectionName);

@@ -24,71 +24,71 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewBundle;
 
 public class ApplicationService extends Service<UserConfiguration> {
-    
+
 	private ApplicationContext context;
-	
+
 	public static void main(String[] args) throws Exception {
-        new ApplicationService().run(args);
-    }
+		new ApplicationService().run(args);
+	}
 
-    @Override
-    public void initialize(Bootstrap<UserConfiguration> bootstrap) {
-        bootstrap.setName("application");
-        bootstrap.addBundle(new ViewBundle());
-        bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
-        bootstrap.addBundle(new AssetsBundle("/html/home", "/home", "index.html"));
-        bootstrap.addBundle(new AssetsBundle("/html/users", "/users/home", "index.html"));
-    }
+	@Override
+	public void initialize(Bootstrap<UserConfiguration> bootstrap) {
+		bootstrap.setName("application");
+		bootstrap.addBundle(new ViewBundle());
+		bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
+		bootstrap.addBundle(new AssetsBundle("/html/home", "/home", "index.html"));
+		bootstrap.addBundle(new AssetsBundle("/html/users", "/users/home", "index.html"));
+	}
 
-    @Override
-    public void run(UserConfiguration configuration, Environment environment) {
-        
-    	final String template = configuration.getTemplate();
-        final String defaultName = configuration.getDefaultName();
-        
-        context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
-        UserDao userDao = (UserDao) context.getBean("userDao");
-        SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
-        ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
-        QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
-        AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
-        ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
-        
-        // Create REST End Points
+	@Override
+	public void run(UserConfiguration configuration, Environment environment) {
 
-        // Application
-        ApplicationResource applicationResource = new ApplicationResource();
-        applicationResource.setApplicationDao(applicationDao);
-        applicationResource.setSessionDao(sessionDao);
-        applicationResource.setUserDao(userDao);
-        environment.addResource(applicationResource);
-        
-        // /users/*
-        UserResource userResource = new UserResource();
-        userResource.setUserDao(userDao);
-        userResource.setSessionDao(sessionDao);
-        environment.addResource(userResource);
-        
-        // /questions/*
-        QuestionResource questionResource = new QuestionResource();
-        questionResource.setQuestionDao(questionDao);
-        questionResource.setAnswerDao(answerDao);
-        questionResource.setChoiceDao(choiceDao);
-        environment.addResource(questionResource);
-        
-        // /answers/*
-        AnswerResource answerResource = new AnswerResource();
-        answerResource.setAnswerDao(answerDao);
-        environment.addResource(answerResource);
+		final String template = configuration.getTemplate();
+		final String defaultName = configuration.getDefaultName();
 
-        // /choices/*
-        ChoiceResource choiceResource = new ChoiceResource();
-        choiceResource.setChoiceDao(choiceDao);
-        environment.addResource(choiceResource);
-        
-        environment.addHealthCheck(new ApplicationHealthCheck("application"));
-        Filter filter = new TokenCheckFilter();
+		context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
+		UserDao userDao = (UserDao) context.getBean("userDao");
+		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
+		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
+		QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
+		AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
+		ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
+
+		// Create REST End Points
+
+		// Application
+		ApplicationResource applicationResource = new ApplicationResource();
+		applicationResource.setApplicationDao(applicationDao);
+		applicationResource.setSessionDao(sessionDao);
+		applicationResource.setUserDao(userDao);
+		environment.addResource(applicationResource);
+
+		// /users/*
+		UserResource userResource = new UserResource();
+		userResource.setUserDao(userDao);
+		userResource.setSessionDao(sessionDao);
+		environment.addResource(userResource);
+
+		// /questions/*
+		QuestionResource questionResource = new QuestionResource();
+		questionResource.setQuestionDao(questionDao);
+		questionResource.setAnswerDao(answerDao);
+		questionResource.setChoiceDao(choiceDao);
+		environment.addResource(questionResource);
+
+		// /answers/*
+		AnswerResource answerResource = new AnswerResource();
+		answerResource.setAnswerDao(answerDao);
+		environment.addResource(answerResource);
+
+		// /choices/*
+		ChoiceResource choiceResource = new ChoiceResource();
+		choiceResource.setChoiceDao(choiceDao);
+		environment.addResource(choiceResource);
+
+		environment.addHealthCheck(new ApplicationHealthCheck("application"));
+		Filter filter = new TokenCheckFilter();
 		environment.addFilter(filter, "*");
-    }
+	}
 
 }

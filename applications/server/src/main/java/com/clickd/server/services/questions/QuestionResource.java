@@ -26,73 +26,70 @@ import com.yammer.metrics.annotation.Timed;
 
 @Path("/questions")
 @Produces(MediaType.APPLICATION_JSON)
-public class QuestionResource
-{
+public class QuestionResource {
 	private QuestionDao questionDao;
 	private AnswerDao answerDao;
 	private ChoiceDao choiceDao;
 
 	@GET
 	@Timed
-	public String getAll(@Context HttpServletRequest request, 
-			@Context HttpServletResponse response,
-			@Context HttpHeaders headers)
-	{
+	public String getAll(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
 		List<Question> allQuestions = questionDao.findAll();
 		String result = Utilities.toJson(allQuestions);
 		return result;
 	}
 
 	@GET
-    @Path("/{ref}")
-    @Timed
-    public String getQuestion(@PathParam("ref") String ref) {
+	@Path("/{ref}")
+	@Timed
+	public String getQuestion(@PathParam("ref") String ref) {
 		Question question = questionDao.findByRef("/questions/" + ref);
 		return Utilities.toJson(question);
 	}
 
 	@SuppressWarnings("unchecked")
 	@GET
-    @Path("/next/{userRef}")
-    @Timed
-    public String getNextQuestion(@PathParam("userRef") String userRef) {
+	@Path("/next/{userRef}")
+	@Timed
+	public String getNextQuestion(@PathParam("userRef") String userRef) {
 		List<Question> unansweredQuestions = new ArrayList<Question>();
 		List<Question> questions = questionDao.findAll();
 		List<Choice> userChoices = choiceDao.findChoicesByUserRef(userRef);
-		
+
 		if (userChoices.size() == 0) {
 			// No choices - first time clicking
 			unansweredQuestions = questions;
 		} else {
 			// Only consider questions NOT answered by this user
 			for (Question question : questions) {
-				// Check if user has answered this - i.e. Question in the userChoices
+				// Check if user has answered this - i.e. Question in the
+				// userChoices
 				String questionRef = question.getRef();
 				System.out.println("Evaluating question " + questionRef);
 				boolean hasAnswered = false;
 				for (Choice choice : userChoices) {
-					String choiceQuestionRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
+					String choiceQuestionRef = ((Link) choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
 					if (choiceQuestionRef.equals(questionRef)) {
 						// User has answered this one so flag it
 						hasAnswered = true;
 						System.out.println("Adding question " + choiceQuestionRef);
 						break;
 					} else {
-						System.out.println("Skipping question " + choiceQuestionRef);		
+						System.out.println("Skipping question " + choiceQuestionRef);
 					}
 				}
 				if (!hasAnswered) {
 					unansweredQuestions.add(question);
 				}
-				
+
 			}
 		}
 		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
 		if (unansweredQuestions.size() != 0) {
-			int idx = (int)(Math.random() * (unansweredQuestions.size() - 1));
+			int idx = (int) (Math.random() * (unansweredQuestions.size() - 1));
 			Question question = unansweredQuestions.get(idx);
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
-			List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
+			List<Link> answerLinks = (List<Link>) question.get_Links().get("question-answer-list");
 			for (Link answerLink : answerLinks) {
 				Answer answer = answerDao.findByRef(answerLink.getHref());
 				answerList.add(answer);
@@ -104,7 +101,7 @@ public class QuestionResource
 			return "{ \"status\" : \"done\" }";
 		}
 	}
-	
+
 	public QuestionDao getQuestionDao() {
 		return questionDao;
 	}
@@ -115,7 +112,7 @@ public class QuestionResource
 
 	public void setAnswerDao(AnswerDao answerDao) {
 		this.answerDao = answerDao;
-		
+
 	}
 
 	public ChoiceDao getChoiceDao() {

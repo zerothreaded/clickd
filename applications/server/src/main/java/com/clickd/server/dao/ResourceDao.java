@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Resource;
 
-public class ResourceDao implements IDao<Resource, String>{
+public class ResourceDao implements IDao<Resource, String> {
 
 	private MongoOperations mongoOperations;
 	protected String collectionName;
-	
+
 	@Override
 	public Resource create(Resource type) {
 		mongoOperations.save(type, collectionName);

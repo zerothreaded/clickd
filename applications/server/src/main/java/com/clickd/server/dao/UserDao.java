@@ -25,30 +25,27 @@ public class UserDao {
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
 	}
-	
+
 	public User create(User user) {
 		mongoOperations.save(user, collectionName);
 		return user;
 	}
-	
-	public User update(User user)
-	{
+
+	public User update(User user) {
 		delete(user);
 		create(user);
 		return user;
 	}
-	
-	public void delete(User user)
-	{
+
+	public void delete(User user) {
 		mongoOperations.remove(user);
 	}
-	
+
 	public List<User> findAll() {
 		return mongoOperations.findAll(User.class, collectionName);
 	}
 
-	public User findById(String id)
-	{
+	public User findById(String id) {
 		User user = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), User.class, collectionName);
 		return user;
 	}

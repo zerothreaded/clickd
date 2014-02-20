@@ -25,32 +25,29 @@ public class ApplicationDao {
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
 	}
-	
+
 	public Application create(Application application) {
 		mongoOperations.save(application, collectionName);
 		return application;
 	}
-	
-	public Application update(Application application)
-	{
+
+	public Application update(Application application) {
 		delete(application);
 		create(application);
 		return application;
 	}
-	
-	public void delete(Application application)
-	{
+
+	public void delete(Application application) {
 		mongoOperations.remove(application);
 	}
-	
-	public Application findById(String id)
-	{
+
+	public Application findById(String id) {
 		Application application = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), Application.class, collectionName);
 		return application;
 	}
-	
+
 	public List<Application> findAll() {
 		return mongoOperations.findAll(Application.class, collectionName);
 	}
-	
+
 }

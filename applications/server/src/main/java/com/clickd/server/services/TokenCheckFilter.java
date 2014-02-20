@@ -14,26 +14,27 @@ public class TokenCheckFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-//		String accessToken = request.getParameter("apikey");
-//		if (accessToken != null) {
-//			// System.out.println("TOKEN = " + accessToken);
-//			filterChain.doFilter(request, response);
-//		} else {
-//			// System.out.println("TOKEN = " + "NOT PRESENT");
-//			filterChain.doFilter(request, response);
-//		}
-		
-		  // Add whatever headers you want here
-		HttpServletResponse servletResponse = (HttpServletResponse)response;
-//		servletResponse.setHeader("Cache-Control", "public, max-age=1");
-//		servletResponse.setHeader("Expires", new Date().getTime() + 0 + "");
-		servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		// String accessToken = request.getParameter("apikey");
+		// if (accessToken != null) {
+		// // System.out.println("TOKEN = " + accessToken);
+		// filterChain.doFilter(request, response);
+		// } else {
+		// // System.out.println("TOKEN = " + "NOT PRESENT");
+		// filterChain.doFilter(request, response);
+		// }
+
+		// Add whatever headers you want here
+		HttpServletResponse servletResponse = (HttpServletResponse) response;
+		// servletResponse.setHeader("Cache-Control", "public, max-age=1");
+		// servletResponse.setHeader("Expires", new Date().getTime() + 0 + "");
+		servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
+																							// 1.1.
 		servletResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-//		servletResponse.setDateHeader("Expires", 0); // Proxies.
+		// servletResponse.setDateHeader("Expires", 0); // Proxies.
 
 		filterChain.doFilter(request, response);
 	}
-	
+
 	@Override
 	public void destroy() {
 		System.out.println("==========================================================");

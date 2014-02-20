@@ -14,7 +14,7 @@ public class Utilities {
 		System.out.println(label + " = " + json);
 		return json;
 	}
-	
+
 	public static String toJson(Object object) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(object);
@@ -26,19 +26,16 @@ public class Utilities {
 		String json = gson.toJson(object);
 		return json;
 	}
-	
-	public static Date dateFromString(String s)
-	{
-		SimpleDateFormat format =
-		        new SimpleDateFormat("dd-MM-yyyy");
-		
+
+	public static Date dateFromString(String s) {
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
 		Date parsed = new Date();
-		try
-		{
-		    parsed = format.parse(s);
+		try {
+			parsed = format.parse(s);
+		} catch (Exception e) {
 		}
-		catch (Exception e){}
-		
+
 		return parsed;
 	}
 

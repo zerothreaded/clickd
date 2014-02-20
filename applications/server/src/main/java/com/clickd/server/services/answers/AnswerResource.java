@@ -19,27 +19,23 @@ import com.yammer.metrics.annotation.Timed;
 
 @Path("/answers")
 @Produces(MediaType.APPLICATION_JSON)
-public class AnswerResource
-{
+public class AnswerResource {
 	private AnswerDao answerDao;
 
 	@GET
 	@Timed
-	public String getAll(@Context HttpServletRequest request, 
-			@Context HttpServletResponse response,
-			@Context HttpHeaders headers)
-	{
+	public String getAll(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
 		List<Answer> allAnswers = answerDao.findAll();
 		String result = Utilities.toJson(allAnswers);
 		return result;
 	}
 
 	@GET
-    @Path("/{ref}")
-    @Timed
-    public String getAnswer(@PathParam("ref") String ref) {
+	@Path("/{ref}")
+	@Timed
+	public String getAnswer(@PathParam("ref") String ref) {
 		Answer answer = answerDao.findByRef("/answers/" + ref);
-		
+
 		return Utilities.toJson(answer);
 	}
 
