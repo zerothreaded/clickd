@@ -17,6 +17,7 @@ import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.model.Answer;
+import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
 import com.clickd.server.utilities.Utilities;
@@ -46,7 +47,6 @@ public class QuestionResource
     @Timed
     public String getQuestion(@PathParam("ref") String ref) {
 		Question question = questionDao.findByRef("/questions/" + ref);
-		
 		return Utilities.toJson(question);
 	}
 
@@ -54,25 +54,25 @@ public class QuestionResource
     @Path("/next/{userRef}")
     @Timed
     public String getNextQuestion(@PathParam("userRef") String userRef) {
+		List<Question> unansweredQuestions = new ArrayList<Question>();
 		List<Question> questions = questionDao.findAll();
-		// Remove questions already answered by this user
+		List<Choice> userChoices = choiceDao.findChoicesByUserRef(userRef);
+		
+		// Only consider questions NOT answered by this user
 		for (Question question : questions) {
-			
+
 		}
 		int idx = (int)(Math.random() * (questions.size() - 1));
 		Question question = questions.get(idx);
 		
 		ArrayList<Answer> answerList = new ArrayList<Answer>();
-		
 		List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
-		
 		for (Link answerLink : answerLinks)
 		{
 			Answer answer = answerDao.findByRef(answerLink.getHref());
 			answerList.add(answer);
 			
 		}
-		
 		question.get_Embedded().put("question-answer-list", answerList);
 		
 		return Utilities.toJson(question);

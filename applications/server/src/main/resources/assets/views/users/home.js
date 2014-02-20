@@ -4,7 +4,14 @@ var userRef;
 
 function loadNextQuestion()
 {
-	var nextQuestionUrl = "/questions/next/1";
+	var cookie1 = $.cookie("userSession");
+	var cookie = jQuery.parseJSON(cookie1);
+
+	userRef = cookie.userRef;
+	var substr = userRef.split('/');
+	userRef = substr[2];
+
+	var nextQuestionUrl = "/questions/next/" + userRef;
 	var nextQuestionCall = $.ajax({
 		  url: nextQuestionUrl,
 		  type: "GET",

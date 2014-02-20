@@ -71,7 +71,7 @@ public class ChoiceDao {
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
 			 String choiceUserRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_USER)).getHref();
-			 if (choiceUserRef.equals(userRef)) {
+			 if (choiceUserRef.equals("/users/" + userRef)) {
 				 usersChoices.add(choice);
 			 }
 		}
