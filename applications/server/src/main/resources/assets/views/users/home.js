@@ -18,7 +18,8 @@ function loadNextQuestion()
 		  dataType: "json"
 		});
 		 
-		nextQuestionCall.done(function( msg ) {
+	nextQuestionCall.done(function(msg) {
+		if (typeof msg["status"] == 'undefined' ) {
 			answers = msg["_embedded"]["question-answer-list"];
 			questionRef = msg["ref"];
 			questionRef = questionRef.split("/")[2];
@@ -30,7 +31,13 @@ function loadNextQuestion()
 				var answer = answers[i];
 				$("#click-panel-answer-" + j).html(answer.answerText);
 			}
-		});
+		} else {
+			// No more answers
+			$("#click-panel-question").html("You're so clickd out!");
+			$("#click-panel-answers").html("");
+			$('#button-skip-question').hide();
+		}
+	});
 }
 
 function onAnswerClick(data) 

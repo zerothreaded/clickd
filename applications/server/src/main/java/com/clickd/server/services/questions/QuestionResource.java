@@ -68,34 +68,41 @@ public class QuestionResource
 			for (Question question : questions) {
 				// Check if user has answered this - i.e. Question in the userChoices
 				String questionRef = question.getRef();
+				System.out.println("Evaluating question " + questionRef);
+				boolean hasAnswered = false;
 				for (Choice choice : userChoices) {
 					String choiceQuestionRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
-					if (!choiceQuestionRef.equals(questionRef)) {
-						// User has not answered this one so add it
-						unansweredQuestions.add(question);
-						System.out.println("Adding question " + questionRef);
+					if (choiceQuestionRef.equals(questionRef)) {
+						// User has answered this one so flag it
+						hasAnswered = true;
+						System.out.println("Adding question " + choiceQuestionRef);
+						break;
 					} else {
-						System.out.println("Skipping question " + questionRef);		
+						System.out.println("Skipping question " + choiceQuestionRef);		
 					}
 				}
+				if (!hasAnswered) {
+					unansweredQuestions.add(question);
+				}
+				
 			}
 		}
 		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
-		
-		int idx = (int)(Math.random() * (unansweredQuestions.size() - 1));
-		Question question = unansweredQuestions.get(idx);
-		
-		ArrayList<Answer> answerList = new ArrayList<Answer>();
-		List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
-		for (Link answerLink : answerLinks)
-		{
-			Answer answer = answerDao.findByRef(answerLink.getHref());
-			answerList.add(answer);
-			
+		if (unansweredQuestions.size() != 0) {
+			int idx = (int)(Math.random() * (unansweredQuestions.size() - 1));
+			Question question = unansweredQuestions.get(idx);
+			ArrayList<Answer> answerList = new ArrayList<Answer>();
+			List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
+			for (Link answerLink : answerLinks) {
+				Answer answer = answerDao.findByRef(answerLink.getHref());
+				answerList.add(answer);
+			}
+			question.get_Embedded().put("question-answer-list", answerList);
+			return Utilities.toJson(question);
+		} else {
+			System.out.println("NO MORE QUESTIONS TO ANSWER");
+			return "{ \"status\" : \"done\" }";
 		}
-		question.get_Embedded().put("question-answer-list", answerList);
-		
-		return Utilities.toJson(question);
 	}
 	
 	public QuestionDao getQuestionDao() {
