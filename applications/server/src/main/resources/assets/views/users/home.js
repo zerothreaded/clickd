@@ -1,7 +1,6 @@
 var answers;
 var questionRef;
 var userRef;
-var userFirstName='';
 
 function loadUser()
 {
@@ -20,7 +19,8 @@ function loadUser()
 		});
 		 
 	getUserCall.done(function(userdata) {
-		userFirstName = userdata["firstName"];
+		var userFirstName = userdata["firstName"];
+		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
 	});
 }
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
 						});
 				});
 			}
-			$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
+
 			loadNextQuestion();
 		}
 		
