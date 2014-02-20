@@ -98,7 +98,7 @@ $(document).ready(function() {
 			if (cookie.hasOwnProperty('userRef'))
 			{
 				$("#link-sign-out").click(function() {
-					var signOutUrl = cookie.userRef+"/signout";
+					var signOutUrl = cookie.userRef + "/signout";
 					
 					var signOutCall = $.ajax({
 						  url: signOutUrl,
@@ -111,6 +111,7 @@ $(document).ready(function() {
 						});
 				});
 			}
+			$('#user-image').attr("src", '/assets/images/members/facebook_' + 'ralph' + '.jpg');
 			loadNextQuestion();
 		}
 		
