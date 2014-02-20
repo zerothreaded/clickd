@@ -11,33 +11,30 @@ public class Application extends Resource {
 	@Id
 	protected String id;
 	protected String ref;
-	
+
 	// STATE
 	private String name;
 	private String version;
 	private String baseUrl;
 
-	public Application()
-	{
+	public Application() {
 		super();
 	}
-	
+
 	public Application(String name, String version, String baseUrl) {
 		super();
 		createRef();
 		this.name = name;
 		this.version = version;
-		this.baseUrl  = baseUrl;
+		this.baseUrl = baseUrl;
 
 	}
 
-	private void createRef()
-	{
+	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/application/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/application/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
-	
 
 	public String getId() {
 		return id;
@@ -54,7 +51,7 @@ public class Application extends Resource {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

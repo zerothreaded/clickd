@@ -12,17 +12,16 @@ public class Session extends Resource {
 	@Id
 	protected String id;
 	protected String ref;
-	
+
 	protected Date createdOn;
 	protected Date lastModified;
 	protected Long numberOfLogins;
 	protected Boolean isLoggedIn;
 
-	public Session()
-	{
+	public Session() {
 		super();
 	}
-	
+
 	public Session(User user, Date createdOn, Date lastModified, Long numberOfLogins, Boolean isLoggedIn) {
 		super();
 		createRef(user.getRef());
@@ -32,13 +31,12 @@ public class Session extends Resource {
 		this.isLoggedIn = isLoggedIn;
 	}
 
-	private void createRef(String userRef)
-	{
+	private void createRef(String userRef) {
 		UUID uuid = UUID.randomUUID();
-		String ref = userRef + "/sessions/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = userRef + "/sessions/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -54,7 +52,6 @@ public class Session extends Resource {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-
 
 	public Date getCreatedOn() {
 		return createdOn;

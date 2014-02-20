@@ -20,20 +20,18 @@ public class User extends Resource {
 
 	protected String email;
 	protected String password;
-		
-	public User()
-	{
+
+	public User() {
 		super();
 		createRef();
 	}
-	
-	private void createRef()
-	{
+
+	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/users/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/users/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
-	
+
 	public User(String firstName, String lastName, Date dateOfBirth, String gender, String postCode, String email, String password) {
 		super();
 
@@ -62,7 +60,7 @@ public class User extends Resource {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}

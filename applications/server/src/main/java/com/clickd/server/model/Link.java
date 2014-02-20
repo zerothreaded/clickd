@@ -1,10 +1,10 @@
 package com.clickd.server.model;
 
 public class Link {
-	
+
 	protected String href;
 	protected String rel;
-	
+
 	public Link(String href, String rel) {
 		super();
 		this.href = href;
@@ -26,6 +26,5 @@ public class Link {
 	public void setRel(String rel) {
 		this.rel = rel;
 	}
-
 
 }

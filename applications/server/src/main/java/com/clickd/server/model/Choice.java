@@ -10,19 +10,17 @@ public class Choice extends Resource {
 	protected String id;
 	protected String ref;
 
-	public Choice()
-	{
+	public Choice() {
 		super();
 		createRef();
 	}
-	
-	private void createRef()
-	{
+
+	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/choices/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/choices/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
-	
+
 	public Choice(String questionText, String source) {
 		super();
 		createRef();
@@ -43,5 +41,5 @@ public class Choice extends Resource {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-	
+
 }

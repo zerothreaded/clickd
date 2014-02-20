@@ -12,20 +12,18 @@ public class Question extends Resource {
 
 	protected String questionText;
 	protected String source;
-		
-	public Question()
-	{
+
+	public Question() {
 		super();
 		createRef();
 	}
-	
-	private void createRef()
-	{
+
+	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/questions/" + ((Long)Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/questions/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
-	
+
 	public Question(String questionText, String source) {
 		super();
 
@@ -48,7 +46,7 @@ public class Question extends Resource {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-	
+
 	public String getQuestionText() {
 		return questionText;
 	}
