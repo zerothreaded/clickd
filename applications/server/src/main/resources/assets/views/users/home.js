@@ -1,3 +1,5 @@
+var answers;
+
 function loadNextQuestion()
 {
 	var nextQuestionUrl = "/questions/next/1";
@@ -9,25 +11,24 @@ function loadNextQuestion()
 		});
 		 
 	nextQuestionCall.done(function( msg ) {
-			var answers = msg["_embedded"]["question-answer-list"];
-			
+			answers = msg["_embedded"]["question-answer-list"];
 			var questionText = msg.questionText;
-			
 			$("#click-panel-question").html(questionText);
 			
 			for (var i = 0; i < answers.length; i++)
 			{
-				var j = i+1;
+				var j = i + 1;
 				var answer = answers[i];
 				
-				$("#click-panel-answer-"+j).html(answer.answerText);
+				$("#click-panel-answer-" + j).html(answer.answerText);
 			}
 		});
 }
 
-function onAnswerClick() 
+function onAnswerClick(data) 
 {
-	alert("RALPH");
+	var answer = answers[data - 1];
+	alert(answer.answerText);
 }
 
 $(document).ready(function() {
