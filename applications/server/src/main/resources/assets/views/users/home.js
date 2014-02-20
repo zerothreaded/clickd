@@ -19,7 +19,9 @@ function loadUser() {
 
 	getUserCall.done(function(userdata) {
 		var userFirstName = userdata["firstName"];
+		var userLastName = userdata["lastName"];
 		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
+		$('#user-full-name').html('<strong>' + userFirstName + " " + userLastName + '</strong');
 	});
 }
 
