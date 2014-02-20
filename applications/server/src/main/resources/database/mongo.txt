@@ -18,13 +18,13 @@ db.answers.insert({"ref" : "/answers/7244214840635050554", "answerText" : "Other
 db.answers.insert({"ref" : "/answers/7244214840635050555", "answerText" : "I don't drink", "source" : "system", "_links" : {"self" : {"href":"/answers/7244214840635050555", "rel" : "self"}}});
 
 
-db.answers.insert({"ref" : "/answers/2244214840635050546", "answerText" : "Rat", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050546", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050547", "answerText" : "Cat", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050547", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050548", "answerText" : "Blowfish", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050548", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050549", "answerText" : "Giraffe", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050549", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050550", "answerText" : "Badger", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050550", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050551", "answerText" : "Lion", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050551", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050552", "answerText" : "Snake", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050552", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050553", "answerText" : "Puppy", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050553", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/2244214840635050554", "answerText" : "NONE", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050554", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050546", "answerText" : "Rat", "imageName" : "rat", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050546", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050547", "answerText" : "Cat", "imageName" : "cat",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050547", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050548", "answerText" : "Blowfish", "imageName" : "blowfish",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050548", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050549", "answerText" : "Giraffe", "imageName" : "giraffe",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050549", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050550", "answerText" : "Badger", "imageName" : "badger",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050550", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050551", "answerText" : "Lion", "imageName" : "lion",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050551", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050552", "answerText" : "Snake", "imageName" : "snake",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050552", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050553", "answerText" : "Puppy", "imageName" : "puppy",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050553", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/2244214840635050554", "answerText" : "NONE", "imageName" : "none",  "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050554", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/2244214840635050555", "answerText" : "I don't drink", "source" : "system", "_links" : {"self" : {"href":"/answers/2244214840635050555", "rel" : "self"}}});

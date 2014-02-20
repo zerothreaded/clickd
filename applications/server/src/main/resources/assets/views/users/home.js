@@ -29,7 +29,9 @@ function loadNextQuestion()
 			{
 				var j = i + 1;
 				var answer = answers[i];
-				$("#click-panel-answer-" + j).html(answer.answerText);
+				alert(answer["imageName"]);
+				var image = '<img  src="/assets/images/answers/' + answer["imageName"] + '.jpg" />';
+				$("#click-panel-answer-" + j).html(image + 	answer.answerText);
 			}
 		} else {
 			// No more answers
