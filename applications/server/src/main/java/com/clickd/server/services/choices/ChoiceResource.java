@@ -1,5 +1,6 @@
 package com.clickd.server.services.choices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,19 @@ public class ChoiceResource
 	{
 		List<Choice> allChoices = choiceDao.findAll();
 		String result = Utilities.toJson(allChoices);
+		return result;
+	}
+	
+	@GET
+	@Timed
+	@Path("/{userRef}")
+	public String getUsersChoices(@PathParam("userRef") String userRef,
+			@Context HttpServletRequest request, 
+			@Context HttpServletResponse response,
+			@Context HttpHeaders headers)
+	{
+		List<Choice> usersChoices = choiceDao.findChoicesByUserRef(userRef);
+		String result = Utilities.toJson(usersChoices);
 		return result;
 	}
 

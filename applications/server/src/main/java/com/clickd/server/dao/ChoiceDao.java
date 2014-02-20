@@ -1,12 +1,25 @@
 package com.clickd.server.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Choice;
+import com.clickd.server.model.Link;
+import com.clickd.server.model.Resource;
+import com.clickd.server.utilities.Utilities;
+import com.yammer.metrics.annotation.Timed;
 
 public class ChoiceDao {
 
@@ -18,14 +31,6 @@ public class ChoiceDao {
 		this.collectionName = "choices";
 	}
 
-	public MongoOperations getMongoOperations() {
-		return mongoOperations;
-	}
-
-	public void setMongoOperations(MongoOperations mongoOperations) {
-		this.mongoOperations = mongoOperations;
-	}
-	
 	public Choice create(Choice choice) {
 		mongoOperations.save(choice, collectionName);
 		return choice;
@@ -57,6 +62,29 @@ public class ChoiceDao {
 	public Choice findByRef(String ref) {
 		Choice choice = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Choice.class, collectionName);
 		return choice;
+	}
+
+	
+	public List<Choice> findChoicesByUserRef(String userRef)
+	{
+		List<Choice> usersChoices = new ArrayList<Choice>();
+		List<Choice> allChoices = findAll();
+		for (Choice choice : allChoices) {
+			 String choiceUserRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_USER)).getHref();
+			 if (choiceUserRef.equals(userRef)) {
+				 usersChoices.add(choice);
+			 }
+		}
+		return usersChoices;
+	}
+	
+		
+	public MongoOperations getMongoOperations() {
+		return mongoOperations;
+	}
+
+	public void setMongoOperations(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
 
 }

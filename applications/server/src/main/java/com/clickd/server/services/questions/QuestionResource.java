@@ -13,16 +13,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
-
-
 import com.clickd.server.dao.AnswerDao;
-import com.clickd.server.dao.SessionDao;
+import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.model.Answer;
 import com.clickd.server.model.Link;
-import com.clickd.server.model.Resource;
-import com.clickd.server.model.Session;
-import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.model.Question;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
@@ -33,7 +28,7 @@ public class QuestionResource
 {
 	private QuestionDao questionDao;
 	private AnswerDao answerDao;
-
+	private ChoiceDao choiceDao;
 
 	@GET
 	@Timed
@@ -60,7 +55,11 @@ public class QuestionResource
     @Timed
     public String getNextQuestion(@PathParam("userRef") String userRef) {
 		List<Question> questions = questionDao.findAll();
-		int idx = (int)(Math.random() * (questions.size()-1));
+		// Remove questions already answered by this user
+		for (Question question : questions) {
+			
+		}
+		int idx = (int)(Math.random() * (questions.size() - 1));
 		Question question = questions.get(idx);
 		
 		ArrayList<Answer> answerList = new ArrayList<Answer>();
@@ -90,6 +89,14 @@ public class QuestionResource
 	public void setAnswerDao(AnswerDao answerDao) {
 		this.answerDao = answerDao;
 		
+	}
+
+	public ChoiceDao getChoiceDao() {
+		return choiceDao;
+	}
+
+	public void setChoiceDao(ChoiceDao choiceDao) {
+		this.choiceDao = choiceDao;
 	}
 
 }
