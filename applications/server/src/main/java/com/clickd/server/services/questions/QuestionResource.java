@@ -60,21 +60,28 @@ public class QuestionResource
 		List<Question> questions = questionDao.findAll();
 		List<Choice> userChoices = choiceDao.findChoicesByUserRef(userRef);
 		
-		// Only consider questions NOT answered by this user
-		for (Question question : questions) {
-			// Check if user has answered this - i.e. Question in the userChoices
-			String questionRef = question.getRef();
-			for (Choice choice : userChoices) {
-				String choiceQuestionRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
-				if (!choiceQuestionRef.equals(questionRef)) {
-					// User has not answered this one so add it
-					unansweredQuestions.add(question);
-					System.out.println("Adding question " + questionRef);
-				} else {
-					System.out.println("Skipping question " + questionRef);		
+		if (userChoices.size() == 0) {
+			// No choices - first time clicking
+			unansweredQuestions = questions;
+		} else {
+			// Only consider questions NOT answered by this user
+			for (Question question : questions) {
+				// Check if user has answered this - i.e. Question in the userChoices
+				String questionRef = question.getRef();
+				for (Choice choice : userChoices) {
+					String choiceQuestionRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
+					if (!choiceQuestionRef.equals(questionRef)) {
+						// User has not answered this one so add it
+						unansweredQuestions.add(question);
+						System.out.println("Adding question " + questionRef);
+					} else {
+						System.out.println("Skipping question " + questionRef);		
+					}
 				}
 			}
 		}
+		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
+		
 		int idx = (int)(Math.random() * (unansweredQuestions.size() - 1));
 		Question question = unansweredQuestions.get(idx);
 		
