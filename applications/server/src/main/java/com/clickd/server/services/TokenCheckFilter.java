@@ -1,7 +1,6 @@
 package com.clickd.server.services;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
