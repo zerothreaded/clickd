@@ -20,6 +20,7 @@ import com.clickd.server.model.Answer;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
+import com.clickd.server.model.Resource;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -50,6 +51,7 @@ public class QuestionResource
 		return Utilities.toJson(question);
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
     @Path("/next/{userRef}")
     @Timed
@@ -60,10 +62,21 @@ public class QuestionResource
 		
 		// Only consider questions NOT answered by this user
 		for (Question question : questions) {
-
+			// Check if user has answered this - i.e. Question in the userChoices
+			String questionRef = question.getRef();
+			for (Choice choice : userChoices) {
+				String choiceQuestionRef = ((Link)choice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION)).getHref();
+				if (!choiceQuestionRef.equals(questionRef)) {
+					// User has not answered this one so add it
+					unansweredQuestions.add(question);
+					System.out.println("Adding question " + questionRef);
+				} else {
+					System.out.println("Skipping question " + questionRef);		
+				}
+			}
 		}
-		int idx = (int)(Math.random() * (questions.size() - 1));
-		Question question = questions.get(idx);
+		int idx = (int)(Math.random() * (unansweredQuestions.size() - 1));
+		Question question = unansweredQuestions.get(idx);
 		
 		ArrayList<Answer> answerList = new ArrayList<Answer>();
 		List<Link> answerLinks = (List<Link>)question.get_Links().get("question-answer-list");
