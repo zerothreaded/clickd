@@ -1,6 +1,7 @@
 package com.clickd.server.services;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -8,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 public class TokenCheckFilter implements Filter {
 
@@ -21,6 +23,14 @@ public class TokenCheckFilter implements Filter {
 //			// System.out.println("TOKEN = " + "NOT PRESENT");
 //			filterChain.doFilter(request, response);
 //		}
+		
+		  // Add whatever headers you want here
+		HttpServletResponse servletResponse = (HttpServletResponse)response;
+//		servletResponse.setHeader("Cache-Control", "public, max-age=1");
+//		servletResponse.setHeader("Expires", new Date().getTime() + 0 + "");
+		servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		servletResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+//		servletResponse.setDateHeader("Expires", 0); // Proxies.
 
 		filterChain.doFilter(request, response);
 	}

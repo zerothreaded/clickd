@@ -25,6 +25,11 @@ function loadNextQuestion()
 		});
 }
 
+function onAnswerClick() 
+{
+	alert("RALPH");
+}
+
 $(document).ready(function() {
 		//check cookie status
 		var cookie1 = $.cookie("userSession");
