@@ -1,6 +1,28 @@
 var answers;
 var questionRef;
 var userRef;
+var userFirstName='';
+
+function loadUser()
+{
+	var cookie1 = $.cookie("userSession");
+	var cookie = jQuery.parseJSON(cookie1);
+
+	userRef = cookie.userRef;
+	var substr = userRef.split('/');
+	userRef = substr[2];
+
+	var getUserUrl = "/users/" + userRef;
+	var getUserCall = $.ajax({
+		  url: getUserUrl,
+		  type: "GET",
+		  dataType: "json"
+		});
+		 
+	getUserCall.done(function(userdata) {
+		userFirstName = userdata["firstName"];
+	});
+}
 
 function loadNextQuestion()
 {
@@ -70,12 +92,13 @@ function onAnswerClick(data)
 }
 
 $(document).ready(function() {
-		//check cookie status
+		// check cookie status
 		var cookie1 = $.cookie("userSession");
 		if (typeof cookie1 == "undefined")
 		{
 			window.location="/home";
 		} else {
+			loadUser();
 			var cookie = jQuery.parseJSON(cookie1);
 			if (cookie.hasOwnProperty('sessionRef'))
 			{	var validateSignIn = $.ajax({
@@ -111,7 +134,7 @@ $(document).ready(function() {
 						});
 				});
 			}
-			$('#user-image').attr("src", '/assets/images/members/facebook_' + 'ralph' + '.jpg');
+			$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
 			loadNextQuestion();
 		}
 		
