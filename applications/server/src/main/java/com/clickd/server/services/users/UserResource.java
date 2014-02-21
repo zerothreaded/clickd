@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +34,10 @@ import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/users")
@@ -107,6 +112,7 @@ public class UserResource {
 	public Response signIn(@FormParam(value = "email") String email, @FormParam(value = "password") String password, @Context HttpServletRequest request,
 			@Context HttpServletResponse response) throws URISyntaxException {
 		User user = userDao.findByEmail(email);
+		
 		if (user != null) {
 			if (user.getPassword().equals(password)) {
 				// User Authentication OK
@@ -225,6 +231,75 @@ public class UserResource {
 	public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
 		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
 		return Utilities.toJson(session);
+	}
+	
+	class CandidateResponse
+	{
+		public CandidateResponse(User user, Integer score) {
+			super();
+			this.user = user;
+			this.score = score;
+		}
+		User user;
+		Integer score;
+		
+		
+		public User getUser() {
+			return user;
+		}
+		public void setUser(User user) {
+			this.user = user;
+		}
+		public Integer getScore() {
+			return score;
+		}
+		public void setScore(Integer score) {
+			this.score = score;
+		}
+		
+	}
+	
+	@GET
+	@Path("/{userRef}/candidates")
+	@Timed
+	public String getCandidates(@PathParam("userRef") String userRef) {
+		//get my answers
+		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+
+		ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
+
+		
+		for (Choice choice : myChoices)
+		{
+			Link answerLink = (Link)choice.get_Links().get("choice-answer");
+			List<Choice> sameAnswerChoices = choiceDao.findByAnswerRef(answerLink.getHref());
+			for (Choice otherUsersChoice : sameAnswerChoices)
+			{
+				Link otherUserLink = (Link)otherUsersChoice.get_Links().get("choice-user");
+				User otherUser = userDao.findByRef(otherUserLink.getHref());
+				
+				boolean alreadyExists = false;
+				for (CandidateResponse responseRow : responseList)
+				{
+					if (responseRow.getUser().getRef().equals(otherUser.getRef()))
+					{
+						responseList.remove(responseRow);
+						responseRow.setScore(responseRow.getScore() + 1);
+						responseList.add(responseRow);
+						alreadyExists = true;
+						break;
+					}
+				}
+				
+				if (!alreadyExists)
+				{
+					CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+					responseList.add(responseRow);
+				}
+			}
+		}
+		
+		return Utilities.toJson(responseList);
 	}
 
 	public SessionDao getSessionDao() {

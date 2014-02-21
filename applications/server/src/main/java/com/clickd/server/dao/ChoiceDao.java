@@ -50,7 +50,7 @@ public class ChoiceDao {
 		return choice;
 	}
 
-	public List<Choice> findChoicesByUserRef(String userRef) {
+	public List<Choice> findByUserRef(String userRef) {
 		List<Choice> usersChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
@@ -68,6 +68,23 @@ public class ChoiceDao {
 
 	public void setMongoOperations(MongoOperations mongoOperations) {
 		this.mongoOperations = mongoOperations;
+	}
+
+	public List<Choice> findByAnswerRef(String href) {
+		List<Choice> answerChoices = new ArrayList<Choice>();
+		List<Choice> allChoices = findAll();
+		for (Choice choice : allChoices) {
+			Link choiceAnswerLink =  (Link)choice.get_Links().get("choice-answer");
+			
+			if (null == choiceAnswerLink)
+				continue;
+			
+			String choiceAnswerRef =  choiceAnswerLink.getHref();
+			if (choiceAnswerRef.equals(href)) {
+				answerChoices.add(choice);
+			}
+		}
+		return answerChoices;
 	}
 
 }

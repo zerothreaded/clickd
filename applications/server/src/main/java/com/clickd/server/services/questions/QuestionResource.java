@@ -54,7 +54,7 @@ public class QuestionResource {
 	public String getNextQuestion(@PathParam("userRef") String userRef) {
 		List<Question> unansweredQuestions = new ArrayList<Question>();
 		List<Question> questions = questionDao.findAll();
-		List<Choice> userChoices = choiceDao.findChoicesByUserRef(userRef);
+		List<Choice> userChoices = choiceDao.findByUserRef(userRef);
 
 		if (userChoices.size() == 0) {
 			// No choices - first time clicking

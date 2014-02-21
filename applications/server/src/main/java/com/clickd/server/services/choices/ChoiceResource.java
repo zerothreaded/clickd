@@ -39,7 +39,7 @@ public class ChoiceResource {
 	@Path("/{userRef}")
 	public String getUsersChoices(@PathParam("userRef") String userRef, @Context HttpServletRequest request, @Context HttpServletResponse response,
 			@Context HttpHeaders headers) {
-		List<Choice> usersChoices = choiceDao.findChoicesByUserRef(userRef);
+		List<Choice> usersChoices = choiceDao.findByUserRef(userRef);
 		String result = Utilities.toJson(usersChoices);
 		return result;
 	}
