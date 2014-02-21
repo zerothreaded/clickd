@@ -47,7 +47,7 @@ public class ChoiceResource {
 	@POST
 	@Timed
 	@Path("/{userRef}/{questionRef}/{answerRef}")
-	public String create(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerRef") String answerRef,
+	public String createWithAnswerRef(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerRef") String answerRef,
 			@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
 		Choice choice = new Choice();
 		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
@@ -62,14 +62,14 @@ public class ChoiceResource {
 
 	@POST
 	@Timed
-	@Path("/{userRef}/{questionRef}/text/{text}")
-	public String create(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, boolean textAnswer, @PathParam("text") String answerText,
+	@Path("/{userRef}/{questionRef}/answerText/{text}")
+	public String createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText,
 			@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
 		Choice choice = new Choice();
 		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
-		choice.setRawAnswer(answerText);
+		choice.setAnswerText(answerText);
 		choiceDao.create(choice);
 		String result = Utilities.toJson(choice);
 		return result;

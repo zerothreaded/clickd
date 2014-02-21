@@ -23,10 +23,7 @@ public class Choice extends Resource {
 		this.ref = ref;
 	}
 
-	public Choice(String questionText, String source) {
-		super();
-		createRef();
-	}
+
 
 	public String getId() {
 		return id;
@@ -44,11 +41,11 @@ public class Choice extends Resource {
 		this.ref = ref;
 	}
 
-	public void setRawAnswer(String answerText) {
+	public void setAnswerText(String answerText) {
 		this.answerText = answerText;
 	}
 	
-	public String getRawAnswer()
+	public String getAnswerText()
 	{
 		return this.answerText;
 	}

@@ -54,5 +54,11 @@ public class QuestionDao {
 		Question question = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Question.class, collectionName);
 		return question;
 	}
+	
+	public Question findByTags(String tag)
+	{
+		Question question = mongoOperations.findOne(new Query(Criteria.where("tags").is(tag)), Question.class, collectionName);
+		return question;
+	}
 
 }

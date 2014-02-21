@@ -13,6 +13,7 @@ public class Question extends Resource {
 	protected String questionText;
 	protected String source;
 	protected String type;
+	protected String tags;
 
 	public Question() {	
 		super();
@@ -57,12 +58,19 @@ public class Question extends Resource {
 	}
 
 	public String getType() {
-		// TODO Auto-generated method stub
 		return this.type;
 	}
 	
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getTags() {
+		return this.tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 
 }

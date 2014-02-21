@@ -22,9 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import com.clickd.server.dao.ChoiceDao;
+import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
+import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
@@ -36,6 +40,8 @@ import com.yammer.metrics.annotation.Timed;
 public class UserResource {
 	private UserDao userDao;
 	private SessionDao sessionDao;
+	private ChoiceDao choiceDao;
+	private QuestionDao questionDao;
 
 	@POST
 	@Timed
@@ -58,6 +64,34 @@ public class UserResource {
 			newUser.setGender(gender);
 			newUser.setPostCode(postcode);
 			userDao.create(newUser);
+			
+			String userRef = newUser.getRef();
+			
+			Choice ageChoice = new Choice();
+			Question ageQuestion = questionDao.findByTags("user.bio.age");
+			ageChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
+			ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+			ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
+			ageChoice.setAnswerText(dateOfBirth);
+			choiceDao.create(ageChoice);
+			
+			Choice genderChoice = new Choice();
+			Question genderQuestion = questionDao.findByTags("user.bio.gender");
+			genderChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
+			genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+			genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
+			genderChoice.setAnswerText(gender);
+			choiceDao.create(genderChoice);
+			
+			Choice postcodeChoice = new Choice();
+			Question postcodeQuestion = questionDao.findByTags("user.bio.postcode");
+			postcodeChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
+			postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+			postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
+			postcodeChoice.setAnswerText(postcode);
+			choiceDao.create(postcodeChoice);
+			
+			
 
 			return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
 		} else {
@@ -209,4 +243,11 @@ public class UserResource {
 		this.userDao = userDao;
 	}
 
+	public void setChoiceDao(ChoiceDao choiceDao) {
+		this.choiceDao = choiceDao;
+	}
+
+	public void setQuestionDao(QuestionDao questionDao) {
+		this.questionDao = questionDao;
+	}
 }
