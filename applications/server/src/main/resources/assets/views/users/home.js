@@ -50,9 +50,22 @@ function loadNextQuestion() {
 			for ( var i = 0; i < answers.length; i++) {
 				var j = i + 1;
 				var answer = answers[i];
-				var image = '<img  src="/assets/images/answers/' + answer["imageName"] + '.jpg" />';
+				if (answer == null)
+					break;
+				
+				$("#click-panel-answer-" + j).show();
+
+				
+				var image = '<img  src="/assets/images/answers/'+questionRef+'/' + answer["imageName"] + '.jpg" />';
 				$("#click-panel-answer-" + j).html(image + answer.answerText);
+				
 				// $("#click-panel-answer-" + j).html(image);
+			}
+			
+			for (var i = answers.length; i < 9; i++)
+			{
+				var j = i+1;
+				$("#click-panel-answer-" + j).hide();
 			}
 		} else {
 			// No more answers
