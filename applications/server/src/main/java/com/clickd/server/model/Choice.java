@@ -9,6 +9,8 @@ public class Choice extends Resource {
 	@Id
 	protected String id;
 	protected String ref;
+	
+	protected String answerText;
 
 	public Choice() {
 		super();
@@ -40,6 +42,15 @@ public class Choice extends Resource {
 
 	public void setRef(String ref) {
 		this.ref = ref;
+	}
+
+	public void setRawAnswer(String answerText) {
+		this.answerText = answerText;
+	}
+	
+	public String getRawAnswer()
+	{
+		return this.answerText;
 	}
 
 }

@@ -58,6 +58,22 @@ public class ChoiceResource {
 		String result = Utilities.toJson(choice);
 		return result;
 	}
+	
+
+	@POST
+	@Timed
+	@Path("/{userRef}/{questionRef}/text/{text}")
+	public String create(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, boolean textAnswer, @PathParam("text") String answerText,
+			@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
+		Choice choice = new Choice();
+		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
+		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
+		choice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
+		choice.setRawAnswer(answerText);
+		choiceDao.create(choice);
+		String result = Utilities.toJson(choice);
+		return result;
+	}
 
 	public ChoiceDao getChoiceDao() {
 		return choiceDao;

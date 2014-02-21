@@ -55,7 +55,9 @@ function loadNextQuestion() {
 				if (answer == null)
 					break;
 				
-				$("#click-panel-answer-" + j).show();
+
+				$("#click-panel-answer-" + j).parent().parent().show();
+
 
 				
 				var image = '<img  src="/assets/images/answers/'+questionRef+'/' + answer["imageName"] + '.jpg" />';
@@ -67,7 +69,7 @@ function loadNextQuestion() {
 			for (var i = answers.length; i < 9; i++)
 			{
 				var j = i+1;
-				$("#click-panel-answer-" + j).hide();
+				$("#click-panel-answer-" + j).parent().parent().hide();
 			}
 		} else {
 			// No more answers

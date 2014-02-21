@@ -320,7 +320,7 @@ img.connect-profile-img {
 }
 
 .click-answer-panel {
-	height: 90px;
+	height: 100px;
 	border: 1px solid rgb(201, 201, 201);
 	padding: 5px;
 	border-radius: 4px;
@@ -340,6 +340,7 @@ img.connect-profile-img {
 	border-radius: 2px;
 	border: 1px solid rgb(150, 157, 172);
 	line-height: 90px;
+	padding:0px;
 }
 
 .click-answer-span {
@@ -357,5 +358,5 @@ img.connect-profile-img {
 
 .click-answer-row {
 	padding-left: 11px;
-	margin-bottom: 12px;
+	margin-bottom: 5px;
 }

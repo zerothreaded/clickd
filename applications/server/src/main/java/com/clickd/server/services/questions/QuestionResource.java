@@ -78,7 +78,7 @@ public class QuestionResource {
 						System.out.println("Skipping question " + choiceQuestionRef);
 					}
 				}
-				if (!hasAnswered) {
+				if (!hasAnswered && !question.getType().equals("bio")) {
 					unansweredQuestions.add(question);
 				}
 

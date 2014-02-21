@@ -12,8 +12,9 @@ public class Question extends Resource {
 
 	protected String questionText;
 	protected String source;
+	protected String type;
 
-	public Question() {
+	public Question() {	
 		super();
 		createRef();
 	}
@@ -53,6 +54,15 @@ public class Question extends Resource {
 
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
+	}
+
+	public String getType() {
+		// TODO Auto-generated method stub
+		return this.type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
