@@ -1,16 +1,4 @@
 
-#main-container {
-	position: relative;
-	min-height: 800px;
-	padding-top: 5px;
-	margin-left: 200px;
-	transition: all .5s ease;
-	-webkit-transition: all .5s ease;
-	-moz-transition: all .5s ease;
-	-ms-transition: all .5s ease;
-	-o-transition: all .5s ease;
-}
-
 #wrapper {
 	position: relative;
 	overflow: hidden;
