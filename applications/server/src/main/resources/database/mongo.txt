@@ -15,6 +15,9 @@ db.questions.insert({"questionText" : "What's your gender?", "tags" : "user.bio.
 
 
 db.answers.drop()
+db.answers.insert({"ref" : "/answers/a0", "tags" : "answers.system.skip", "answerText" : "Skip Question", "source" : "system", "_links" : {"self" : {"href":"/answers/a0", "rel" : "self"}}});
+
+
 db.answers.insert({"ref" : "/answers/a1", "answerText" : "Tequila", "source" : "system", "_links" : {"self" : {"href":"/answers/a1", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/a2", "answerText" : "Whiskey", "source" : "system", "_links" : {"self" : {"href":"/answers/a2", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/a3", "answerText" : "Rum", "source" : "system", "_links" : {"self" : {"href":"/answers/a3", "rel" : "self"}}});
