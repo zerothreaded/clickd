@@ -300,7 +300,7 @@ img.connect-profile-img {
 .click-panel-heading {
 	height: 120px;
 	text-transform: uppercase;
-	background-color: cyan;
+	background-color: rgb(41, 57, 78);
 	color: white;
 	border-radius: 4px;
 }

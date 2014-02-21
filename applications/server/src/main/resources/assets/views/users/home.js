@@ -22,6 +22,8 @@ function loadUser() {
 		var userLastName = userdata["lastName"];
 		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
 		$('#user-full-name').html('<strong>' + userFirstName + " " + userLastName + '</strong');
+		$('#user-full-name-2').html('<strong>' + userFirstName + " " + userLastName + '</strong');
+
 	});
 }
 
