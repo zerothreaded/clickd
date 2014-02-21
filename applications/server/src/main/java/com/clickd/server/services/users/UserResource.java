@@ -24,10 +24,12 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import com.clickd.server.dao.ChoiceDao;
+import com.clickd.server.dao.ConnectionDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Choice;
+import com.clickd.server.model.Connection;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
@@ -47,6 +49,7 @@ public class UserResource {
 	private SessionDao sessionDao;
 	private ChoiceDao choiceDao;
 	private QuestionDao questionDao;
+	private ConnectionDao connectionDao;
 
 	@POST
 	@Timed
@@ -301,7 +304,64 @@ public class UserResource {
 		
 		return Utilities.toJson(responseList);
 	}
+	
+	@GET
+	@Path("/{userRef}/addConnection/{otherUserRef}")
+	@Timed
+	public String addConnection(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
 
+		User user = userDao.findByRef("/users/" + userRef);
+		
+		//create the connection object
+		Connection connection = new Connection(user, new Date(), new Date(), "pending");
+		Link otherUserLink = new Link("users/" + otherUserRef, "other-user");
+		connection.get_Links().put("connection-other-user", otherUserLink);
+		connectionDao.create(connection);
+		
+		//get the pre existing connections
+		List<Link> userConnectionLinks = new ArrayList<Link>();
+		if (null != user.get_Links().get("connection-list"))	{
+			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
+		}
+		
+		//add the connection link to the user connection list
+		Link connectionLink = new Link(connection.getRef(), "connection");
+		userConnectionLinks.add(connectionLink);
+		user.get_Links().put("connection-list", userConnectionLinks);
+		userDao.update(user);
+		
+		//todo: add code if other user has already requested connection, set status to active
+		
+		return "";
+	}
+	
+	
+	@GET
+	@Path("/{userRef}/connections")
+	@Timed
+	public String getConnections(@PathParam("userRef") String userRef) {
+		User user = userDao.findByRef("/users/" + userRef);
+		
+		//get the pre existing connections
+		List<Link> userConnectionLinks = new ArrayList<Link>();
+		if (null != user.get_Links().get("connection-list"))	{
+			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
+		}
+
+		return Utilities.toJson(userConnectionLinks);
+	}
+	
+
+	@GET
+	@Path("/{userRef}/connections/{connectionRef}")
+	@Timed
+	public String getConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
+		Connection connection = connectionDao.findByRef("/users/"+userRef+"/connections/"+connectionRef);
+
+		return Utilities.toJson(connection);
+	}
+	
+	
 	public SessionDao getSessionDao() {
 		return sessionDao;
 	}
@@ -324,5 +384,9 @@ public class UserResource {
 
 	public void setQuestionDao(QuestionDao questionDao) {
 		this.questionDao = questionDao;
+	}
+
+	public void setConnectionDao(ConnectionDao connectionDao) {
+		this.connectionDao = connectionDao;
 	}
 }

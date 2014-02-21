@@ -49,4 +49,7 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 
+	<bean id="connectionDao" class="com.clickd.server.dao.ConnectionDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 </beans>

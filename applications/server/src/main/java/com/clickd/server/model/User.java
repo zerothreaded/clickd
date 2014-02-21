@@ -1,6 +1,7 @@
 package com.clickd.server.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -20,7 +21,7 @@ public class User extends Resource {
 
 	protected String email;
 	protected String password;
-
+	
 	public User() {
 		super();
 		createRef();
@@ -116,5 +117,4 @@ public class User extends Resource {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 }
