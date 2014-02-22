@@ -1,4 +1,4 @@
-package com.clickd.server.services.choices;
+	package com.clickd.server.services.choices;
 
 import java.util.List;
 
@@ -43,6 +43,8 @@ public class ChoiceResource {
 		String result = Utilities.toJson(usersChoices);
 		return result;
 	}
+	
+	
 
 	@POST
 	@Timed

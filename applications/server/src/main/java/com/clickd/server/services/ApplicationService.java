@@ -74,6 +74,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		userResource.setChoiceDao(choiceDao);
 		userResource.setQuestionDao(questionDao);
 		userResource.setConnectionDao(connectionDao);
+		userResource.setAnswerDao(answerDao);
 		environment.addResource(userResource);
 
 		// /questions/*

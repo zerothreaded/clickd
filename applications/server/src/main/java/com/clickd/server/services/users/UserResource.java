@@ -23,12 +23,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.ConnectionDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.model.Answer;
 import com.clickd.server.model.Choice;
+import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
@@ -50,6 +53,7 @@ public class UserResource {
 	private ChoiceDao choiceDao;
 	private QuestionDao questionDao;
 	private ConnectionDao connectionDao;
+	private AnswerDao answerDao;
 
 	@POST
 	@Timed
@@ -351,6 +355,48 @@ public class UserResource {
 		return Utilities.toJson(userConnectionLinks);
 	}
 	
+	
+	@GET
+	@Path("/{userRef}/cliques")
+	@Timed
+	public String getCliques(@PathParam("userRef") String userRef) {
+		User user = userDao.findByRef("/users/" + userRef);
+		
+		//get the pre existing connections
+		List<Link> userCliques = new ArrayList<Link>();
+
+		userCliques =  (List<Link>)user.get_Links().get("clique-list");
+		
+		List<Clique> myCliques = new ArrayList<Clique>();	
+			
+		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+		for (Choice myChoice : myChoices)
+		{
+			String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
+			Answer answer = answerDao.findByRef(answerRef);
+			
+			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
+			
+			//now get list of users who made that choice
+			List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+			List<User> cliqueMembers = new ArrayList<User>();
+					
+			for (Choice cliqueMemberChoice : cliqueMemberChoices)
+			{
+				Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
+				
+				if (!cliqueMember.getRef().equals("/users/"+userRef))
+					cliqueMembers.add(cliqueMember);
+			}
+			
+			thisClique.get_Embedded().put("clique-members", cliqueMembers);
+			thisClique.get_Embedded().put("clique-choice", myChoice);
+			myCliques.add(thisClique);
+		}
+
+		return Utilities.toJson(myCliques);
+	}
 
 	@GET
 	@Path("/{userRef}/connections/{connectionRef}")
@@ -388,5 +434,9 @@ public class UserResource {
 
 	public void setConnectionDao(ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
+	}
+
+	public void setAnswerDao(AnswerDao answerDao) {
+		this.answerDao = answerDao;
 	}
 }
