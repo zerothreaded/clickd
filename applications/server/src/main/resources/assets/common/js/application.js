@@ -217,12 +217,14 @@ function updateCliques()
 
 function showHomePage()
 {
-	
+	$("#home-wrapper").removeClass("hidden");
+	$("#user-wrapper").addClass("hidden");
 }
 
 function showUserPage()
 {
-	
+	$("#home-wrapper").addClass("hidden");
+	$("#user-wrapper").removeClass("hidden");
 }
 
 function initLoginSignUpForm()
