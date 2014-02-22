@@ -720,7 +720,7 @@ aside .main-menu .alert {
     display: none;
   }
 }
-#wrapper {
+#home-wrapper {
   position: relative;
   overflow: hidden;
   height: 100%;
@@ -7330,3 +7330,4 @@ input[type="radio"]:active + .custom-radio {
 {
 	margin-right:110px;
 }
+

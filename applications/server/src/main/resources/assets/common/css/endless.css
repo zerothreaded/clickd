@@ -11,8 +11,8 @@
   white-space: nowrap;
   min-width: 310px;
   border-bottom: 1px solid #f2f2f2;
-  transition: all 0.5s ease;
-  -webkit-transition: all 0.5s ease;
+  /* transition: all 0.5s ease; */
+  /* -webkit-transition: all 0.5s ease; */
   -moz-transition: all 0.5s ease;
   -ms-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -95,32 +95,18 @@
   display: block;
   position: relative;
   float: left;
-  transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
 }
 #top-nav .nav-notification > li.open {
   background: #fcfcfc;
 }
 #top-nav .nav-notification > li.open .dropdown-menu {
   animation: fadeInUp 0.8s ease;
-  -webkit-animation: fadeInUp 0.8s ease;
-  -moz-animation: fadeInUp 0.8s ease;
-  -ms-animation: fadeInUp 0.8s ease;
-  -o-animation: fadeInUp 0.8s ease;
 }
 #top-nav .nav-notification > li:last-child {
   border-right: none;
 }
 #top-nav .nav-notification > li:hover {
   background: #fcfcfc;
-  transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
 }
 #top-nav .nav-notification > li.profile:hover a,
 #top-nav .nav-notification > li.profile:focus a {
@@ -133,20 +119,10 @@
 #top-nav .nav-notification > li.profile:hover a > strong,
 #top-nav .nav-notification > li.profile:focus a > strong {
   display: inline-block;
-  animation: fadeInRight 0.2s ease-in-out;
-  -webkit-animation: fadeInRight 0.2s ease-in-out;
-  -moz-animation: fadeInRight 0.2s ease-in-out;
-  -ms-animation: fadeInRight 0.2s ease-in-out;
-  -o-animation: fadeInRight 0.2s ease-in-out;
 }
 #top-nav .nav-notification > li.profile:hover a > span,
 #top-nav .nav-notification > li.profile:focus a > span {
   display: inline-block;
-  animation: fadeInLeft 0.2s ease-in-out;
-  -webkit-animation: fadeInLeft 0.2s ease-in-out;
-  -moz-animation: fadeInLeft 0.2s ease-in-out;
-  -ms-animation: fadeInLeft 0.2s ease-in-out;
-  -o-animation: fadeInLeft 0.2s ease-in-out;
 }
 #top-nav .nav-notification > li.profile .dropdown-menu {
   border-radius: 2px;
@@ -162,47 +138,23 @@
   color: #000;
 }
 #top-nav .nav-notification > li.profile .dropdown-menu li:not(:first-child) a {
-  transition: all 0.2s ease-in-out;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
+
 }
 #top-nav .nav-notification > li.profile .dropdown-menu li:not(:first-child) a:hover,
 #top-nav .nav-notification > li.profile .dropdown-menu li:not(:first-child) a:focus {
-  transform: scale(1.05);
-  -webkit-transform: scale(1.05);
-  -moz-transform: scale(1.05);
-  -ms-transform: scale(1.05);
-  -o-transform: scale(1.05);
   background: transparent;
   color: #000;
-  transition: all 0.2s ease-in-out;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
 }
 #top-nav .nav-notification > li > a {
   display: block;
   position: relative;
   padding: 13px 15px;
   color: #999999;
-  transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
 }
 #top-nav .nav-notification > li > a:hover,
 #top-nav .nav-notification > li > a:focus {
   color: #777777;
   text-decoration: none;
-  transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -ms-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
 }
 @media (max-width: 480px) {
   #top-nav .nav-notification > li > a {
@@ -720,6 +672,13 @@ aside .main-menu .alert {
     display: none;
   }
 }
+#home-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  background-color: #f9f9f9;
+}
+
 #wrapper {
   position: relative;
   overflow: hidden;
@@ -914,8 +873,8 @@ hr {
 }
 a {
   color: #555;
-  transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
+  /* -webkit-transition: all 0.2s ease; */
   -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
   -o-transition: all 0.2s ease;
@@ -924,7 +883,7 @@ a:hover,
 a:focus {
   color: #999;
   text-decoration: none;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   -ms-transition: all 0.2s ease;
@@ -1294,6 +1253,20 @@ a.list-group-item {
   -ms-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
 }
+
+#main-container-home {
+  position: relative;
+  height: 100%;
+  padding-top: 45px;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  background-image:url(/assets/images/home/background10.jpg);
+  background-size:cover;
+}
+
 @media (max-width: 480px) {
   #main-container {
     min-width: 310px;
@@ -5294,7 +5267,7 @@ input[type="radio"]:active + .custom-radio {
   border-bottom-right-radius: 0;
 }
 .dd3-handle:before {
-  content: '≡';
+  content: '=';
   display: block;
   position: absolute;
   left: 0;
@@ -7307,5 +7280,33 @@ input[type="radio"]:active + .custom-radio {
 {
       float: right;
   height: 100%;
+}
+
+.signup-window
+{
+  background-color: #495B6C;
+  color: #BECFDF;
+  border-left: 1px solid #415160;
+      float: right;
+  height: 100%;
+}
+
+
+.signup-group
+{
+	background-color:white; filter:alpha(opacity=80); opacity:.8;
+	padding-bottom:20px;
+	border-radius:8px;
+	margin-top:40px;
+}
+
+.form-group-navbar
+{
+	margin-bottom:5px;
+}
+
+.login-group
+{
+	margin-right:110px;
 }
 

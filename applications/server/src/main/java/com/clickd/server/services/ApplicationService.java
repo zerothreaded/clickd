@@ -37,9 +37,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		bootstrap.setName("application");
 		bootstrap.addBundle(new ViewBundle());
 		bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
-		bootstrap.addBundle(new AssetsBundle("/html/home", "/home", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/html/users", "/users/home", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/html/home", "/timeline", "timeline.html"));
+		bootstrap.addBundle(new AssetsBundle("/html", "/clickd", "index.html"));
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.clickd.server.services.users;
+	package com.clickd.server.services.users;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -278,6 +278,9 @@ public class UserResource {
 		
 		for (Choice choice : myChoices)
 		{
+			if (null == choice.get_Links().get("choice-answer"))
+				continue;
+			
 			Link answerLink = (Link)choice.get_Links().get("choice-answer");
 			List<Choice> sameAnswerChoices = choiceDao.findByAnswerRef(answerLink.getHref());
 			for (Choice otherUsersChoice : sameAnswerChoices)
@@ -368,7 +371,51 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/cliques")
 	@Timed
-	public String getCliques(@PathParam("userRef") String userRef) {
+	public String getCliques(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
+		User user = userDao.findByRef("/users/" + userRef);
+		
+		//get the pre existing connections
+		List<Link> userCliques = new ArrayList<Link>();
+
+		userCliques =  (List<Link>)user.get_Links().get("clique-list");
+		
+		List<Clique> myCliques = new ArrayList<Clique>();	
+			
+		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+		for (Choice myChoice : myChoices)
+		{
+			if (null == myChoice.get_Links().get("choice-answer"))
+				continue;
+			
+			String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
+			Answer answer = answerDao.findByRef(answerRef);
+			
+			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
+			
+			//now get list of users who made that choice
+			List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+			List<User> cliqueMembers = new ArrayList<User>();
+					
+			for (Choice cliqueMemberChoice : cliqueMemberChoices)
+			{
+				Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
+				
+				if (!cliqueMember.getRef().equals("/users/"+userRef))
+					cliqueMembers.add(cliqueMember);
+			}
+			
+			thisClique.get_Embedded().put("clique-members", cliqueMembers);
+			thisClique.get_Embedded().put("clique-choice", myChoice);
+			myCliques.add(thisClique);
+		}
+
+		return Utilities.toJson(myCliques);
+	}
+	@GET
+	@Path("/{userRef}/cliques/{qliqueRef}")
+	@Timed
+	public String getClique(@PathParam("userRef") String userRef) {
 		User user = userDao.findByRef("/users/" + userRef);
 		
 		//get the pre existing connections
