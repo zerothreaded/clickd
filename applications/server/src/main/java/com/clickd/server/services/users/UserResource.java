@@ -310,7 +310,7 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/{userRef}/addConnection/{otherUserRef}")
+	@Path("/{userRef}/connections/add/{otherUserRef}")
 	@Timed
 	public String addConnection(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
 
@@ -352,7 +352,16 @@ public class UserResource {
 			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
 		}
 
-		return Utilities.toJson(userConnectionLinks);
+		List<Connection> userConnections = new ArrayList<Connection>();
+
+		
+		for (Link connectionLink : userConnectionLinks)
+		{
+			Connection c = connectionDao.findByRef(connectionLink.getHref());
+			userConnections.add(c);
+		}
+		
+		return Utilities.toJson(userConnections);
 	}
 	
 	

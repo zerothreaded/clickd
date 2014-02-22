@@ -78,7 +78,7 @@ public class QuestionResource {
 						System.out.println("Skipping question " + choiceQuestionRef);
 					}
 				}
-				if (!hasAnswered && !question.getTags().contains("bio.data")) {
+				if (!hasAnswered && !question.getTags().contains("user.bio")) {
 					unansweredQuestions.add(question);
 				}
 
@@ -90,6 +90,7 @@ public class QuestionResource {
 			Question question = unansweredQuestions.get(idx);
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
 			List<Link> answerLinks = (List<Link>) question.get_Links().get("question-answer-list");
+			
 			for (Link answerLink : answerLinks) {
 				Answer answer = answerDao.findByRef(answerLink.getHref());
 				answerList.add(answer);

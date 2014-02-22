@@ -2,6 +2,10 @@ var answers;
 var questionRef;
 var userRef;
 
+var userConnections;
+var userCandidates;
+var userCliques;
+
 function loadUser() {
 	var cookie1 = $.cookie("userSession");
 	var cookie = jQuery.parseJSON(cookie1);
@@ -61,9 +65,11 @@ function loadNextQuestion() {
 
 				
 				var image = '<img  src="/assets/images/answers/'+questionRef+'/' + answer["imageName"] + '.jpg" />';
-				$("#click-panel-answer-" + j).html(image + answer.answerText);
 				
-				// $("#click-panel-answer-" + j).html(image);
+				if (null == answer["imageName"] || answer["imageName"].length == 0)
+					$("#click-panel-answer-" + j).html(image + answer.answerText);
+				else
+					$("#click-panel-answer-" + j).html(image);
 			}
 			
 			for (var i = answers.length; i < 9; i++)
@@ -80,17 +86,27 @@ function loadNextQuestion() {
 	});
 }
 
+function getUserRef()
+{
+	var cookie1 = $.cookie("userSession");
+	var cookie = jQuery.parseJSON(cookie1);
+	if (cookie.hasOwnProperty('userRef')) {
+		var userRef = cookie.userRef;
+		var substr = userRef.split('/');
+		userRef = substr[2];
+		return userRef;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 function onAnswerClick(data) {
 	var answer = answers[data - 1];
 	var substr = answer.ref.split('/');
 	var answerRef = substr[2];
-	var cookie1 = $.cookie("userSession");
-	var cookie = jQuery.parseJSON(cookie1);
-	if (cookie.hasOwnProperty('userRef')) {
-		userRef = cookie.userRef;
-		var substr = userRef.split('/');
-		userRef = substr[2];
-	}
+	var userRef = getUserRef();
 	var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef + "";
 
 	var createChoiceCall = $.ajax({
@@ -105,6 +121,103 @@ function onAnswerClick(data) {
 	});
 }
 
+
+
+function updateConnections()
+{
+	//ajax call to getConnections
+	var userRef = getUserRef();
+	
+	var getConnectionsUrl = "/users/"+userRef+"/connections";
+	var getConnectionsCall = $.ajax({
+		url : getConnectionsUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
+	getConnectionsCall.done(function(msg) {
+		
+
+		$("#connection-list").html("");
+		
+		//TODO limit to X
+		msg.forEach(function(entry) {
+			var userRef = "/"+entry["_links"]["connection-other-user"]["href"];
+		    console.log(userRef);
+		    
+			var getConnectionUserCall = $.ajax({
+				url : userRef,
+				type : "GET",
+				dataType : "json"
+			});
+			
+			getConnectionUserCall.done(function(msg) {
+				var firstName = msg.firstName;
+				$("#connection-list").append("<li><a href=\""+userRef+"\"><span class=\"submenu-label\">"+
+						"<img class=\"small-profile-img\" src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\">"+firstName+"</span></a></li>")
+			});
+		});
+	});
+	
+}
+
+function updateCandidates()
+{
+	//ajax call to getConnections
+	var userRef = getUserRef();
+	
+	var getConnectionsUrl = "/users/"+userRef+"/candidates";
+	var getCandidatesCall = $.ajax({
+		url : getConnectionsUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
+	getCandidatesCall.done(function(msg) {
+		
+
+		$("#candidate-list").html("");
+		
+		//TODO limit to X
+		msg.forEach(function(entry) {
+			var thisUserRef = entry["user"]["ref"];
+		    console.log(entry);
+
+				var firstName = entry["user"]["firstName"];
+				$("#candidate-list").append("<li><a href=\""+thisUserRef+"\"><span class=\"submenu-label\">"+
+						"<img class=\"small-profile-img\" src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\">"+firstName+"</span></a></li>")
+		});
+	});
+}
+
+function updateCliques()
+{
+	//ajax call to getConnections
+	var userRef = getUserRef();
+	
+	var getCliquesUrl = "/users/"+userRef+"/cliques";
+	var getCliquesCall = $.ajax({
+		url : getCliquesUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
+	getCliquesCall.done(function(msg) {
+		console.log(msg);
+		alert(msg);
+
+		$("#clique-list").html("");
+		
+		//TODO limit to X
+		msg.forEach(function(entry) {
+				var cliqueRef = entry["ref"];
+				var cliqueName = entry["name"];
+				$("#clique-list").append("<li><a href=\""+cliqueRef+"\"><span class=\"submenu-label\">"+cliqueName+"</span></a></li>");
+			//			"<img class=\"small-profile-img\" src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\">"+firstName+"</span></a></li>")
+		});
+	});
+}
+
 $(document).ready(function() {
 	// check cookie status
 	var cookie1 = $.cookie("userSession");
@@ -112,6 +225,11 @@ $(document).ready(function() {
 		window.location = "/home";
 	} else {
 		loadUser();
+		
+		updateConnections();
+		updateCandidates();
+		updateCliques();
+		
 		var cookie = jQuery.parseJSON(cookie1);
 		if (cookie.hasOwnProperty('sessionRef')) {
 			var validateSignIn = $.ajax({

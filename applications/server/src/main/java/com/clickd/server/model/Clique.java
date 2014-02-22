@@ -29,11 +29,12 @@ public class Clique extends Resource {
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
 		this.source = source;
+		this.name=name;
 	}
 	
 	private void createRef(String userRef) {
 		UUID uuid = UUID.randomUUID();
-		String ref = userRef + "/connections/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = userRef + "/cliques/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	
