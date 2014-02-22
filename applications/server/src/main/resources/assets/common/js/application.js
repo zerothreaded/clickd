@@ -243,7 +243,7 @@ function initLoginSignUpForm()
 		request.done(function(msg) {
 			if (msg.isLoggedIn == true) {
 				postLogin();
-				showHomePage();
+				showUserPage();
 			} else {
 				$("#login-email-group").addClass("has-error");
 				$("#login-password-group").addClass("has-error");
@@ -290,8 +290,7 @@ function initLoginSignUpForm()
 				request2.done(function(msg2) {
 					if (msg2.isLoggedIn == true) {
 						postLogin();
-						$("#user-wrapper").removeClass("hidden");
-						$("#home-wrapper").addClass("hidden");
+						showUserPage();
 					}
 
 				});
@@ -334,8 +333,7 @@ function initUserPage()
 		});
 		validateSignIn.done(function(msg) {
 			if (!msg.isLoggedIn) {
-				$("#home-wrapper").hide();
-				$("#user-wrapper").show();
+				showUserPage();
 				postLogin();
 			//	window.location = "/home";
 			}
