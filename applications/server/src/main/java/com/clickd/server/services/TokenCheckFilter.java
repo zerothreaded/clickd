@@ -32,6 +32,8 @@ public class TokenCheckFilter implements Filter {
 		servletResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		// servletResponse.setDateHeader("Expires", 0); // Proxies.
 
+		servletResponse.setHeader("Access-Control-Allow-Origin", "*");
+		
 		filterChain.doFilter(request, response);
 	}
 

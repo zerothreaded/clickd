@@ -38,6 +38,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		bootstrap.addBundle(new ViewBundle());
 		bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
 		bootstrap.addBundle(new AssetsBundle("/html", "/clickd", "index.html"));
+		bootstrap.addBundle(new AssetsBundle("/new", "/new", "index_ang_working.html"));
 	}
 
 	@Override
