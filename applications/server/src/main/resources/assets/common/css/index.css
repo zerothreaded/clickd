@@ -366,3 +366,52 @@ img.connect-profile-img {
 	background-color:white;
 	z-index:99999;	
 }
+
+#content-window
+{
+	padding-top:4px;
+}
+
+ #content-window h4
+{
+	color: #428bca;
+}
+
+.member-md-panel
+{
+	padding: 4px; height: 90px; width: 30%;
+	display:inline-block;
+	margin-right:5px;
+	border-radius:10px;
+	border:1px solid #ccc;
+}
+
+.member-md-panel:hover
+{
+	cursor:pointer;
+	background-color:#e4eaff;
+	border:1px solid #abd;
+}
+
+.member-md-image
+{
+	width:80px;
+	height:80px;
+	float:left;
+	border-radius:10px;
+	margin-right:10px;
+}
+
+.member-sm-image
+{
+	width:40px;
+	height:40px;
+	float:left;
+	border-radius:20px;
+	margin-right:10px;
+}
+
+.member-md-panel h5
+{
+	margin-bottom: 6px; margin-top: 6px; font-weight: bold; color: rgb(41, 57, 78);
+}

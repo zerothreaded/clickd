@@ -312,7 +312,40 @@ public class UserResource {
 		return Utilities.toJson(responseList);
 	}
 	
+	
 	@GET
+	@Path("/{userRef}/candidates/comparison/{otherUserRef}")
+	@Timed
+	public String compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
+		//get my answers
+		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+		List<Choice> otherUserChoices = choiceDao.findByUserRef(otherUserRef);
+		
+		ArrayList<String> same = new ArrayList<String>();
+
+		
+		for (Choice choice : myChoices)
+		{
+			for (Choice choice2 : otherUserChoices)
+			{
+				Link answerLink = (Link)choice.get_Links().get("choice-answer");
+				Link answerLink2 = (Link)choice2.get_Links().get("choice-answer");
+			
+				if (null == answerLink || null == answerLink2)
+					continue;
+				
+				if (answerLink.getHref().equals(answerLink2.getHref()))
+				{
+					Answer answer = answerDao.findByRef(answerLink.getHref());
+					same.add(answer.getAnswerText());
+				}
+			}
+		}
+		
+		return Utilities.toJson(same);
+	}
+	
+	@POST
 	@Path("/{userRef}/connections/add/{otherUserRef}")
 	@Timed
 	public String addConnection(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
@@ -339,7 +372,7 @@ public class UserResource {
 		
 		//todo: add code if other user has already requested connection, set status to active
 		
-		return "";
+		return "{\"status\" : \"ok\"}";
 	}
 	
 	
