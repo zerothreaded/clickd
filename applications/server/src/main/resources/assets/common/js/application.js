@@ -2,10 +2,9 @@ var answers;
 var questionRef;
 var userRef;
 
-var userConnections;
-var userCandidates;
-var userCliques;
 var userData;
+
+var activePage = '';
 
 function loadUser()
 {
@@ -24,33 +23,8 @@ function loadUser()
 		$('#user-image').attr("src", '/assets/images/members/facebook_' + userFirstName + '.jpg');
 		$('#user-full-name').html('<strong>' + userFirstName + " " + userLastName + '</strong');
 		$('#user-full-name-2').html('<strong>' + userFirstName + " " + userLastName + '</strong');
+		userData = userdata;
 	});
-}
-
-function getUserData()
-{
-	var userRef = getUserRef();
-
-	var getUserUrl = "/users/" + userRef;
-	var getUserCall = $.ajax({
-		url : getUserUrl,
-		type : "GET",
-		dataType : "json"
-	});
-
-	getUserCall.done(function(msg) {
-		userData = msg;
-	});
-}
-
-function postLogin()
-{
-	loadUser();
-	loadNextQuestion();
-	updateConnections();
-	updateCandidates();
-	updateCliques();
-	getUserData();
 }
 
 function loadNextQuestion() {
@@ -99,8 +73,10 @@ function loadNextQuestion() {
 		}
 	});
 	
+	updateConnections();
 	updateCliques();
-	updateCandidates()
+	updateCandidates();
+
 }
 
 function getUserRef()
@@ -139,9 +115,9 @@ function onAnswerClick(data) {
 }
 
 
-
 function updateConnections()
 {
+	console.log("in update connections");
 	//ajax call to getConnections
 	var userRef = getUserRef();
 	
@@ -151,17 +127,22 @@ function updateConnections()
 		type : "GET",
 		dataType : "json"
 	});
+	
+
+	$("#connection-list").html("");
 
 	getConnectionsCall.done(function(msg) {
 		
-		userConnections = msg;
+		console.log("got user connections");
 		
 		$("#connection-list").html("");
 		
+		var listHtml = '';
+		
 		//TODO limit to X
 		msg.forEach(function(entry) {
-			var userRef = "/"+entry["_links"]["connection-other-user"]["href"];
-		    console.log(userRef);
+			var userRef = entry["_links"]["connection-other-user"]["href"];
+		    console.log("connected to : "+userRef);
 		    
 			var getConnectionUserCall = $.ajax({
 				url : userRef,
@@ -176,7 +157,6 @@ function updateConnections()
 			});
 		});
 	});
-	
 }
 
 function updateCandidates()
@@ -192,21 +172,22 @@ function updateCandidates()
 	});
 
 	getCandidatesCall.done(function(msg) {
-		
-		userCandidates = msg;
+
 
 		$("#candidate-list").html("");
 		
 		//TODO limit to X
 		msg.forEach(function(entry) {
-			var thisUserRef = entry["user"]["ref"];
+			var candidateLongRef = entry["user"]["ref"];
+			var shortRef = candidateLongRef.split("/");
+			shortRef = shortRef[2];
 		    console.log(entry);
 
 				var firstName = entry["user"]["firstName"];
-				$("#candidate-list").append("<li><a href=\""+thisUserRef+"\"><span class=\"submenu-label\">"+
+				$("#candidate-list").append("<li><a href=\"#\" id=\"candidate-list-link-"+shortRef+"\"><span class=\"submenu-label\">"+
 						"<img class=\"small-profile-img\" src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\">"+firstName+"</span></a></li>")
 
-					$("#content-well").append("<li><a href=\""+thisUserRef+"\"><span class=\"submenu-label\">"+
+					$("#content-well").append("<li><a href=\""+candidateLongRef+"\"><span class=\"submenu-label\">"+
 							"<img class=\"small-profile-img\" src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\">"+firstName+"</span></a></li>")
 		});
 	});
@@ -228,7 +209,6 @@ function updateCliques()
 		console.log(msg);
 		$("#clique-list").html("");
 
-		userCliques = msg;
 		
 		//TODO limit to X
 		msg.forEach(function(entry) {
@@ -265,22 +245,141 @@ function getAge(birthDay) {
 	}
 
 
-function getComparison( user1ref,  user2ref)
+function showComparisonPageFor(candidateRef)
 {
+	var myUserRef = getUserRef();
 
+	var candidate;
+	
+	
+	var getCandidatesUrl = "/users/"+myUserRef+"/candidates";
+	var getCandidatesCall = $.ajax({
+		url : getCandidatesUrl,
+		type : "GET",
+		dataType : "json"
+	});
+	
+	getCandidatesCall.done(function(userCandidates)
+			{
+		
+
+	
+	//find the candidate
+	userCandidates.forEach(function (candidateRow){
+		var candidateLongRef = candidateRow["user"]["ref"];
+		if (candidateLongRef == candidateRef)
+			candidate = candidateRow;
+	});
+	
+	//load the vars
+	var firstName = candidate["user"]["firstName"];
+	var lastName = candidate["user"]["lastName"];
+	var age = getAge(candidate["user"]["dateOfBirth"]);
+	var location = candidate["user"]["postCode"].toUpperCase();
+	var score = candidate["score"];
+	
+	//create the page object
+	var shortRef = candidateRef.split("/");
+	shortRef = shortRef[2];
+	var candidateShortRef = shortRef;
+	
+	//set the window content
+	$("#content-window").html("<div class=\"col-md-6\" id=\"me-col-"+candidateShortRef+"\"></div><div class=\"col-md-6\" id=\"you-col-"+candidateShortRef+"\"></div>");
+		
+		$("#me-col-"+candidateShortRef).html("<h4><img src=\"/assets/images/members/facebook_"+userData["firstName"].toLowerCase()+".jpg\" class=\"member-sm-image\">Me</h4>");
+		$("#me-col-"+candidateShortRef).append("<h5>"+userData["firstName"]+" "+userData["lastName"]+"</h5>"+
+	"<strong>Age: </strong>25<br> <strong>Location: </strong>"+userData["postCode"]+"<br>"
+	);
+		
+	
+	$("#you-col-"+candidateShortRef).html("<h4><img src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\" class=\"member-sm-image\">"+firstName+"</h4>");
+	$("#you-col-"+candidateShortRef).append("<h5>"+firstName+" "+lastName+"</h5>"+
+			"<strong>Age: </strong>25<br> <strong>Location: </strong>"+candidate["user"]["postCode"]+"<br>"
+			);
+		
+
+	//get the comparison data
+	var getComparisonUrl = "/users/"+myUserRef+"/candidates/comparison/"+shortRef;
+	console.log(getComparisonUrl);
+	var getComparisonCall = $.ajax({
+		url : getComparisonUrl,
+		type : "GET",
+		dataType : "json"
+	});
+
+	$("#you-col-"+candidateShortRef).append("You both like:");
+	
+	
+	//once we have the comparison data create the info and add buttons
+	getComparisonCall.done(function(msg) {
+			console.log(msg);
+			$("#you-col-"+candidateShortRef).append("<ul>");
+			
+			msg.forEach(function (entry){console.log(entry);
+			
+				$("#you-col-"+candidateShortRef).append("<li>"+entry+"</li>");
+			});
+			
+			$("#you-col-"+candidateShortRef).append("</ul>");
+			
+			$("#you-col-"+candidateShortRef).append("<br/><br/><button class=\"btn btn-primary\" id=\"btn-add-connection-"+candidateShortRef+"\">Add Connection</button>");
+			
+			//add connection button
+			$("#btn-add-connection-"+candidateShortRef).click(function()
+			{
+				$("#btn-add-connection-"+candidateShortRef).addClass("disabled");
+				$("#btn-add-connection-"+candidateShortRef).html("Connected");
+				
+				var addConnectionUrl = "/users/"+myUserRef+"/connections/add/"+shortRef;
+				var addConnectionCall = $.ajax({
+					url : addConnectionUrl,
+					type : "POST",
+					dataType : "json"
+				});
+				
+				console.log(addConnectionUrl);
+				
+				addConnectionCall.done(function(msg) {
+					console.log("done add connection");
+					console.log(addConnectionUrl);
+					console.log(msg);
+				});
+			}); //end add connection
+			
+		}); //end comparison ajax on done
+
+		//("<h4 id=\"content-window-header\">candidates : "+firstName+" "+lastName+"  </h4><div class=\"container\" id=\"candidate-container-"+candidateShortRef+"\"></div>")
+
+		$("#candidates-container-"+candidateShortRef).html();
+		
+			});
 }
 
 function candidatesPage()
 {
+	activePage = 'candidates';
+	
 	$("#content-window").html("<h4 id=\"content-window-header\">candidates</h4><div class=\"container-fluid\" id=\"candidates-container\"></div>")
 	
 	var myUserRef = getUserRef();
-	getUserData();
 	
-	userCandidates.forEach(function (candidate){
-		var thisUserRef = candidate["user"]["ref"];
+	var getCandidatesUrl = "/users/"+myUserRef+"/candidates";
+	var getCandidatesCall = $.ajax({
+		url : getCandidatesUrl,
+		type : "GET",
+		dataType : "json"
+	});
+	
+	console.log("candidates page");
+	console.log(getCandidatesUrl);
+
+	getCandidatesCall.done(function(msg) {
+		console.log(msg);
+
+	msg.forEach(function (candidate){
+		var candidateLongRef = candidate["user"]["ref"];
 		
-		var shortRef = thisUserRef.split("/");
+		var shortRef = candidateLongRef.split("/");
 		shortRef = shortRef[2];
 
 		var firstName = candidate["user"]["firstName"];
@@ -291,95 +390,144 @@ function candidatesPage()
 		
 		console.log(candidate);
 
-
-		var candidateBtnId = shortRef;
+		var candidateShortRef = shortRef;
 		
-		$("#candidates-container").append("<div id=\"candidate-btn-"+candidateBtnId+"\" data-user-ref=\""+thisUserRef+"\" class=\"panel member-md-panel\">"+
+		$("#candidates-container").append("<div id=\"candidate-btn-"+candidateShortRef+"\" data-user-ref=\""+candidateLongRef+"\" class=\"panel member-md-panel\">"+
 		"<img src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\" class=\"member-md-image\">"+
 		"<h5>"+firstName+" "+lastName+"</h5>"+
 		"<strong>Age: </strong>"+age+"<br> <strong>Location: </strong>"+location+"<br>"+
 		"<strong>Score: </strong>"+score+"</div>");
 		
-		$("#candidate-btn-"+candidateBtnId).click(function()
-		{
-			$("#content-window").html("<div class=\"col-md-6\" id=\"me-col-"+candidateBtnId+"\"></div><div class=\"col-md-6\" id=\"you-col-"+candidateBtnId+"\"></div>");
-			
-			$("#me-col-"+candidateBtnId).html("<h4><img src=\"/assets/images/members/facebook_"+userData["firstName"].toLowerCase()+".jpg\" class=\"member-sm-image\">Me</h4>");
-			$("#me-col-"+candidateBtnId).append("<h5>"+userData["firstName"]+" "+userData["lastName"]+"</h5>"+
-		"<strong>Age: </strong>25<br> <strong>Location: </strong>"+userData["postCode"]+"<br>"
-		);
-			
-			
-			$("#you-col-"+candidateBtnId).html("<h4><img src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\" class=\"member-sm-image\">"+firstName+"</h4>");
-			$("#you-col-"+candidateBtnId).append("<h5>"+firstName+" "+lastName+"</h5>"+
-					"<strong>Age: </strong>25<br> <strong>Location: </strong>"+candidate["user"]["postCode"]+"<br>"
-					);
-			
-
-			
-			var getComparisonUrl = "/users/"+myUserRef+"/candidates/comparison/"+shortRef;
-			console.log(getComparisonUrl);
-			var getComparisonCall = $.ajax({
-				url : getComparisonUrl,
-				type : "GET",
-				dataType : "json"
-			});
-
-			$("#you-col-"+candidateBtnId).append("You both like:");
 		
-			getComparisonCall.done(function(msg) {
-				console.log(msg);
-				$("#you-col-"+candidateBtnId).append("<ul>");
-				
-				msg.forEach(function (entry){console.log(entry);
-				
-					$("#you-col-"+candidateBtnId).append("<li>"+entry+"</li>");
-				});
-				
-				$("#you-col-"+candidateBtnId).append("</ul>");
-				
-				
-				$("#you-col-"+candidateBtnId).append("<br/><br/><button class=\"btn btn-primary\" id=\"btn-add-connection-"+candidateBtnId+"\">Add Connection</button>");
-				
-				$("#btn-add-connection-"+candidateBtnId).click(function()
-				{
-					$("#btn-add-connection-"+candidateBtnId).addClass("disabled");
-					$("#btn-add-connection-"+candidateBtnId).html("Connected");
-					
-					var addConnectionUrl = "/users/"+myUserRef+"/connections/add/"+shortRef;
-					var addConnectionCall = $.ajax({
-						url : addConnectionUrl,
-						type : "POST",
-						dataType : "json"
-					});
-					
-					console.log(addConnectionUrl);
-					
-					addConnectionCall.done(function(msg) {
-						console.log(msg);
-					
-					});
-				});
-				
-			});
-			
-			
-			
-			
-			//("<h4 id=\"content-window-header\">candidates : "+firstName+" "+lastName+"  </h4><div class=\"container\" id=\"candidate-container-"+candidateBtnId+"\"></div>")
-
-			$("#candidates-container-"+candidateBtnId).html();
+		$("#candidate-btn-"+candidateShortRef).unbind('click');
+		$("#candidate-btn-"+candidateShortRef).click(function()
+		{
+			showComparisonPageFor(candidateLongRef);
+		}); //end onClick canddiate btn
+		
+		$("#candidate-list-link-"+candidateShortRef).unbind('click');
+		$("#candidate-list-link-"+candidateShortRef).click(function ()
+		{
+			showComparisonPageFor(candidateLongRef);
 		});
-	});
+				
+	}); //end foreach
+	}); //end update done
 }
+
 
 function connectionsPage()
 {
-	$("#content-window-header").html("connections");
+	activePage = 'connections';
+	
+	console.log("connections page");
+	$("#content-window").html("<h4 id=\"content-window-header\">connections</h4><div class=\"container-fluid\" id=\"connections-container\"></div>")
+	
+	var myUserRef = getUserRef();
+	
+	var getConnectionsUrl = "/users/"+myUserRef+"/connections";
+	var getConnectionsCall = $.ajax({
+		url : getConnectionsUrl,
+		type : "GET",
+		dataType : "json"
+	});
+	
+	console.log("candidates page");
+	console.log(getConnectionsUrl);
+
+	getConnectionsCall.done(function(msg) {
+		console.log(msg);
+		
+	msg.forEach(function (connection){
+		var otherUserRef = connection["_links"]["connection-other-user"]["href"];
+		
+
+		
+		var getUserUrl  = otherUserRef;
+		var getUserCall = $.ajax({
+			url : getUserUrl,
+			type : "GET",
+			dataType : "json"
+		});
+		
+		console.log("getting connection user for "+otherUserRef)
+		
+		getUserCall.done(function(otherUser) {
+			var connectionRef = connection.ref;
+			connectionShortRef = connectionRef.split("/");
+			connectionShortRef = connectionShortRef[4];
+			
+			var firstName = otherUser.firstName;
+			var lastName = otherUser.lastName;
+			
+			var connectionUserShortRef = otherUserRef.split("/");
+			connectionUserShortRef = connectionUserShortRef[2];
+			
+			
+			$("#connections-container").append("<div id=\"connection-btn-"+connectionShortRef+"\" data-user-ref=\""+otherUserRef+"\" class=\"panel member-md-panel\" style=\"width:40%\">"+
+			"<img src=\"/assets/images/members/facebook_"+firstName.toLowerCase()+".jpg\" class=\"member-md-image\">"+
+			"<h5>"+firstName+" "+lastName+"</h5><strong>Status: </strong>"+connection.status+"</div>");
+			
+			if (connection.status == "pending")
+				$("#connection-btn-"+connectionShortRef).append("<br/><button class=\"btn btn-small\" id=\"accept-connection-"+connectionShortRef+"\">Accept</button> <button class=\"btn btn-small\" id=\"reject-connection-"+connectionShortRef+"\">Reject</button>");
+			
+			$("#accept-connection-"+connectionShortRef).unbind('click');
+			$("#accept-connection-"+connectionShortRef).click(function ()
+			{
+				console.log("accepting");
+				var acceptConnectionUrl  = "/users/"+myUserRef+"/connections/"+connectionShortRef+"/accept";
+				console.log(acceptConnectionUrl);
+				var acceptConnectionCall = $.ajax({
+					url : acceptConnectionUrl,
+					type : "GET",
+					dataType : "json"
+				});
+				
+				acceptConnectionCall.done(function(){
+					updateConnections();
+					setTimeout("connectionsPage()", 600);
+				});
+			});
+			
+			$("#reject-connection-"+connectionShortRef).unbind('click');
+			$("#reject-connection-"+connectionShortRef).click(function ()
+			{
+				console.log("rejecting");
+				var rejectConnectionUrl  = "/users/"+myUserRef+"/connections/"+connectionShortRef+"/reject";
+				console.log(rejectConnectionUrl);
+				var rejectConnectionCall = $.ajax({
+					url : rejectConnectionUrl,
+					type : "GET",
+					dataType : "json"
+				});
+				
+				rejectConnectionCall.done(function(){
+					updateConnections();
+					setTimeout("connectionsPage()", 600);
+				});
+			});
+			
+			$("#connections-btn-"+connectionShortRef).click(function()
+			{
+				showComparisonPageFor(connectionLongRef);
+			}); //end onClick canddiate btn
+			
+			$("#connections-list-link-"+connectionShortRef).click(function ()
+			{
+				showComparisonPageFor(connectionLongRef);
+			});
+		});
+		
+	
+	
+				
+	}); 
+	});//end foreach
 }
 
 function cliquesPage()
 {
+	activePage = 'cliques';
 	$("#content-window-header").html("cliques");
 }
 
@@ -410,8 +558,7 @@ function initLoginSignUpForm()
 
 		request.done(function(msg) {
 			if (msg.isLoggedIn == true) {
-				postLogin();
-				showUserPage();
+				initUserPage();
 			} else {
 				$("#login-email-group").addClass("has-error");
 				$("#login-password-group").addClass("has-error");
@@ -457,8 +604,7 @@ function initLoginSignUpForm()
 
 				request2.done(function(msg2) {
 					if (msg2.isLoggedIn == true) {
-						postLogin();
-						showUserPage();
+						initUserPage();
 					}
 
 				});
@@ -484,32 +630,30 @@ function initUserPage()
 	
 	loadUser();
 	
-	updateConnections();
-	updateCandidates();
-	updateCliques();
+	$("#content-window").html("");
+
 	
-	$( "#candidates-link" ).click(function()
-	{
-		 candidatesPage();
-	});
+	var candidatesLinkHandler = function(){ candidatesPage();}
+	var connectionsLinkHandler = function(){ connectionsPage();}
+	var cliquesLinkHandler = function(){ cliquesPage();}
 	
-	$("#connections-link").click(function()
-	{
-		connectionsPage();
-	});
+	$( "#candidates-link" ).unbind('click', candidatesLinkHandler);
+	$( "#candidates-link" ).bind('click', candidatesLinkHandler);
+
+	$( "#connections-link" ).unbind('click', connectionsLinkHandler);
+	$( "#connections-link" ).bind('click', connectionsLinkHandler);
 	
-	
-	$("#cliques-link").click(function()
-	{
-		cliquesPage();
-	});
+	$( "#cliques-link" ).unbind('click', cliquesLinkHandler);
+	$( "#cliques-link" ).bind('click', cliquesLinkHandler);
 	
 	$("#home-wrapper").addClass("hidden");
 	$("#user-wrapper").removeClass("hidden");
 	
 	var cookie1 = $.cookie("userSession");
 	var cookie = jQuery.parseJSON(cookie1);
-	if (cookie.hasOwnProperty('sessionRef')) {
+
+	console.log("sessionRef: "+cookie.sessionRef);
+	
 		var validateSignIn = $.ajax({
 			url : cookie.sessionRef,
 			type : "GET",
@@ -518,36 +662,34 @@ function initUserPage()
 		validateSignIn.done(function(msg) {
 			if (!msg.isLoggedIn) {
 				showUserPage();
-				postLogin();
 			//	window.location = "/home";
 			}
 		});
 
 		validateSignIn.fail(function(jqXHR, textStatus) {
+			showHomePage();
 		//	window.location = "/home";
 		});
-	}
 
-	if (cookie.hasOwnProperty('userRef')) {
+
+
 		$("#link-sign-out").click(function() {
 			var signOutUrl = cookie.userRef + "/signout";
 
+			console.log(signOutUrl);
+			
 			var signOutCall = $.ajax({
 				url : signOutUrl,
 				type : "PUT",
 				dataType : "json"
 			});
 			
-			console.log(signOutUrl);
-
 			signOutCall.done(function(msg) {
 				$.removeCookie("userSession");
-				$("#home-wrapper").removeClass("hidden");
-				$("#user-wrapper").addClass("hidden");
-				//window.location = "/home";
+			//	showHomePage();
+				window.location = "/clickd";
 			});
 		});
-	}
 
 	loadNextQuestion();
 }
