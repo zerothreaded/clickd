@@ -267,8 +267,32 @@ http://angular-ui.github.io/bootstrap/ -->
 								<li><a href="#">Connections</a></li>
 								<li><a href="#">Cliques</a></li>
 							</ul>
-							<div class="chat-window" id="chat.window"></div>
+							<br/>
+							<div class="row">
+								<div class="col-sm-2" align="left">
+									<img class="small-profile-img" ng-src="/assets/images/members/facebook_ralph.jpg">
+									<strong>Ralph :</strong>
+								</div>
+								<div class="col-sm-10" align="left">
+									Hey - r u busy?
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-sm-2" align="left">
+									<img class="small-profile-img" ng-src="/assets/images/members/facebook_john.jpg">
+									<strong>John : </strong>
+								</div>
+								<div class="col-sm-10" align="left">
+									Yeah dude - get back to work 
+								</div>
+							</div>
 						</div>
+					</div>
+					<div class="row">
+					<div class="col-sm-12" align="left">
+						<input type="text" size="12">
+					</div>
 					</div>
 				</div>
 				<!-- /.padding -->
@@ -276,7 +300,7 @@ http://angular-ui.github.io/bootstrap/ -->
 					<div class="well click-well">
 						<div class="panel click-panel">
 							<div class="panel-heading click-panel-heading"">
-								<h3 class="click-panel-heading-h2" id="click-panel-question">What's your poison?</h3>
+								<h3 class="click-panel-heading-h2">{{model.currentUser.firstName}}</h3>
 							</div>
 							<div class="panel-body click-panel-body" id="click-panel-answers">
 								<div class="row click-answer-row">

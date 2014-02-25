@@ -43,6 +43,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		bootstrap.addBundle(new AssetsBundle("/html", "/clickd", "index.html"));
 		bootstrap.addBundle(new AssetsBundle("/new", "/angular", "index.html"));
 		bootstrap.addBundle(new AssetsBundle("/assets/angular/includes", "/form", "form.html"));
+		bootstrap.addBundle(new AssetsBundle("/html/home", "/timeline", "timeline.html"));
 	}
 
 	@Override

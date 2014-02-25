@@ -19,7 +19,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			"connectionsShowMenu" : true,
 			// Users Cliques
 			"cliques" : [ ],
-			"cliquesShowMenu" : true
+			"cliquesShowMenu" : true,
+			// Questions and Answers
+			"currentQuestionText" : "Ask me Blud"
 		}
 	}; 
 
@@ -96,6 +98,61 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		}
 	}
 	
+
+	$scope.loadNextQuestion = function() {
+		alert('DUDE');
+		var userRef = $scope.model.currentUser.userRef;
+		console.log('loadNextQuestion Called With User Ref :' + userRef);
+		
+		var nextQuestionUrl = "/questions/next/" + userRef;
+		var nextQuestionCall = $.ajax({
+			url : nextQuestionUrl,
+			type : "GET",
+			dataType : "json"
+		});
+
+		nextQuestionCall.done(function(msg) {
+			if (typeof msg["status"] == 'undefined') {
+				answers = msg["_embedded"]["question-answer-list"];
+				questionRef = msg["ref"];
+				questionRef = questionRef.split("/")[2];
+				var questionText = msg.questionText;
+				
+				$scope.currentUser.currentQuestionText = questionText;
+				
+				// $("#click-panel-question").html(questionText);
+				
+				for ( var i = 0; i < answers.length; i++) {
+					var j = i + 1;
+					var answer = answers[i];
+					if (answer == null)
+						break;
+
+					$("#click-panel-answer-" + j).parent().parent().show();
+					
+					var image = '<img  src="/assets/images/answers/'+questionRef+'/' + answer["imageName"] + '.jpg" />';
+					
+					if (null == answer["imageName"] || answer["imageName"].length == 0)
+						$("#click-panel-answer-" + j).html(image + answer.answerText);
+					else
+						$("#click-panel-answer-" + j).html(image);
+				}
+				
+				for (var i = answers.length; i < 9; i++)
+				{
+					var j = i+1;
+					$("#click-panel-answer-" + j).parent().parent().hide();
+				}
+			} else {
+				// No more answers
+				$("#click-panel-question").html("You're so clickd out!");
+				$("#click-panel-answers").html("");
+				$('#button-skip-question').hide();
+			}
+		});
+
+	}
+	
 	// GET USER + CCC From Server
 	$scope.loadUserByRef = function(theUserRef)
 	{
@@ -149,6 +206,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	        console.log('$scope.model.currentUser.isLoggedIn = ' + $scope.model.currentUser.isLoggedIn);
 	        
 			$scope.loadUserByRef(theUserRef);
+	        $scope.loadNextQuestion();
 			$scope.updateCCC();
        });
 	}
@@ -262,6 +320,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
 	$scope.isCliquesMenuOn = function() { return $scope.model.currentUser.cliquesShowMenu == true; }
+
 	
   });
 
