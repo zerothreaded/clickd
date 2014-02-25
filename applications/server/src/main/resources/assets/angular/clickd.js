@@ -60,17 +60,24 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		    })
 		    
 		    .success(function(data) {
-		        console.log(data);
-		    	var userRef = "/" + data[0]["_links"]["connection-other-user"]["href"];
-		    	console.log(userRef);
-		    	// Get the USER data for this connection
-				$http({
-					url : userRef,
-					method : "GET",
-				}).success(function(user) {
-					$scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user);
-				});
-			    
+		        console.log("got connections");
+		    	console.log(data);
+		        
+		        data.forEach(function(connection) {
+		        	console.log("connection");
+		        	console.log(connection);
+
+			    	var userRef = connection["_links"]["connection-other-user"]["href"];
+			    	console.log(userRef);
+			    	// Get the USER data for this connection
+					$http({
+						url : userRef,
+						method : "GET",
+					}).success(function(user) {
+						$scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user);
+					});
+
+			    });
 		    });
 		
 			// REST call to get cliques
