@@ -274,10 +274,13 @@ public class UserResource {
 	@Timed
 	public String getCandidates(@PathParam("userRef") String userRef) {
 		//get my answers
+		User user = userDao.findByRef("/users/"+userRef);
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 
 		ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
 
+		List<Link> userConnectionLinks = new ArrayList<Link>();
+	
 		
 		for (Choice choice : myChoices)
 		{
@@ -306,11 +309,28 @@ public class UserResource {
 						break;
 					}
 				}
+		
 				
 				if (!alreadyExists)
 				{
 					CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
 					responseList.add(responseRow);
+				}
+			}
+		}
+		
+		if (null != user.get_Links().get("connection-list")) {
+			userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
+			for (Link userConnectionLink : userConnectionLinks) {
+				Connection c = connectionDao.findByRef(userConnectionLink.getHref());
+				Link otherUserConnectionLink = (Link) c.get_Links().get("connection-other-user");
+				String connectionUserRef = otherUserConnectionLink.getHref();
+
+				for (CandidateResponse responseRow : responseList) {
+					if (connectionUserRef.equals(responseRow.getUser().getRef())) {
+						responseList.remove(responseRow);
+						break;
+					}
 				}
 			}
 		}
