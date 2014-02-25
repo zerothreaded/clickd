@@ -6,6 +6,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"currentSelection" : "candidates",
 		"cookie" : "",
 		"sessionRef" : "",
+		"selectedUser": {},
+		"selectedClique" : {},
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -270,7 +272,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'candidates';
 		if ($scope.model.currentUser.candidatesShowMenu == true) {
-			$scope.model.currentUser.candidatesShowMenu = true;
+			$scope.model.currentUser.candidatesShowMenu = false;
 		} else {
 			$scope.model.currentUser.candidatesShowMenu = true;
 		}
@@ -280,7 +282,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'connections';
 		if ($scope.model.currentUser.connectionsShowMenu == true) {
-			$scope.model.currentUser.connectionsShowMenu = true;
+			$scope.model.currentUser.connectionsShowMenu = false;
 		} else {
 			$scope.model.currentUser.connectionsShowMenu = true;
 		}
@@ -290,7 +292,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'cliques';
 		if ($scope.model.currentUser.cliquesShowMenu == true) {
-			$scope.model.currentUser.cliquesShowMenu = true;
+			$scope.model.currentUser.cliquesShowMenu = false;
 		} else {
 			$scope.model.currentUser.cliquesShowMenu = true;
 		}
@@ -301,13 +303,16 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		console.log('CANDIDATE');
 		console.log(candidate.firstName);
 		$scope.model.currentSelection = 'Candidate : ' + candidate.firstName;
+		$scope.model.selectedUser = candidate;
+		console.log($scope.model.selectedUser);
 	}
 	
 	$scope.onClickConnection = function(connection)
 	{
 		console.log('CONNECTION');
-		console.log(connection.firstName);
+		console.log(connection);
 		$scope.model.currentSelection = 'Connection : ' + connection.firstName;
+		$scope.model.selectedUser = connection;
 	}
 	
 	$scope.onClickClique = function(clique)
@@ -315,7 +320,21 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		console.log('CLIQUE');
 		console.log(clique.name);
 		$scope.model.currentSelection = 'Clique : ' + clique.name;
+		$scope.model.selectedClique = clique;
 	}
+	
+	$scope.isUserSelected = function (otherUser)
+	{
+		console.log("checking if users are the same");
+		return otherUser == $scope.model.selectedUser.ref;
+	}
+	
+	$scope.isCliqueSelected = function (otherClique)
+	{
+		console.log("checking if cliques are the same");
+		return otherClique == $scope.model.selectedClique.ref;
+	}
+	
 	
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
