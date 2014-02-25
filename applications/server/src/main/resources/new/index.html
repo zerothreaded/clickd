@@ -214,32 +214,35 @@ http://angular-ui.github.io/bootstrap/ -->
 						<div>
 							<hr/>
 							<a href="" ng-click="onClickCandidates()"><font color="white"><h4>Candidates</h4></font></a>
-							<div ng-if="isCandidatesMenuOn()">
-								<ul>
-									<li ng-repeat="candidate in model.currentUser.candidates">
+							<div ng-if="isCandidatesMenuOn()" class="list-group">
+									<a class="list-group-item" ng-repeat="candidate in model.currentUser.candidates"
+									ng-click="onClickCandidate({{candidate.user}})" href="#"
+									ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
+									 >
 										&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{candidate.user.firstName}}.jpg">
-										<a href="" ng-click="onClickCandidate({{candidate.user}})"><font color="white">{{candidate.user.firstName}}</font></a>
-									</li>	
-								</ul>
+										{{candidate.user.firstName}}</a>
+									</div>	
 							</div>
 							<hr/>
 							<a href="" ng-click="onClickConnections()"><font color="white"><h4>Connections</h4></font></a>
-							<div ng-if="isConnectionsMenuOn()">
-								<ul>
-									<li ng-repeat="connection in model.currentUser.connections">
+							<div ng-if="isConnectionsMenuOn()"  class="list-group">
+								<a class="list-group-item"  ng-repeat="connection in model.currentUser.connections"
+								ng-click="onClickConnection({{connection}})" href="#"
+								ng-class="{active: isUserSelected('{{connection.ref}}')}"
+									 >
 										&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{connection.firstName}}.jpg">
-										<a href="" ng-click="onClickConnection({{connection}})"><font color="white">{{connection.firstName}}</font></a>
-									</li>
-								</ul>
+										{{connection.firstName}}
+									</a>
 							</div>
 							<hr/>
 							<a href="" ng-click="onClickCliques()"><font color="white"><h4>Cliques</h4></font></a>
 							<div ng-if="isCliquesMenuOn()">
-								<ul>
-									<li ng-repeat="clique in model.currentUser.cliques">
-										&nbsp;<a href="" ng-click="onClickClique({{clique}})"><font color="white">{{clique.name}}</font></a>
-									</li>
-								</ul>
+								<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
+								ng-click="onClickClique({{clique}})" href="#"
+								ng-class="{active: isCliqueSelected({{'clique.ref'}})}"
+									 >
+										&nbsp;{{clique.name}}
+									</a>
 							</div>
 							<hr/>
 						</div>
