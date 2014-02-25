@@ -1,4 +1,5 @@
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="utf-8">
 <title>Dating @ Clickd</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +23,13 @@
 <link href="/assets/views/home/timeline.css" rel="stylesheet">
 <link href="/assets/components/datepicker/datepicker.css" rel="stylesheet">
 
-<script>window["_GOOG_TRANS_EXT_VER"] = "1";</script><script>window["_GOOG_TRANS_EXT_VER"] = "1";</script></head>
+<script>
+	window["_GOOG_TRANS_EXT_VER"] = "1";
+</script>
+<script>
+	window["_GOOG_TRANS_EXT_VER"] = "1";
+</script>
+</head>
 <body>
 	<!-- Overlay Div -->
 	<div id="overlay" class="transparent" style="display: none;"></div>
@@ -65,12 +72,14 @@
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="form-group">
-									<input type="text" name="firstName" id="first_name" class="form-control input-md valid" placeholder="First Name" tabindex="1" data-validation="length" data-validation-length="min2" style="">
+									<input type="text" name="firstName" id="first_name" class="form-control input-md valid" placeholder="First Name" tabindex="1" data-validation="length"
+										data-validation-length="min2" style="">
 								</div>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="form-group">
-									<input type="text" name="lastName" id="last_name" class="form-control input-md valid" placeholder="Last Name" tabindex="2" data-validation="length" data-validation-length="min2" style="">
+									<input type="text" name="lastName" id="last_name" class="form-control input-md valid" placeholder="Last Name" tabindex="2" data-validation="length"
+										data-validation-length="min2" style="">
 								</div>
 							</div>
 						</div>
@@ -80,12 +89,14 @@
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="form-group">
-									<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md" placeholder="Password" tabindex="5" data-validation="strength" data-validation-strength="1">
+									<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md" placeholder="Password" tabindex="5"
+										data-validation="strength" data-validation-strength="1">
 								</div>
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6">
 								<div class="form-group">
-									<input type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password" tabindex="6" data-validation="confirmation">
+									<input type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password" tabindex="6"
+										data-validation="confirmation">
 								</div>
 							</div>
 						</div>
@@ -109,14 +120,16 @@
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-12">
 								<div class="form-group">
-									<input type="text" name="dateOfBirth" id="dateOfBirth" class="form-control input-md valid" placeholder="When's your birthday?" tabindex="1" data-validation="length" data-date="01-01-1989" data-date-format="dd-mm-yyyy" data-validation-length="min2" data-date-viewmode="years" style="">
+									<input type="text" name="dateOfBirth" id="dateOfBirth" class="form-control input-md valid" placeholder="When's your birthday?" tabindex="1"
+										data-validation="length" data-date="01-01-1989" data-date-format="dd-mm-yyyy" data-validation-length="min2" data-date-viewmode="years" style="">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-12">
 								<div class="form-group">
-									<input type="text" name="postcode" id="postcode" class="form-control input-md valid" placeholder="What's your postcode?" tabindex="2" data-validation="length" data-validation-length="min2" style="">
+									<input type="text" name="postcode" id="postcode" class="form-control input-md valid" placeholder="What's your postcode?" tabindex="2"
+										data-validation="length" data-validation-length="min2" style="">
 								</div>
 							</div>
 						</div>
@@ -133,7 +146,8 @@
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-sm-12 col-md-12">
-								By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#" data-toggle="modal" data-target="#t_and_c_m">Terms and Conditions</a> set out by this site, including our Cookie Use.
+								By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#" data-toggle="modal"
+									data-target="#t_and_c_m">Terms and Conditions</a> set out by this site, including our Cookie Use.
 							</div>
 						</div>
 
@@ -152,288 +166,286 @@
 		</div>
 
 
-	</div><!-- /wrapper -->
-	
+	</div>
+	<!-- /wrapper -->
+
 	<div id="user-wrapper" class="hidden">
 		<div id="logoutConfirm_background" class="popup_background"
-		style="opacity: 0; visibility: hidden; background-color: black; position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; transition: all 0.3s; -webkit-transition: all 0.3s;"></div>
-	<div id="logoutConfirm_wrapper" class="popup_wrapper"
-		style="opacity: 0; visibility: hidden; position: fixed; overflow: auto; z-index: 2001; transition: all 0.3s; -webkit-transition: all 0.3s; top: 0px; right: 0px; left: 0px; bottom: 0px; text-align: center; display: none;">
-		<div class="custom-popup width-100 popup_content" id="logoutConfirm" data-popup-initialized="true" aria-hidden="true" role="dialog"
-			aria-labelledby="open_67128750"
-			style="opacity: 0; visibility: hidden; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;">
-			<div class="padding-md">
-				<h4 class="m-top-none">Do you want to logout?</h4>
-			</div>
+			style="opacity: 0; visibility: hidden; background-color: black; position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; transition: all 0.3s; -webkit-transition: all 0.3s;"></div>
+		<div id="logoutConfirm_wrapper" class="popup_wrapper"
+			style="opacity: 0; visibility: hidden; position: fixed; overflow: auto; z-index: 2001; transition: all 0.3s; -webkit-transition: all 0.3s; top: 0px; right: 0px; left: 0px; bottom: 0px; text-align: center; display: none;">
+			<div class="custom-popup width-100 popup_content" id="logoutConfirm" data-popup-initialized="true" aria-hidden="true" role="dialog"
+				aria-labelledby="open_67128750"
+				style="opacity: 0; visibility: hidden; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;">
+				<div class="padding-md">
+					<h4 class="m-top-none">Do you want to logout?</h4>
+				</div>
 
-			<div class="text-center">
-				<a class="btn btn-success m-right-sm" href="login.html">Logout</a> <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+				<div class="text-center">
+					<a class="btn btn-success m-right-sm" href="login.html">Logout</a> <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+				</div>
 			</div>
+			<div class="popup_align" style="display: inline-block; vertical-align: middle; height: 100%;"></div>
 		</div>
-		<div class="popup_align" style="display: inline-block; vertical-align: middle; height: 100%;"></div>
-	</div>
-	<!-- Overlay Div -->
-	<div id="overlay" class="transparent" style="display: none;"></div>
+		<!-- Overlay Div -->
+		<div id="overlay" class="transparent" style="display: none;"></div>
 
 
-	<div id="top-nav" class="fixed skin-6">
-		<a href="#" class="brand"> <span>dating @ clickd</span>
-		</a>
-		<!-- /brand -->
-		<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
-			<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-		</button>
-		<ul class="nav-notification clearfix">
-			<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>John Doe</strong></span>
-					<span><i class="fa fa-chevron-down"></i></span>
+		<div id="top-nav" class="fixed skin-6">
+			<a href="#" class="brand"> <span>dating @ clickd</span>
 			</a>
-				<ul class="dropdown-menu">
-					<li><a class="clearfix" href="#"> 
-							<span class="detail">
-								<strong>John Doe</strong>
-								<span class="grey">John_Doe@email.com</span>
+			<!-- /brand -->
+			<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="nav-notification clearfix">
+				<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>John Doe</strong></span>
+						<span><i class="fa fa-chevron-down"></i></span>
+				</a>
+					<ul class="dropdown-menu">
+						<li><a class="clearfix" href="#"> <span class="detail"> <strong>John Doe</strong> <span class="grey">John_Doe@email.com</span>
 							</span>
-					</a></li>
-					<li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
-					<li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
-					<li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
-					<li class="divider"></li>
-					<li><a tabindex="-1" class="main-link logoutConfirm_open" href="#" data-popup-ordinal="0" id="link-sign-out"><i class="fa fa-lock fa-lg"></i>Sign
-							out</a></li>
-				</ul></li>
-		</ul>
-	</div>
-	<!-- /top-nav-->
-
-
-
-	<aside class="fixed skin-6">
-		<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
-			<div class="sidebar-inner scrollable-sidebar" style="overflow: hidden; width: auto; height: 100%;">
-				<!-- /size-toggle -->
-				<div class="user-block clearfix">
-					<img src="" alt="User Avatar" id="user-image">
-					<div class="detail">
-						<strong id="user-full-name-2"></strong>
-
-					</div>
-				</div>
-				<!-- /user-block -->
-				<div class="main-menu">
-					<ul>
-						<li class="active"><a href="index.html"> <span class="menu-icon"> <i class="fa fa-desktop fa-lg"></i>
-							</span> <span class="text"> Dashboard </span> <span class="menu-hover"></span>
 						</a></li>
-						<li class="openable"><a href="#" id="candidates-link"> <span class="menu-icon"> <i class="fa fa-file-text fa-lg"></i>
-							</span> <span class="text"> Candidates </span> <span class="menu-hover"></span>
-						</a>
-							<ul class="submenu" id="candidate-list">
-								<li class=""><a href="login.html"><span class="submenu-label"><img class="small-profile-img"
-											src="/assets/images/members/facebook_maree.jpg">Maree</span></a></li>
-								<li class=""><a href="register.html"><span class="submenu-label"><img class="small-profile-img"
-											src="/assets/images/members/facebook_mia.jpg">Mia</span></a></li>
-								<li class=""><a href="tara.html"><span class="submenu-label"><img class="small-profile-img"
-											src="/assets/images/members/facebook_tara.jpg">Tara</span></a></li>
-								<li class=""><a href="profile.html"><span class="submenu-label">And 15 more...</span></a></li>
-							</ul></li>
-						<li class="openable"><a href="#" id="connections-link"> <span class="menu-icon"> <i class="fa fa-tag fa-lg"></i>
-							</span> <span class="text"> Connections </span> <span class="menu-hover"></span>
-						</a>
-							<ul class="submenu" id="connection-list">
-								<li class=""><a href="ui_element.html"><span class="submenu-label"><img class="small-profile-img"
-											src="/assets/images/members/facebook_mo.jpg">Mo</span></a></li>
-								<li><a href="button.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/facebook_toby.jpg">Toby</span></a></li>
-								<li><a href="tab.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/facebook_ralph.jpg">Ralph</span></a></li>
-								<li><a href="profile.html"><span class="submenu-label">And 15 more...</span></a></li>
-							</ul></li>
-
-						<li class="openable"><a href="#" id="cliques-link"> <span class="menu-icon"> <i class="fa fa-tag fa-lg"></i>
-							</span> <span class="text"> Cliques </span> <span class="menu-hover"></span>
-						</a>
-							<ul class="submenu" id="clique-list">
-								<li class="openable"><a href="#"><span class="submenu-label"><img class="small-profile-img"
-											src="/assets/images/members/topics/nightlife.jpg">Nightlife</span></a>
-									<ul class="submenu">
-										<li><a href="ui_element.html"><span class="submenu-label">Camden</span></a></li>
-										<li><a href="button.html"><span class="submenu-label">Mayfair VIP</span></a></li>
-										<li><a href="tab.html"><span class="submenu-label">Friday Night City Drinks</span></a></li>
-									</ul></li>
-								<li><a href="button.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/topics/sports.jpg">Chalk
-											Farm Football</span></a></li>
-								<li><a href="tab.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/topics/food.jpg">Dining
-											Club</span></a></li>
-								<li><a href="tab.html"><span class="submenu-label">And 5 more...</span></a></li>
-							</ul></li>
-
-
-					</ul>
-
-				</div>
-				<!-- /main-menu -->
-			</div>
-			<div class="slimScrollBar"
-				style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;"></div>
-			<div class="slimScrollRail"
-				style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div>
+						<li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+						<li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
+						<li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
+						<li class="divider"></li>
+						<li><a tabindex="-1" class="main-link logoutConfirm_open" href="#" data-popup-ordinal="0" id="link-sign-out"><i class="fa fa-lock fa-lg"></i>Sign
+								out</a></li>
+					</ul></li>
+			</ul>
 		</div>
-		<!-- /sidebar-inner -->
-	</aside>
-	<div id="main-container">
-		<div class="col-sm-8">
+		<!-- /top-nav-->
 
-			<div class="row content-row">
-				<div class="well content-well" id="content-window">
-								<h4 id="content-window-header">candidates</h4>
-			
-				</div>
-			</div>
 
-			<div class="row chat-row">
-				<div class="well chat-well">
-				 	<ul class="nav nav-pills">
-						<li class="active"><a href="#">Candidates</a></li>
-						<li><a href="#">Connections</a></li>
-						<li><a href="#">Cliques</a></li>
-					</ul>
-					
-					<div class="chat-window" id="chat.window">
-		
-				</div>
-			</div>
-		</div>	
-		</div><!-- /.padding -->
 
-		<div class="col-sm-4 click-window custom-grid menu-grid click-col">
-			<div class="well click-well">
-				<div class="panel click-panel">
-					<div class="panel-heading click-panel-heading"">
-						<h3 class="click-panel-heading-h2" id="click-panel-question">What's your poison?</h3>
+		<aside class="fixed skin-6">
+			<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
+				<div class="sidebar-inner scrollable-sidebar" style="overflow: hidden; width: auto; height: 100%;">
+					<!-- /size-toggle -->
+					<div class="user-block clearfix">
+						<img src="" alt="User Avatar" id="user-image">
+						<div class="detail">
+							<strong id="user-full-name-2"></strong>
+
+						</div>
 					</div>
-					<div class="panel-body click-panel-body" id="click-panel-answers">
-						<div class="row click-answer-row">
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-1" onclick="onAnswerClick('1')">Whiskey </span>
-									</div>
-								</div>
-							</div>
+					<!-- /user-block -->
+					<div class="main-menu">
+						<ul>
+							<li class="active"><a href="index.html"> <span class="menu-icon"> <i class="fa fa-desktop fa-lg"></i>
+								</span> <span class="text"> Dashboard </span> <span class="menu-hover"></span>
+							</a></li>
+							<li class="openable"><a href="#" id="candidates-link"> <span class="menu-icon"> <i class="fa fa-file-text fa-lg"></i>
+								</span> <span class="text"> Candidates </span> <span class="menu-hover"></span>
+							</a>
+								<ul class="submenu" id="candidate-list">
+									<li class=""><a href="login.html"><span class="submenu-label"><img class="small-profile-img"
+												src="/assets/images/members/facebook_maree.jpg">Maree</span></a></li>
+									<li class=""><a href="register.html"><span class="submenu-label"><img class="small-profile-img"
+												src="/assets/images/members/facebook_mia.jpg">Mia</span></a></li>
+									<li class=""><a href="tara.html"><span class="submenu-label"><img class="small-profile-img"
+												src="/assets/images/members/facebook_tara.jpg">Tara</span></a></li>
+									<li class=""><a href="profile.html"><span class="submenu-label">And 15 more...</span></a></li>
+								</ul></li>
+							<li class="openable"><a href="#" id="connections-link"> <span class="menu-icon"> <i class="fa fa-tag fa-lg"></i>
+								</span> <span class="text"> Connections </span> <span class="menu-hover"></span>
+							</a>
+								<ul class="submenu" id="connection-list">
+									<li class=""><a href="ui_element.html"><span class="submenu-label"><img class="small-profile-img"
+												src="/assets/images/members/facebook_mo.jpg">Mo</span></a></li>
+									<li><a href="button.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/facebook_toby.jpg">Toby</span></a></li>
+									<li><a href="tab.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/facebook_ralph.jpg">Ralph</span></a></li>
+									<li><a href="profile.html"><span class="submenu-label">And 15 more...</span></a></li>
+								</ul></li>
 
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-2" onclick="onAnswerClick('2')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-3" onclick="onAnswerClick('3')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
-
-						<div class="row click-answer-row">
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-4" onclick="onAnswerClick('4')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-5" onclick="onAnswerClick('5')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-6" onclick="onAnswerClick('6')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
-						<div class="row click-answer-row">
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-7" onclick="onAnswerClick('7')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-8" onclick="onAnswerClick('8')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
+							<li class="openable"><a href="#" id="cliques-link"> <span class="menu-icon"> <i class="fa fa-tag fa-lg"></i>
+								</span> <span class="text"> Cliques </span> <span class="menu-hover"></span>
+							</a>
+								<ul class="submenu" id="clique-list">
+									<li class="openable"><a href="#"><span class="submenu-label"><img class="small-profile-img"
+												src="/assets/images/members/topics/nightlife.jpg">Nightlife</span></a>
+										<ul class="submenu">
+											<li><a href="ui_element.html"><span class="submenu-label">Camden</span></a></li>
+											<li><a href="button.html"><span class="submenu-label">Mayfair VIP</span></a></li>
+											<li><a href="tab.html"><span class="submenu-label">Friday Night City Drinks</span></a></li>
+										</ul></li>
+									<li><a href="button.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/topics/sports.jpg">Chalk
+												Farm Football</span></a></li>
+									<li><a href="tab.html"><span class="submenu-label"><img class="small-profile-img" src="/assets/images/members/topics/food.jpg">Dining
+												Club</span></a></li>
+									<li><a href="tab.html"><span class="submenu-label">And 5 more...</span></a></li>
+								</ul></li>
 
 
-							<div class="col-md-4 click-answer-col">
-								<div class="click-answer-panel">
-									<div class="panel-body click-answer-panel-body">
-										<span class="click-answer-span" id="click-panel-answer-9" onclick="onAnswerClick('9')"> Whiskey </span>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
+						</ul>
 
 					</div>
-
-					<button class="btn btn-large" id="button-skip-question" onclick="loadNextQuestion()">Skip Question</button>
+					<!-- /main-menu -->
 				</div>
-				<!--  end click panel -->
-
+				<div class="slimScrollBar"
+					style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;"></div>
+				<div class="slimScrollRail"
+					style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;"></div>
 			</div>
-		</div>
-	</div> <!--  end main-contiainer-user -->
+			<!-- /sidebar-inner -->
+		</aside>
+		<div id="main-container">
+			<div class="col-sm-8">
 
+				<div class="row content-row">
+					<div class="well content-well" id="content-window">
+						<h4 id="content-window-header">candidates</h4>
 
-	<!--Modal-->
-	<div class="modal fade" id="newFolder">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
-					<h4>Create new folder</h4>
+					</div>
 				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="folderName">Folder Name</label> <input type="text" class="form-control input-sm" id="folderName" placeholder="Folder name here...">
+
+				<div class="row chat-row">
+					<div class="well chat-well">
+						<ul class="nav nav-pills">
+							<li class="active"><a href="#">Candidates</a></li>
+							<li><a href="#">Connections</a></li>
+							<li><a href="#">Cliques</a></li>
+						</ul>
+
+						<div class="chat-window" id="chat.window"></div>
+					</div>
+				</div>
+			</div>
+			<!-- /.padding -->
+
+			<div class="col-sm-4 click-window custom-grid menu-grid click-col">
+				<div class="well click-well">
+					<div class="panel click-panel">
+						<div class="panel-heading click-panel-heading"">
+							<h3 class="click-panel-heading-h2" id="click-panel-question">What's your poison?</h3>
 						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
-					<a href="#" class="btn btn-danger btn-sm">Save changes</a>
+						<div class="panel-body click-panel-body" id="click-panel-answers">
+							<div class="row click-answer-row">
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-1" onclick="onAnswerClick('1')">Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-2" onclick="onAnswerClick('2')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-3" onclick="onAnswerClick('3')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
+							<div class="row click-answer-row">
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-4" onclick="onAnswerClick('4')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-5" onclick="onAnswerClick('5')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-6" onclick="onAnswerClick('6')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<div class="row click-answer-row">
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-7" onclick="onAnswerClick('7')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-8" onclick="onAnswerClick('8')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="col-md-4 click-answer-col">
+									<div class="click-answer-panel">
+										<div class="panel-body click-answer-panel-body">
+											<span class="click-answer-span" id="click-panel-answer-9" onclick="onAnswerClick('9')"> Whiskey </span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
+						</div>
+
+						<button class="btn btn-large" id="button-skip-question" onclick="loadNextQuestion()">Skip Question</button>
+					</div>
+					<!--  end click panel -->
+
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
+		<!--  end main-contiainer-user -->
+
+
+		<!--Modal-->
+		<div class="modal fade" id="newFolder">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+						<h4>Create new folder</h4>
+					</div>
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="folderName">Folder Name</label> <input type="text" class="form-control input-sm" id="folderName" placeholder="Folder name here...">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+						<a href="#" class="btn btn-danger btn-sm">Save changes</a>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 	</div>
 	<!-- /wrapper -->
 
@@ -561,11 +573,124 @@
 		</div>
 		<div style="position: absolute; width: 9999px; visibility: hidden; display: none;"></div>
 	</div>
-	</div> 	
+	</div>
 
 	<a href="#" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
-<div class="datepicker dropdown-menu" style="display: none; top: 214px; left: 808.75px;"><div class="datepicker-days" style="display: none;"><table class=" table-condensed"><thead><tr><th class="prev">‹</th><th colspan="5" class="switch">February 1999</th><th class="next">›</th></tr><tr><th class="dow">Su</th><th class="dow">Mo</th><th class="dow">Tu</th><th class="dow">We</th><th class="dow">Th</th><th class="dow">Fr</th><th class="dow">Sa</th></tr></thead><tbody><tr><td class="day  old">31</td><td class="day  active">1</td><td class="day ">2</td><td class="day ">3</td><td class="day ">4</td><td class="day ">5</td><td class="day ">6</td></tr><tr><td class="day ">7</td><td class="day ">8</td><td class="day ">9</td><td class="day ">10</td><td class="day ">11</td><td class="day ">12</td><td class="day ">13</td></tr><tr><td class="day ">14</td><td class="day ">15</td><td class="day ">16</td><td class="day ">17</td><td class="day ">18</td><td class="day ">19</td><td class="day ">20</td></tr><tr><td class="day ">21</td><td class="day ">22</td><td class="day ">23</td><td class="day ">24</td><td class="day ">25</td><td class="day ">26</td><td class="day ">27</td></tr><tr><td class="day ">28</td><td class="day  new">1</td><td class="day  new">2</td><td class="day  new">3</td><td class="day  new">4</td><td class="day  new">5</td><td class="day  new">6</td></tr><tr><td class="day  new">7</td><td class="day  new">8</td><td class="day  new">9</td><td class="day  new">10</td><td class="day  new">11</td><td class="day  new">12</td><td class="day  new">13</td></tr></tbody></table></div><div class="datepicker-months" style="display: none;"><table class="table-condensed"><thead><tr><th class="prev">‹</th><th colspan="5" class="switch">1999</th><th class="next">›</th></tr></thead><tbody><tr><td colspan="7"><span class="month">Jan</span><span class="month active">Feb</span><span class="month">Mar</span><span class="month">Apr</span><span class="month">May</span><span class="month">Jun</span><span class="month">Jul</span><span class="month">Aug</span><span class="month">Sep</span><span class="month">Oct</span><span class="month">Nov</span><span class="month">Dec</span></td></tr></tbody></table></div><div class="datepicker-years" style="display: block;"><table class="table-condensed"><thead><tr><th class="prev">‹</th><th colspan="5" class="switch">1990-1999</th><th class="next">›</th></tr></thead><tbody><tr><td colspan="7"><span class="year old">1989</span><span class="year">1990</span><span class="year">1991</span><span class="year">1992</span><span class="year">1993</span><span class="year">1994</span><span class="year">1995</span><span class="year">1996</span><span class="year">1997</span><span class="year">1998</span><span class="year active">1999</span><span class="year old">2000</span></td></tr></tbody></table></div></div>
+	<div class="datepicker dropdown-menu" style="display: none; top: 214px; left: 808.75px;">
+		<div class="datepicker-days" style="display: none;">
+			<table class=" table-condensed">
+				<thead>
+					<tr>
+						<th class="prev">‹</th>
+						<th colspan="5" class="switch">February 1999</th>
+						<th class="next">›</th>
+					</tr>
+					<tr>
+						<th class="dow">Su</th>
+						<th class="dow">Mo</th>
+						<th class="dow">Tu</th>
+						<th class="dow">We</th>
+						<th class="dow">Th</th>
+						<th class="dow">Fr</th>
+						<th class="dow">Sa</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="day  old">31</td>
+						<td class="day  active">1</td>
+						<td class="day ">2</td>
+						<td class="day ">3</td>
+						<td class="day ">4</td>
+						<td class="day ">5</td>
+						<td class="day ">6</td>
+					</tr>
+					<tr>
+						<td class="day ">7</td>
+						<td class="day ">8</td>
+						<td class="day ">9</td>
+						<td class="day ">10</td>
+						<td class="day ">11</td>
+						<td class="day ">12</td>
+						<td class="day ">13</td>
+					</tr>
+					<tr>
+						<td class="day ">14</td>
+						<td class="day ">15</td>
+						<td class="day ">16</td>
+						<td class="day ">17</td>
+						<td class="day ">18</td>
+						<td class="day ">19</td>
+						<td class="day ">20</td>
+					</tr>
+					<tr>
+						<td class="day ">21</td>
+						<td class="day ">22</td>
+						<td class="day ">23</td>
+						<td class="day ">24</td>
+						<td class="day ">25</td>
+						<td class="day ">26</td>
+						<td class="day ">27</td>
+					</tr>
+					<tr>
+						<td class="day ">28</td>
+						<td class="day  new">1</td>
+						<td class="day  new">2</td>
+						<td class="day  new">3</td>
+						<td class="day  new">4</td>
+						<td class="day  new">5</td>
+						<td class="day  new">6</td>
+					</tr>
+					<tr>
+						<td class="day  new">7</td>
+						<td class="day  new">8</td>
+						<td class="day  new">9</td>
+						<td class="day  new">10</td>
+						<td class="day  new">11</td>
+						<td class="day  new">12</td>
+						<td class="day  new">13</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="datepicker-months" style="display: none;">
+			<table class="table-condensed">
+				<thead>
+					<tr>
+						<th class="prev">‹</th>
+						<th colspan="5" class="switch">1999</th>
+						<th class="next">›</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="7"><span class="month">Jan</span><span class="month active">Feb</span><span class="month">Mar</span><span class="month">Apr</span><span
+							class="month">May</span><span class="month">Jun</span><span class="month">Jul</span><span class="month">Aug</span><span class="month">Sep</span><span
+							class="month">Oct</span><span class="month">Nov</span><span class="month">Dec</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="datepicker-years" style="display: block;">
+			<table class="table-condensed">
+				<thead>
+					<tr>
+						<th class="prev">‹</th>
+						<th colspan="5" class="switch">1990-1999</th>
+						<th class="next">›</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="7"><span class="year old">1989</span><span class="year">1990</span><span class="year">1991</span><span class="year">1992</span><span
+							class="year">1993</span><span class="year">1994</span><span class="year">1995</span><span class="year">1996</span><span class="year">1997</span><span
+							class="year">1998</span><span class="year active">1999</span><span class="year old">2000</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 </body>
 </html>

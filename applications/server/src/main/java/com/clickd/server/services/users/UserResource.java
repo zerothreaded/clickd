@@ -59,7 +59,7 @@ public class UserResource {
 	@Timed
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response register(@FormParam("email") String email, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName,
+	public String register(@FormParam("email") String email, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName,
 			@FormParam("password") String password, @FormParam("dateOfBirth") String dateOfBirth, @FormParam("gender") String gender,
 			@FormParam("postcode") String postcode) throws URISyntaxException {
 
@@ -105,9 +105,9 @@ public class UserResource {
 			
 			
 
-			return Response.status(200).entity(" { \"status\" : \"ok\" } ").build();
+			return Utilities.toJson(newUser);
 		} else {
-			return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
+			return " { \"status\" : \"failed\" } ";
 		}
 	}
 
