@@ -45,6 +45,14 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.currentUser.candidatesShowMenu = true;
 		$scope.model.currentUser.connectionsShowMenu = true;
 		$scope.model.currentUser.cliquesShowMenu = true;
+        $scope.model.currentSelection = "candidates";
+		$scope.model.currentUser.isLoggedIn = false;
+		$scope.model.currentUser.user = "";
+		$scope.model.currentUser.userRef = "";
+		$scope.signInFormData.email = '';
+		$scope.signInFormData.password = '';
+		$scope.model.selectedUser = {};
+		$scope.controlFlags.requestMemberBio = false;
 	}
 	
 	// UPDATE CCC FROM SERVER 
@@ -185,21 +193,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	        url     : signOutUrl,
 	    })
         .success(function(data) {
-            $scope.model.currentSelection = "candidates";
-			$scope.model.currentUser.isLoggedIn = false;
-			$scope.model.currentUser.user = "";
-			$scope.model.currentUser.userRef = "";
-			
-			$scope.signInFormData.email = '';
-			$scope.signInFormData.password = '';
-			
 			$scope.resetModel();
-			
-			$scope.model.selectedUser = {};
-			$scope.controlFlags.requestMemberBio = false;
-			
-			// TODO: Proper state deletion
-
 			delete $cookies["userSession"];
 			// TODO: TBA
 			// $window.location.href = 'localhost:8080/angular';
