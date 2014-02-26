@@ -232,6 +232,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$scope.signInFormData.email = '';
 			$scope.signInFormData.password = '';
+			$scope.registerFormData = { };
 			
 			$scope.resetModel();
 			
