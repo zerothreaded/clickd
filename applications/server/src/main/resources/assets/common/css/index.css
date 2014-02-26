@@ -418,3 +418,21 @@ img.connect-profile-img {
 {
 	margin-bottom: 6px; margin-top: 6px; font-weight: bold; color: rgb(41, 57, 78);
 }
+
+.list-group-item
+{
+	background-color:#495B6C;
+	color:#fff;
+	border:0px none;
+	padding:3px;
+}
+
+a.list-group-item:hover, a.list-group-item:focus
+{
+		background-color:#596B7C;
+}
+
+.list-group-item, a.list-group-item
+{
+	color:#fff;
+}
