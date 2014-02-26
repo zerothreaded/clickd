@@ -236,8 +236,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         	$scope.signInFormData.email = $scope.registerFormData.email;
         	$scope.signInFormData.password = $scope.registerFormData.password;
         	$scope.signInFormSubmit();
-        	console.log("register done");
-            console.log(data);
         });
 	}
 	
@@ -245,12 +243,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.showMemberBioRequest = function()
 	{
 		$scope.controlFlags.requestMemberBio = true;	
-		console.log("show member bio request :" + $scope.controlFlags.requestMemberBio);
 	}
 	
 	$scope.requestMemberBio = function()
 	{
-		// console.log("req member bio");
 		return $scope.controlFlags.requestMemberBio;	
 	}
 	
@@ -286,8 +282,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onClickCandidate = function(candidate)
 	{
-		console.log('CANDIDATE');
-		console.log(candidate.firstName);
 		$scope.model.currentSelection = 'Candidate : ' + candidate.firstName;
 		$scope.model.selectedUser = candidate;
 		console.log($scope.model.selectedUser);
@@ -303,44 +297,23 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onClickClique = function(clique)
 	{
-		console.log('CLIQUE');
-		console.log(clique.name);
 		$scope.model.currentSelection = 'Clique : ' + clique.name;
 		$scope.model.selectedClique = clique;
 	}
 	
 	$scope.isUserSelected = function (otherUser)
 	{
-		console.log("checking if users are the same");
 		return otherUser == $scope.model.selectedUser.ref;
 	}
 	
 	$scope.isCliqueSelected = function (otherClique)
 	{
-		console.log("checking if cliques are the same");
 		return otherClique == $scope.model.selectedClique.ref;
 	}
-	
 	
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
 	$scope.isCliquesMenuOn = function() { return $scope.model.currentUser.cliquesShowMenu == true; }
 
-	
   });
-
-clickdApplication.directive('clickdHome', function() {
-	return {
-		restrict : "A",
-		templateUrl : '/assets/angular/includes/home.html'
-	}
-});
-
-clickdApplication.directive('userHome', function() {
-	return {
-		restrict : "A",
-		templateUrl : '/assets/angular/includes/userhome.html'
-	};
-});
-
 
