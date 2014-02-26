@@ -56,7 +56,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// REST call to get connections
 			var getConnectionsUrl = "/users/" + userRef + "/connections"; 
 			$http({ method  : 'GET', url : getConnectionsUrl, })
-		    .success(function(data) {
+		    .success(function(data) {	
 		        console.log("got connections");
 		    	console.log(data);
 		    	
@@ -80,7 +80,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// REST call to get cliques
 			var getCliquesUrl = "/users/" + userRef + "/cliques"; $http({ method : 'GET', url : getCliquesUrl, }).success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
 			
-			$scope.$apply();
+			// $scope.$apply();
 		        
 			
 		}
@@ -90,14 +90,23 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		var userRef = $scope.model.currentUser.userRef;
 		console.log('loadNextQuestion Called With User Ref :' + userRef);
 		
+//		$http({
+//	        method  : 'POST',
+//	        url     : '/users/signin',
+//	        data    : $.param($scope.signInFormData),  // pass in data as strings
+//	        headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
+//	    })
+//        .success(function(data) {
+//        	
+//        }
+//        
 		var nextQuestionUrl = "/questions/next/" + userRef;
-		var nextQuestionCall = $.ajax({
-			url : nextQuestionUrl,
-			type : "GET",
+		$http({
+			url : "/questions/next/" + userRef,
+			method : "GET",
 			dataType : "json"
-		});
-
-		nextQuestionCall.done(function(msg) {
+		})
+		.success(function(msg) {
 			if (typeof(msg["status"]) == 'undefined') {
 				answers = msg["_embedded"]["question-answer-list"];
 				questionRef = msg["ref"];
@@ -109,7 +118,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				
 				$scope.model.currentUser.currentQuestion = msg;
 				$scope.model.currentUser.currentAnswers = answers;
-				$scope.$apply();
+				//$scope.$apply();
 				console.log('POST loadNextQuestion()');
 				console.log($scope.model);
 				$scope.updateCCC();
@@ -129,19 +138,15 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		var userRef = $scope.model.currentUser.userRef;
 		var questionRef = question.ref.split("/")[2];
 		var answerRef = answer.ref.split("/")[2];
-		console.log('onSelectAnswer()');
-		console.log('qref=' + questionRef);
-		console.log('aref=' + answerRef);
 		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef;
 		console.log(createChoiceUrl);
 		
-		var createChoiceCall = $.ajax({
+		$http({
 			url : createChoiceUrl,
-			type : "POST",
+			method : "POST",
 			dataType : "json"
-		});
-
-		createChoiceCall.done(function(msg) {
+		})
+		.success(function(msg) {
 			$scope.loadNextQuestion();
 		});
 	}
@@ -157,7 +162,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.userRef = theUserRef;
 			$scope.model.currentUser.isLoggedIn = true;
 			console.log($scope.model);
-			$scope.$apply
+			// $scope.$apply
 		});
 	};
 	
@@ -179,11 +184,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 
 	$scope.isUserLoggedIn = function() { 
-		// alert('isuserLoggedIn()');
-		// console.log($scope.model);
-		// console.log("checking login: " + $scope.model.currentUser.isLoggedIn);
 		return $scope.model.currentUser.isLoggedIn;
-		//return false;
 	}
 	
 	$scope.signInFormSubmit = function () {
