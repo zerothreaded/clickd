@@ -8,22 +8,28 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"sessionRef" : "",
 		"selectedUser": {},
 		"selectedClique" : {},
+		
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
 			"user" : "",
 			"userRef" : "",
+			
 			// Users Candidates
 			"candidates" : [ ],
 			"candidatesShowMenu" : true,
+			
 			// Users Connections
 			"connections" : [ ],
 			"connectionsShowMenu" : true,
+			
 			// Users Cliques
 			"cliques" : [ ],
 			"cliquesShowMenu" : true,
+			
 			// Questions and Answers
-			"currentQuestionText" : "Ask me Blud"
+			"currentQuestion" : { },
+			"currentAnswers" : [ ]
 		}
 	}; 
 
@@ -31,7 +37,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.signInFormData = { };
 	$scope.registerFormData = { };
 	$scope.controlFlags = {
-			"requestMemberBio" : false
+		"requestMemberBio" : false
 	};
 	
 	// UPDATE CCC FROM SERVER 
@@ -40,69 +46,47 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		// REST call to get candidates
 		var userRef = $scope.model.currentUser.userRef;
 		console.log('User Ref :' + userRef);
-		if (userRef != false)
-		{
+		if (userRef != false) {
 			// alert('WTF');
 			var getCandidatesUrl = "/users/" + userRef + "/candidates";
-			$http({
-		        method  : 'GET',
-		        url     : getCandidatesUrl,
-		    })
-		    .success(function(data) {
-		        console.log(data);
-		        $scope.model.currentUser.candidates = data;
-		    });
+			$http({ method  : 'GET', url     : getCandidatesUrl }) .success(function(data) { console.log(data); $scope.model.currentUser.candidates = data; });
 			
 			$scope.model.currentUser.connections = [];
-
 			
 			// REST call to get connections
-			var getConnectionsUrl = "/users/" + userRef + "/connections";
-			$http({
-		        method  : 'GET',
-		        url     : getConnectionsUrl,
-		    })
-		    
+			var getConnectionsUrl = "/users/" + userRef + "/connections"; 
+			$http({ method  : 'GET', url : getConnectionsUrl, })
 		    .success(function(data) {
 		        console.log("got connections");
 		    	console.log(data);
-		        
-		        data.forEach(function(connection) {
-		        	console.log("connection");
-		        	console.log(connection);
-
-			    	var userRef = connection["_links"]["connection-other-user"]["href"];
-			    	console.log(userRef);
-			    	// Get the USER data for this connection
-					$http({
-						url : userRef,
-						method : "GET",
-					}).success(function(user) {
-						$scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user);
-					});
-
-			    });
+		    	
+		    	if (typeof(data) != 'undefined' && data != null) {
+		    		console.log('GET CONNECTIONS RESULT NOT NULL');
+			        data.forEach(function(connection) {
+			        	console.log("connection");
+			        	console.log(connection);
+			        	if (typeof(connection) != 'undefined' &&  connection != null) {
+					    	var userRef = connection["_links"]["connection-other-user"]["href"];
+					    	console.log(userRef);
+					    	// Get the USER data for this connection
+							$http({ url : userRef, method : "GET" })
+							.success(function(user) { $scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user); } );
+			        	}
+			        });
+		    	}
+		    
 		    });
 		
 			// REST call to get cliques
-			var getCliquesUrl = "/users/" + userRef + "/cliques";
-			$http({
-		        method  : 'GET',
-		        url     : getCliquesUrl,
-		    })
-		    .success(function(data) {
-		        console.log(data);
-		        $scope.model.currentUser.cliques = data;
-		    });
-		
-		} else {
-			// alert('GRRR');
+			var getCliquesUrl = "/users/" + userRef + "/cliques"; $http({ method : 'GET', url : getCliquesUrl, }).success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
+			
+			$scope.$apply();
+		        
+			
 		}
 	}
-	
-
+		
 	$scope.loadNextQuestion = function() {
-		alert('DUDE');
 		var userRef = $scope.model.currentUser.userRef;
 		console.log('loadNextQuestion Called With User Ref :' + userRef);
 		
@@ -114,45 +98,52 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		});
 
 		nextQuestionCall.done(function(msg) {
-			if (typeof msg["status"] == 'undefined') {
+			if (typeof(msg["status"]) == 'undefined') {
 				answers = msg["_embedded"]["question-answer-list"];
 				questionRef = msg["ref"];
 				questionRef = questionRef.split("/")[2];
 				var questionText = msg.questionText;
 				
-				$scope.currentUser.currentQuestionText = questionText;
+				console.log('CURRENT QUESTION TXT :' + msg.questionText);
+				console.log('CURRENT USER:' + $scope.model.currentUser);			
 				
-				// $("#click-panel-question").html(questionText);
+				$scope.model.currentUser.currentQuestion = msg;
+				$scope.model.currentUser.currentAnswers = answers;
+				$scope.$apply();
+				console.log('POST loadNextQuestion()');
+				console.log($scope.model);
+				$scope.updateCCC();
 				
-				for ( var i = 0; i < answers.length; i++) {
-					var j = i + 1;
-					var answer = answers[i];
-					if (answer == null)
-						break;
-
-					$("#click-panel-answer-" + j).parent().parent().show();
-					
-					var image = '<img  src="/assets/images/answers/'+questionRef+'/' + answer["imageName"] + '.jpg" />';
-					
-					if (null == answer["imageName"] || answer["imageName"].length == 0)
-						$("#click-panel-answer-" + j).html(image + answer.answerText);
-					else
-						$("#click-panel-answer-" + j).html(image);
-				}
-				
-				for (var i = answers.length; i < 9; i++)
-				{
-					var j = i+1;
-					$("#click-panel-answer-" + j).parent().parent().hide();
-				}
 			} else {
 				// No more answers
 				$("#click-panel-question").html("You're so clickd out!");
 				$("#click-panel-answers").html("");
 				$('#button-skip-question').hide();
+				$scope.updateCCC();
 			}
+		
+		});
+	}
+	
+	$scope.onSelectAnswer = function(question, answer) {
+		var userRef = $scope.model.currentUser.userRef;
+		var questionRef = question.ref.split("/")[2];
+		var answerRef = answer.ref.split("/")[2];
+		console.log('onSelectAnswer()');
+		console.log('qref=' + questionRef);
+		console.log('aref=' + answerRef);
+		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef;
+		console.log(createChoiceUrl);
+		
+		var createChoiceCall = $.ajax({
+			url : createChoiceUrl,
+			type : "POST",
+			dataType : "json"
 		});
 
+		createChoiceCall.done(function(msg) {
+			$scope.loadNextQuestion();
+		});
 	}
 	
 	// GET USER + CCC From Server
@@ -166,10 +157,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.userRef = theUserRef;
 			$scope.model.currentUser.isLoggedIn = true;
 			console.log($scope.model);
-			$scope.updateCCC();
+			$scope.$apply
 		});
 	};
 	
+	// APPLICATION INITIALIZATION CODE
+	// FIRST TIME ONLY - or on refresh
 	// Check for cookie and valid user session
 	var cookie = $cookies.userSession;
 	// $scope.model.cookie = cookie;
@@ -181,13 +174,16 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		shortUserRef = shortUserRef[2];
 		console.log('SHORT REF + ' + shortUserRef);
 		$scope.loadUserByRef(shortUserRef);
+		$scope.model.currentUser.userRef = shortUserRef;
+		$scope.loadNextQuestion();
 	}
 
 	$scope.isUserLoggedIn = function() { 
 		// alert('isuserLoggedIn()');
-		console.log($scope.model);
-		console.log("checking login: " + $scope.model.currentUser.isLoggedIn);
+		// console.log($scope.model);
+		// console.log("checking login: " + $scope.model.currentUser.isLoggedIn);
 		return $scope.model.currentUser.isLoggedIn;
+		//return false;
 	}
 	
 	$scope.signInFormSubmit = function () {
@@ -206,10 +202,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
             console.log('$scope.model.currentUser.isLoggedIn = ' + $scope.model.currentUser.isLoggedIn);
 			$scope.model.currentUser.isLoggedIn = true;
 	        console.log('$scope.model.currentUser.isLoggedIn = ' + $scope.model.currentUser.isLoggedIn);
-	        
+	        $scope.model.currentUser.userRef = theUserRef;
 			$scope.loadUserByRef(theUserRef);
-	        $scope.loadNextQuestion();
-			$scope.updateCCC();
+			$scope.loadNextQuestion();
        });
 	}
 
@@ -226,9 +221,15 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.isLoggedIn = false;
 			$scope.model.currentUser.user = "";
 			$scope.model.currentUser.userRef = "";
+			
+			$scope.model.selectedUser = {};
+			$scope.controlFlags.requestMemberBio = false;
+			
+			// TODO: Proper state deletion
+
 			delete $cookies["userSession"];
 			// TODO: TBA
-			$window.location.href = 'localhost:8080/angular';
+			// $window.location.href = 'localhost:8080/angular';
         });
 	}
 	
@@ -264,7 +265,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.requestMemberBio = function()
 	{
-		console.log("req member bio");
+		// console.log("req member bio");
 		return $scope.controlFlags.requestMemberBio;	
 	}
 	

@@ -84,6 +84,8 @@ public class QuestionResource {
 
 			}
 		}
+		
+		// TODO: Ralph clear up this conditional logic
 		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
 		if (unansweredQuestions.size() != 0) {
 			int idx = (int) (Math.random() * (unansweredQuestions.size() - 1));
@@ -91,16 +93,23 @@ public class QuestionResource {
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
 			List<Link> answerLinks = (List<Link>) question.get_Links().get("question-answer-list");
 			
-			for (Link answerLink : answerLinks) {
-				Answer answer = answerDao.findByRef(answerLink.getHref());
-				answerList.add(answer);
+			// DUDE
+			if (answerLinks != null) {
+				for (Link answerLink : answerLinks) {
+					Answer answer = answerDao.findByRef(answerLink.getHref());
+					answerList.add(answer);
+				}
+				question.get_Embedded().put("question-answer-list", answerList);
+				return Utilities.toJson(question);
+			} else {
+				System.out.println("NO ANSWER LINKS");
+				return Utilities.toJson(question);
 			}
-			question.get_Embedded().put("question-answer-list", answerList);
-			return Utilities.toJson(question);
 		} else {
 			System.out.println("NO MORE QUESTIONS TO ANSWER");
 			return "{ \"status\" : \"done\" }";
 		}
+
 	}
 
 	public QuestionDao getQuestionDao() {

@@ -102,8 +102,6 @@ public class UserResource {
 			postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
 			postcodeChoice.setAnswerText(postcode);
 			choiceDao.create(postcodeChoice);
-			
-			
 
 			return Utilities.toJson(newUser);
 		} else {
@@ -269,6 +267,7 @@ public class UserResource {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
@@ -322,14 +321,16 @@ public class UserResource {
 		if (null != user.get_Links().get("connection-list")) {
 			userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
 			for (Link userConnectionLink : userConnectionLinks) {
-				Connection c = connectionDao.findByRef(userConnectionLink.getHref());
-				Link otherUserConnectionLink = (Link) c.get_Links().get("connection-other-user");
-				String connectionUserRef = otherUserConnectionLink.getHref();
-
-				for (CandidateResponse responseRow : responseList) {
-					if (connectionUserRef.equals(responseRow.getUser().getRef())) {
-						responseList.remove(responseRow);
-						break;
+				Connection connection = connectionDao.findByRef(userConnectionLink.getHref());
+				if (null != connection) {
+					Link otherUserConnectionLink = (Link) connection.get_Links().get("connection-other-user");
+					String connectionUserRef = otherUserConnectionLink.getHref();
+	
+					for (CandidateResponse responseRow : responseList) {
+						if (connectionUserRef.equals(responseRow.getUser().getRef())) {
+							responseList.remove(responseRow);
+							break;
+						}
 					}
 				}
 			}

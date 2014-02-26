@@ -129,7 +129,7 @@ http://angular-ui.github.io/bootstrap/ -->
 							<div class="row">
 								<div class="col-xs-6 col-sm-6 col-md-12">
 									<div class="form-group">
-										<input type="text" ng-model="registerFormData.postcde" name="postcode" id="postcode" class="form-control input-md" placeholder="What's your postcode?">
+										<input type="text" ng-model="registerFormData.postcode" name="postcode" id="postcode" class="form-control input-md" placeholder="What's your postcode?">
 									</div>
 								</div>
 							</div>
@@ -250,7 +250,6 @@ http://angular-ui.github.io/bootstrap/ -->
 					
 					<div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;" ></div>
 					<div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;" ></div>
-				</div>
 			</aside>
 			
 			
@@ -292,124 +291,37 @@ http://angular-ui.github.io/bootstrap/ -->
 							</div>
 						</div>
 					</div>
-					<div class="row">
-					<div class="col-sm-12" align="left">
-						<input type="text" size="12">
-					</div>
-					</div>
+
 				</div>
 				<!-- /.padding -->
 				<div class="col-sm-4 click-window custom-grid menu-grid click-col">
 					<div class="well click-well">
 						<div class="panel click-panel">
 							<div class="panel-heading click-panel-heading"">
-								<h3 class="click-panel-heading-h2">{{model.currentUser.firstName}}</h3>
+								<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}</h3>
 							</div>
+							
 							<div class="panel-body click-panel-body" id="click-panel-answers">
-								<div class="row click-answer-row">
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-1" onclick="onAnswerClick('1')">Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-2" onclick="onAnswerClick('2')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-3" onclick="onAnswerClick('3')"> Whiskey </span>
-											</div>
+					
+								<!--  Answers for this question -->
+								<div class="row">
+									<div class="col-sm-4" ng-repeat="answer in model.currentUser.currentAnswers" >
+										<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, {{answer}})" >
+											<span class="click-answer-span">{{answer.answerText}}</span>
 										</div>
 									</div>
 								</div>
-								<div class="row click-answer-row">
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-4" onclick="onAnswerClick('4')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-5" onclick="onAnswerClick('5')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-6" onclick="onAnswerClick('6')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row click-answer-row">
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-7" onclick="onAnswerClick('7')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-8" onclick="onAnswerClick('8')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-4 click-answer-col">
-										<div class="click-answer-panel">
-											<div class="panel-body click-answer-panel-body">
-												<span class="click-answer-span" id="click-panel-answer-9" onclick="onAnswerClick('9')"> Whiskey </span>
-											</div>
-										</div>
-									</div>
-								</div>
+								
+
 							</div>
-							<button class="btn btn-large" id="button-skip-question" onclick="loadNextQuestion()">Skip Question</button>
 						</div>
+						<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
+					</div>
 						<!--  end click panel -->
-					</div>
 				</div>
 			</div>
-			<!--  end main-contiainer-user -->
-			<!--Modal-->
-			<div class="modal fade" id="newFolder">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">ï¿½</button>
-							<h4>Create new folder</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<div class="form-group">
-									<label for="folderName">Folder Name</label> <input type="text" class="form-control input-sm" id="folderName" placeholder="Folder name here...">
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button class="btn btn-sm btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
-							<a href="#" class="btn btn-danger btn-sm">Save changes</a>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
 		</div>
-	</div>
+			
 </body>
 
 </html>
