@@ -260,13 +260,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 	
 	$scope.onClickConnection = function(connection) { $scope.model.currentSelection = 'Connection : ' + connection.firstName; $scope.model.selectedUser = connection; }
-	
 	$scope.onClickClique = function(clique) { $scope.model.currentSelection = 'Clique : ' + clique.name; $scope.model.selectedClique = clique; }
-	
 	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
-	
 	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
-	
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
 	$scope.isCliquesMenuOn = function() { return $scope.model.currentUser.cliquesShowMenu == true; }
