@@ -2,7 +2,6 @@ var clickdApplication = angular.module('clickdApplication', ['ngCookies', 'ngRes
 
 clickdApplication.controller('AppController', function($scope, $cookies, $resource, $http) {
 	
-	
 	$scope.model = {
 		"currentSelection" : "candidates",
 		"cookie" : "",
@@ -88,26 +87,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// REST call to get cliques
 			var getCliquesUrl = "/users/" + userRef + "/cliques"; $http({ method : 'GET', url : getCliquesUrl, }).success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
 			
-			// $scope.$apply();
-		        
-			
 		}
 	}
 		
 	$scope.loadNextQuestion = function() {
 		var userRef = $scope.model.currentUser.userRef;
-		console.log('loadNextQuestion Called With User Ref :' + userRef);
-		
-//		$http({
-//	        method  : 'POST',
-//	        url     : '/users/signin',
-//	        data    : $.param($scope.signInFormData),  // pass in data as strings
-//	        headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
-//	    })
-//        .success(function(data) {
-//        	
-//        }
-//        
+		console.log('loadNextQuestion Called With User Ref :' + userRef);      
 		var nextQuestionUrl = "/questions/next/" + userRef;
 		$http({
 			url : "/questions/next/" + userRef,
@@ -126,11 +111,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				
 				$scope.model.currentUser.currentQuestion = msg;
 				$scope.model.currentUser.currentAnswers = answers;
-				//$scope.$apply();
 				console.log('POST loadNextQuestion()');
 				console.log($scope.model);
 				$scope.updateCCC();
-				
 			} else {
 				// No more answers
 				$("#click-panel-question").html("You're so clickd out!");
@@ -138,7 +121,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				$('#button-skip-question').hide();
 				$scope.updateCCC();
 			}
-		
 		});
 	}
 	
@@ -147,8 +129,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		var questionRef = question.ref.split("/")[2];
 		var answerRef = answer.ref.split("/")[2];
 		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef;
-		console.log(createChoiceUrl);
-		
 		$http({
 			url : createChoiceUrl,
 			method : "POST",
@@ -170,7 +150,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.userRef = theUserRef;
 			$scope.model.currentUser.isLoggedIn = true;
 			console.log($scope.model);
-			// $scope.$apply
 		});
 	};
 	
@@ -185,7 +164,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.sessionRef = cookie1.sessionRef;
 		var shortUserRef = cookie1.userRef.split("/");
 		shortUserRef = shortUserRef[2];
-		console.log('SHORT REF + ' + shortUserRef);
 		$scope.loadUserByRef(shortUserRef);
 		$scope.model.currentUser.userRef = shortUserRef;
 		$scope.loadNextQuestion();
@@ -207,10 +185,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         	var userRefTokens = data.ref.split("/");
         	var theUserRef = userRefTokens[2];
         	var userUrl = "/users/" + theUserRef;
-            console.log('signIn theUserRef: ' + theUserRef);
-            console.log('$scope.model.currentUser.isLoggedIn = ' + $scope.model.currentUser.isLoggedIn);
 			$scope.model.currentUser.isLoggedIn = true;
-	        console.log('$scope.model.currentUser.isLoggedIn = ' + $scope.model.currentUser.isLoggedIn);
 	        $scope.model.currentUser.userRef = theUserRef;
 			$scope.loadUserByRef(theUserRef);
 			$scope.loadNextQuestion();
@@ -260,13 +235,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         .success(function(data) {
         	$scope.signInFormData.email = $scope.registerFormData.email;
         	$scope.signInFormData.password = $scope.registerFormData.password;
- 
         	$scope.signInFormSubmit();
-        	
         	console.log("register done");
             console.log(data);
-            
-            
         });
 	}
 	
