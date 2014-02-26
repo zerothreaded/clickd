@@ -67,7 +67,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			.success(function(data) { $scope.model.currentUser.candidates = data; });
 			
 			$scope.model.currentUser.connections = [];
-			
 			// REST call to get connections
 			var getConnectionsUrl = "/users/" + userRef + "/connections"; 
 			$http({ method  : 'GET', url : getConnectionsUrl, })
@@ -83,7 +82,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			        });
 		    	}
 		    });
-		
 			// REST call to get cliques
 			var getCliquesUrl = "/users/" + userRef + "/cliques";
 			$http({ method : 'GET', url : getCliquesUrl, })
@@ -195,8 +193,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         .success(function(data) {
 			$scope.resetModel();
 			delete $cookies["userSession"];
-			// TODO: TBA
-			// $window.location.href = 'localhost:8080/angular';
         });
 	}
 	
@@ -263,27 +259,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.selectedUser = candidate;
 	}
 	
-	$scope.onClickConnection = function(connection)
-	{
-		$scope.model.currentSelection = 'Connection : ' + connection.firstName;
-		$scope.model.selectedUser = connection;
-	}
+	$scope.onClickConnection = function(connection) { $scope.model.currentSelection = 'Connection : ' + connection.firstName; $scope.model.selectedUser = connection; }
 	
-	$scope.onClickClique = function(clique)
-	{
-		$scope.model.currentSelection = 'Clique : ' + clique.name;
-		$scope.model.selectedClique = clique;
-	}
+	$scope.onClickClique = function(clique) { $scope.model.currentSelection = 'Clique : ' + clique.name; $scope.model.selectedClique = clique; }
 	
-	$scope.isUserSelected = function (otherUser)
-	{
-		return otherUser == $scope.model.selectedUser.ref;
-	}
+	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
 	
-	$scope.isCliqueSelected = function (otherClique)
-	{
-		return otherClique == $scope.model.selectedClique.ref;
-	}
+	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
 	
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
