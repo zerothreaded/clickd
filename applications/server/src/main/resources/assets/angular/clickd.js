@@ -52,11 +52,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		// REST call to get candidates
 		var userRef = $scope.model.currentUser.userRef;
-		console.log('User Ref :' + userRef);
 		if (userRef != false) {
 			// alert('WTF');
 			var getCandidatesUrl = "/users/" + userRef + "/candidates";
-			$http({ method  : 'GET', url     : getCandidatesUrl }) .success(function(data) { console.log(data); $scope.model.currentUser.candidates = data; });
+			$http({ method  : 'GET', url     : getCandidatesUrl })
+			.success(function(data) { $scope.model.currentUser.candidates = data; });
 			
 			$scope.model.currentUser.connections = [];
 			
@@ -64,17 +64,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			var getConnectionsUrl = "/users/" + userRef + "/connections"; 
 			$http({ method  : 'GET', url : getConnectionsUrl, })
 		    .success(function(data) {	
-		        console.log("got connections");
-		    	console.log(data);
-		    	
 		    	if (typeof(data) != 'undefined' && data != null) {
-		    		console.log('GET CONNECTIONS RESULT NOT NULL');
 			        data.forEach(function(connection) {
-			        	console.log("connection");
-			        	console.log(connection);
 			        	if (typeof(connection) != 'undefined' &&  connection != null) {
 					    	var userRef = connection["_links"]["connection-other-user"]["href"];
-					    	console.log(userRef);
 					    	// Get the USER data for this connection
 							$http({ url : userRef, method : "GET" })
 								.success(function(user) { $scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user); } );
@@ -86,13 +79,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// REST call to get cliques
 			var getCliquesUrl = "/users/" + userRef + "/cliques";
 			$http({ method : 'GET', url : getCliquesUrl, })
-				.success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
+				.success(function(data) { $scope.model.currentUser.cliques = data; });
 		}
 	}
 		
 	$scope.loadNextQuestion = function() {
 		var userRef = $scope.model.currentUser.userRef;
-		console.log('loadNextQuestion Called With User Ref :' + userRef);      
 		var nextQuestionUrl = "/questions/next/" + userRef;
 		$http({
 			url : "/questions/next/" + userRef,
@@ -105,14 +97,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				questionRef = msg["ref"];
 				questionRef = questionRef.split("/")[2];
 				var questionText = msg.questionText;
-				
-				console.log('CURRENT QUESTION TXT :' + msg.questionText);
-				console.log('CURRENT USER:' + $scope.model.currentUser);			
-				
 				$scope.model.currentUser.currentQuestion = msg;
 				$scope.model.currentUser.currentAnswers = answers;
-				console.log('POST loadNextQuestion()');
-				console.log($scope.model);
 				$scope.updateCCC();
 			} else {
 				// No more answers
@@ -149,7 +135,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.user = user;
 			$scope.model.currentUser.userRef = theUserRef;
 			$scope.model.currentUser.isLoggedIn = true;
-			console.log($scope.model);
 		});
 	};
 	
@@ -200,7 +185,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	        url     : signOutUrl,
 	    })
         .success(function(data) {
-            console.log('Signed Out ' + data);
             $scope.model.currentSelection = "candidates";
 			$scope.model.currentUser.isLoggedIn = false;
 			$scope.model.currentUser.user = "";
@@ -224,7 +208,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.processRegisterForm = function()
 	{
-		console.log("register form");
 		// Form processor
 		$http({
 	        method  : 'POST',
@@ -284,13 +267,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'Candidate : ' + candidate.firstName;
 		$scope.model.selectedUser = candidate;
-		console.log($scope.model.selectedUser);
 	}
 	
 	$scope.onClickConnection = function(connection)
 	{
-		console.log('CONNECTION');
-		console.log(connection);
 		$scope.model.currentSelection = 'Connection : ' + connection.firstName;
 		$scope.model.selectedUser = connection;
 	}
