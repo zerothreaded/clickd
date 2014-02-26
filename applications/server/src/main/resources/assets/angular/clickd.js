@@ -77,16 +77,16 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 					    	console.log(userRef);
 					    	// Get the USER data for this connection
 							$http({ url : userRef, method : "GET" })
-							.success(function(user) { $scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user); } );
+								.success(function(user) { $scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user); } );
 			        	}
 			        });
 		    	}
-		    
 		    });
 		
 			// REST call to get cliques
-			var getCliquesUrl = "/users/" + userRef + "/cliques"; $http({ method : 'GET', url : getCliquesUrl, }).success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
-			
+			var getCliquesUrl = "/users/" + userRef + "/cliques";
+			$http({ method : 'GET', url : getCliquesUrl, })
+				.success(function(data) { console.log(data); $scope.model.currentUser.cliques = data; });
 		}
 	}
 		
