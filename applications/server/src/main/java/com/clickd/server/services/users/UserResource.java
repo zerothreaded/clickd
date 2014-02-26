@@ -126,14 +126,14 @@ public class UserResource {
 				if (sessionLinks == null) {
 					sessionLinks = new ArrayList<Link>();
 				}
-				for (Link sessionLink : sessionLinks) {
-					Session session = sessionDao.findByRef(sessionLink.getHref());
-					if (session.getIsLoggedIn()) {
-						session.setIsLoggedIn(Boolean.FALSE);
-						sessionDao.update(session);
+				else
+				{
+					for (Link sessionLink : sessionLinks) {
+						Session session = sessionDao.findByRef(sessionLink.getHref());
+						sessionDao.delete(session);
 					}
+					sessionLinks = new ArrayList<Link>();
 				}
-
 				// Previous sessions SIGNED OUT - create a new one
 				Session session = new Session(user, new Date(), new Date(), 1L, true);
 				Link sessionLink = new Link(session.getRef(), "self");
