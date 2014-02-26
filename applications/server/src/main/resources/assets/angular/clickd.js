@@ -2,6 +2,7 @@ var clickdApplication = angular.module('clickdApplication', ['ngCookies', 'ngRes
 
 clickdApplication.controller('AppController', function($scope, $cookies, $resource, $http) {
 	
+	
 	$scope.model = {
 		"currentSelection" : "candidates",
 		"cookie" : "",
@@ -39,6 +40,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.controlFlags = {
 		"requestMemberBio" : false
 	};
+	
+	$scope.resetModel = function ()
+	{
+		$scope.model.currentUser.candidatesShowMenu = true;
+		$scope.model.currentUser.connectionsShowMenu = true;
+		$scope.model.currentUser.cliquesShowMenu = true;
+	}
 	
 	// UPDATE CCC FROM SERVER 
 	$scope.updateCCC = function ()
@@ -222,6 +230,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.isLoggedIn = false;
 			$scope.model.currentUser.user = "";
 			$scope.model.currentUser.userRef = "";
+			
+			$scope.signInFormData.email = '';
+			$scope.signInFormData.password = '';
+			
+			$scope.resetModel();
 			
 			$scope.model.selectedUser = {};
 			$scope.controlFlags.requestMemberBio = false;
