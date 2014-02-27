@@ -42,7 +42,7 @@ http://angular-ui.github.io/bootstrap/ -->
 <script> window["_GOOG_TRANS_EXT_VER"] = "1";
 
 $(function() {
-    $( "#dateOfBirth" ).datepicker();
+    $( "#dateOfBirth" ).datepickker();
   });
   
 </script>
@@ -229,7 +229,7 @@ $(function() {
 								ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
 								 >
 									&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{candidate.user.firstName}}.jpg">
-									{{candidate.user.firstName}}</a>
+									{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
 								</div>	
 						</div>
 						<hr/>
