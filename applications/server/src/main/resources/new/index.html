@@ -266,6 +266,15 @@ $(function() {
 				<div class="row content-row">
 					<div class="well content-well" id="content-window">
 						<h4 id="content-window-header">Current Selection : {{model.currentSelection}}</h4>
+						<div ng-if="model.currentSelection == 'candidates'" class="panel candidates-panel">
+								<div class="member-md-panel" ng-repeat="candidate in model.currentUser.candidates"
+								ng-click="onClickCandidate({{candidate.user}})" href="#"
+								ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
+								 >
+									&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{candidate.user.firstName}}.jpg">
+									{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
+								</div>	
+						</div>
 					</div>
 				</div>
 				<div class="row chat-row">

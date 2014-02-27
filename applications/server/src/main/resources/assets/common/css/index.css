@@ -419,6 +419,11 @@ img.connect-profile-img {
 	margin-bottom: 6px; margin-top: 6px; font-weight: bold; color: rgb(41, 57, 78);
 }
 
+.candidate-panel
+{
+	overflow-y:scroll;
+}
+
 .list-group-item
 {
 	background-color:#495B6C;
