@@ -2,6 +2,8 @@
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -126,14 +128,14 @@ public class UserResource {
 				if (sessionLinks == null) {
 					sessionLinks = new ArrayList<Link>();
 				}
-				for (Link sessionLink : sessionLinks) {
-					Session session = sessionDao.findByRef(sessionLink.getHref());
-					if (session.getIsLoggedIn()) {
-						session.setIsLoggedIn(Boolean.FALSE);
-						sessionDao.update(session);
+				else
+				{
+					for (Link sessionLink : sessionLinks) {
+						Session session = sessionDao.findByRef(sessionLink.getHref());
+						sessionDao.delete(session);
 					}
+					sessionLinks = new ArrayList<Link>();
 				}
-
 				// Previous sessions SIGNED OUT - create a new one
 				Session session = new Session(user, new Date(), new Date(), 1L, true);
 				Link sessionLink = new Link(session.getRef(), "self");
@@ -335,6 +337,15 @@ public class UserResource {
 				}
 			}
 		}
+		
+		Collections.sort(responseList, new Comparator<CandidateResponse>() {
+	        @Override
+	        public int compare(CandidateResponse  cr1, CandidateResponse  cr2)
+	        {
+
+	            return cr2.score - cr1.score;
+	        }
+	    });
 		
 		return Utilities.toJson(responseList);
 	}
