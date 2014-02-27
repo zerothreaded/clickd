@@ -37,7 +37,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.signInFormData = { signInFailed : false};
 	$scope.registerFormData = { registerFailed : false };
 	$scope.controlFlags = {
-		"requestMemberBio" : false
+		"requestMemberBio" : false,
+		"moreQuestionsToAsk" : true
 	};
 	
 	$scope.resetModel = function ()
@@ -53,6 +54,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.signInFormData.password = '';
 		$scope.model.selectedUser = {};
 		$scope.controlFlags.requestMemberBio = false;
+		$scope.controlFlags.moreQuestionsToAsk = true;
+		
 	}
 	
 	// UPDATE CCC FROM SERVER 
@@ -89,6 +92,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		}
 	}
 		
+	$scope.moreQuestionsToAsk = function() {
+		return $scope.controlFlags.moreQuestionsToAsk;
+	}
+	
 	$scope.loadNextQuestion = function() {
 		var userRef = $scope.model.currentUser.userRef;
 		var nextQuestionUrl = "/questions/next/" + userRef;
@@ -108,9 +115,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				$scope.updateCCC();
 			} else {
 				// No more answers
-				$("#click-panel-question").html("You're so clickd out!");
-				$("#click-panel-answers").html("");
-				$('#button-skip-question').hide();
+				$scope.controlFlags.moreQuestionsToAsk = false;
 				$scope.updateCCC();
 			}
 		});
@@ -128,6 +133,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		})
 		.success(function(msg) {
 			$scope.loadNextQuestion();
+			$scope.controlFlags.blockSelectAnswer = false;
 		});
 	}
 	

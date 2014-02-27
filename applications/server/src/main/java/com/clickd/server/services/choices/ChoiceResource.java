@@ -56,6 +56,17 @@ public class ChoiceResource {
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_ANSWER, new Link("/answers/" + answerRef, "answer"));
+		
+		// Ensure question has not been answered before
+		// TODO : Revisit this once we allow editing of previous answers
+		List<Choice> usersChoices = choiceDao.findByUserRef(userRef);
+		for (Choice existingChoice : usersChoices) {
+			Link questionLink = (Link) existingChoice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION);
+			if (questionLink.getHref().equals("/questions/" + questionRef)) {
+				// Already answered so don't save it
+				choice = existingChoice;
+			}
+		}
 		choiceDao.create(choice);
 		String result = Utilities.toJson(choice);
 		return result;
