@@ -2,6 +2,8 @@
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -335,6 +337,15 @@ public class UserResource {
 				}
 			}
 		}
+		
+		Collections.sort(responseList, new Comparator<CandidateResponse>() {
+	        @Override
+	        public int compare(CandidateResponse  cr1, CandidateResponse  cr2)
+	        {
+
+	            return cr2.score - cr1.score;
+	        }
+	    });
 		
 		return Utilities.toJson(responseList);
 	}

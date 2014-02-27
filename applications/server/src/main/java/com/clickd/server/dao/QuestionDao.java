@@ -2,6 +2,7 @@ package com.clickd.server.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -39,6 +40,13 @@ public class QuestionDao {
 
 	public void delete(Question question) {
 		mongoOperations.remove(question);
+	}
+
+
+	public List<Question> findAllSortedBy(String field) {
+		Query q = new Query();
+		q.with(new Sort(Sort.Direction.ASC, field));	
+		return mongoOperations.find(q, Question.class, collectionName);
 	}
 
 	public List<Question> findAll() {

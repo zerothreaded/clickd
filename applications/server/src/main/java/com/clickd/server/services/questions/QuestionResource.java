@@ -52,7 +52,7 @@ public class QuestionResource {
 	@Timed
 	public String getNextQuestion(@PathParam("userRef") String userRef) {
 		List<Question> unansweredQuestions = new ArrayList<Question>();
-		List<Question> questions = questionDao.findAll();
+		List<Question> questions = questionDao.findAllSortedBy("questionText");
 		List<Choice> userChoices = choiceDao.findByUserRef(userRef);
 
 		if (userChoices.size() == 0) {
@@ -87,7 +87,8 @@ public class QuestionResource {
 		// TODO: Ralph clear up this conditional logic
 		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
 		if (unansweredQuestions.size() != 0) {
-			int idx = (int) (Math.random() * (unansweredQuestions.size() - 1));
+			//int idx = (int) (Math.random() * (unansweredQuestions.size() - 1));
+			int idx = 0;
 			Question question = unansweredQuestions.get(idx);
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
 			List<Link> answerLinks = (List<Link>) question.get_Links().get("question-answer-list");
