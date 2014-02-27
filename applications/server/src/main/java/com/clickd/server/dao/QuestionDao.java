@@ -44,9 +44,9 @@ public class QuestionDao {
 
 
 	public List<Question> findAllSortedBy(String field) {
-		Query q = new Query();
-		q.with(new Sort(Sort.Direction.ASC, field));	
-		return mongoOperations.find(q, Question.class, collectionName);
+		Query qquery = new Query();
+		qquery.with(new Sort(Sort.Direction.ASC, field));	
+		return mongoOperations.find(qquery, Question.class, collectionName);
 	}
 
 	public List<Question> findAll() {
