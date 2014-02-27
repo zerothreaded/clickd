@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,10 +40,6 @@ import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/users")
@@ -67,8 +62,12 @@ public class UserResource {
 
 		// check if user exists
 		User user = userDao.findByEmail(email);
-
-		if (user == null) {
+		boolean missingRegistrationDetails = false;
+		if (email == null || firstName == null || lastName == null || password == null || dateOfBirth == null || gender == null || postcode == null) {
+			missingRegistrationDetails = true;
+		}
+		
+		if (!missingRegistrationDetails && user == null) {
 			User newUser = new User();
 			newUser.setEmail(email);
 			newUser.setFirstName(firstName);
