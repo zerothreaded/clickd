@@ -133,6 +133,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		})
 		.success(function(msg) {
 			$scope.loadNextQuestion();
+			$scope.controlFlags.blockSelectAnswer = false;
 		});
 	}
 	
