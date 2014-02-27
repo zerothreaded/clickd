@@ -42,285 +42,281 @@ http://angular-ui.github.io/bootstrap/ -->
 <script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
 </head>
 <body>
-	<div ng-app="clickdApplication" ng-controller="AppController" >
-		<!-- SINGLE SCREEN -->
-		<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
-			<div id="top-nav" class="fixed skin-6">
-				<a href="#" class="brand"> <span>This is <strong>dating</strong> @ clickd</span>
+<div ng-app="clickdApplication" ng-controller="AppController" >
+	<!-- SINGLE SCREEN -->
+	<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
+		<div id="top-nav" class="fixed skin-6">
+			<a href="#" class="brand"> <span>This is <strong>dating</strong> @ clickd</span>
+			</a>
+			<!-- /brand -->
+			<div class="col-md-4 col-md-offset-5">
+				<form ng-submit="signInFormSubmit()" class="form-group login-form">
+					<div class="form-group-navbar">
+						<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-email-group">
+							<input ng-model="signInFormData.email" type="email" class="form-control col-md-3 col-sm-3" placeholder="Email" name="email" id="login-email-input">
+						</div>
+						<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-password-group">
+							<input ng-model="signInFormData.password" type="password" class="form-control" placeholder="Password" name="password" id="login-password-input">
+						</div>
+	
+						<div class="col-md-1 col-sm-1 form-group navbar-form-group">
+							<button class="btn btn-default" type="submit">Sign In</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	
+		<div id="main-container-home">
+			<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
+				<form ng-submit="processRegisterForm()">
+					<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
+						<h2>
+							Sign Up<small> to see who you click with</small>
+						</h2>
+						<hr>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ng-model="registerFormData.firstName" type="text" name="firstName" id="first_name" class="form-control" placeholder="First Name">
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ng-model="registerFormData.lastName" type="text" name="lastName" id="last_name" class="form-control" placeholder="Last Name">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<input ng-model="registerFormData.email"  type="email" name="email" id="email" class="form-control input-md" placeholder="Email Address">
+						</div>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ng-model="registerFormData.password_confirmation" type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md" placeholder="Password">
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<div class="form-group">
+									<input ng-model="registerFormData.password" type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">Click register to get started on clickd!</div>
+						</div>
+		
+						<hr>
+						<div class="row">
+							<div class="col-xs-6 col-md-12">
+								<button ng-click="showMemberBioRequest()" class="btn btn-primary btn-block btn-lg" type="button">Get Started</button>
+							</div>
+		
+						</div>
+					</div>
+		
+					<div ng-if="requestMemberBio()" class="panel" id="form-page-2">
+						<h2>Almost there...</h2>
+						<hr>
+						<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-12">
+								<div class="form-group">
+									<input type="text" ng-model="registerFormData.dateOfBirth" name="dateOfBirth" id="dateOfBirth" class="form-control input-md" placeholder="When's your birthday?">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-12">
+								<div class="form-group">
+									<input type="text" ng-model="registerFormData.postcode" name="postcode" id="postcode" class="form-control input-md" placeholder="What's your postcode?">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-12">
+								<div class="form-group">
+									<select class="form-control" name="gender" id="gender" ng-model="registerFormData.gender">
+										<option value="" disabled="" selected="">What's your gender?</option>
+										<option>Male</option>
+										<option>Female</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#" data-toggle="modal"
+									data-target="#t_and_c_m">Terms and Conditions</a> set out by this site, including our Cookie Use.
+							</div>
+						</div>
+		
+						<hr>
+						<div class="row">
+							<div class="col-xs-6 col-md-12">
+								<input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
+							</div>
+		
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- USER SCREEN -->
+	<div ng-if="isUserLoggedIn()" id="user-wrapper">
+		<div id="logoutConfirm_background" class="popup_background" style="opacity: 0; visibility: hidden; background-color: black; position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; transition: all 0.3s; -webkit-transition: all 0.3s;" ></div>
+		
+		<div id="logoutConfirm_wrapper" class="popup_wrapper" style="opacity: 0; visibility: hidden; position: fixed; overflow: auto; z-index: 2001; transition: all 0.3s; -webkit-transition: all 0.3s; top: 0px; right: 0px; left: 0px; bottom: 0px; text-align: center; display: none;" >
+			<div class="custom-popup width-100 popup_content" id="logoutConfirm" data-popup-initialized="true" aria-hidden="true" role="dialog" aria-labelledby="open_67128750" style="opacity: 0; visibility: hidden; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;" >
+				<div class="padding-md">
+					<h4 class="m-top-none">Do you want to logout?</h4>
+				</div>
+				<div class="text-center">
+					<a class="btn btn-success m-right-sm" href="login.html">Logout</a> <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+				</div>
+			</div>
+			<div class="popup_align" style="display: inline-block; vertical-align: middle; height: 100%;"></div>
+		</div>
+		
+		<!-- Overlay Div -->
+		<div id="overlay" class="transparent" style="display: none;"></div>
+		<div id="top-nav" class="fixed skin-6" >
+			<a href="#" class="brand"><span>{{model.currentUser.user.firstName}} is dating @ clickd</span></a>
+			<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<ul class="nav-notification clearfix">
+				<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>{{model.currentUser.user.firstName}}</strong></span> <span><i class="fa fa-chevron-down"></i></span>
 				</a>
-				<!-- /brand -->
-				<div class="col-md-4 col-md-offset-5">
-					<form ng-submit="signInFormSubmit()" class="form-group login-form">
-						<div class="form-group-navbar">
-							<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-email-group">
-								<input ng-model="signInFormData.email" type="email" class="form-control col-md-3 col-sm-3" placeholder="Email" name="email" id="login-email-input">
-							</div>
-							<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-password-group">
-								<input ng-model="signInFormData.password" type="password" class="form-control" placeholder="Password" name="password" id="login-password-input">
-							</div>
-		
-							<div class="col-md-1 col-sm-1 form-group navbar-form-group">
-								<button class="btn btn-default" type="submit">Sign In</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		
-			<div id="main-container-home">
-				<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
-					<form ng-submit="processRegisterForm()">
-						<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
-							<h2>
-								Sign Up<small> to see who you click with</small>
-							</h2>
-							<hr>
-							<div class="row">
-								<div class="col-xs-6 col-sm-6 col-md-6">
-									<div class="form-group">
-										<input ng-model="registerFormData.firstName" type="text" name="firstName" id="first_name" class="form-control" placeholder="First Name">
-									</div>
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6">
-									<div class="form-group">
-										<input ng-model="registerFormData.lastName" type="text" name="lastName" id="last_name" class="form-control" placeholder="Last Name">
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<input ng-model="registerFormData.email"  type="email" name="email" id="email" class="form-control input-md" placeholder="Email Address">
-							</div>
-							<div class="row">
-								<div class="col-xs-6 col-sm-6 col-md-6">
-									<div class="form-group">
-										<input ng-model="registerFormData.password_confirmation" type="password" name="password_confirmation" id="password_confirmation" class="form-control input-md" placeholder="Password">
-									</div>
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6">
-									<div class="form-group">
-										<input ng-model="registerFormData.password" type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password">
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 col-sm-12 col-md-12">Click register to get started on clickd!</div>
-							</div>
-			
-							<hr>
-							<div class="row">
-								<div class="col-xs-6 col-md-12">
-									<button ng-click="showMemberBioRequest()" class="btn btn-primary btn-block btn-lg" type="button">Get Started</button>
-								</div>
-			
-							</div>
-						</div>
-			
-						<div ng-if="requestMemberBio()" class="panel" id="form-page-2">
-							<h2>Almost there...</h2>
-							<hr>
-							<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
-							<div class="row">
-								<div class="col-xs-6 col-sm-6 col-md-12">
-									<div class="form-group">
-										<input type="text" ng-model="registerFormData.dateOfBirth" name="dateOfBirth" id="dateOfBirth" class="form-control input-md" placeholder="When's your birthday?">
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-6 col-sm-6 col-md-12">
-									<div class="form-group">
-										<input type="text" ng-model="registerFormData.postcode" name="postcode" id="postcode" class="form-control input-md" placeholder="What's your postcode?">
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-6 col-sm-6 col-md-12">
-									<div class="form-group">
-										<select class="form-control" name="gender" id="gender" ng-model="registerFormData.gender">
-											<option value="" disabled="" selected="">What's your gender?</option>
-											<option>Male</option>
-											<option>Female</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 col-sm-12 col-md-12">
-									By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#" data-toggle="modal"
-										data-target="#t_and_c_m">Terms and Conditions</a> set out by this site, including our Cookie Use.
-								</div>
-							</div>
-			
-							<hr>
-							<div class="row">
-								<div class="col-xs-6 col-md-12">
-									<input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
-								</div>
-			
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
+					<ul class="dropdown-menu">
+						<li><a class="clearfix" href="#"> <span class="detail"> <strong>{{model.currentUser.user.firstName}} {{model.currentUser.user.lastName}}</strong><br/><span class="grey">{{model.currentUser.user.email}}</span>
+							</span>
+						</a></li>
+						<li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+						<li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
+						<li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
+						<li class="divider"></li>
+						<li><a tabindex="-1" class="main-link logoutConfirm_open" href="#" data-popup-ordinal="0" id="link-sign-out" ng-click="signOut()">
+						<i class="fa fa-lock fa-lg" ></i>Sign out</a></li>
+					</ul>
+				</li>
+			</ul>
 		</div>
+		<!-- /top-nav-->
 		
-		<!-- USER SCREEN -->
-		<div ng-if="isUserLoggedIn()" id="user-wrapper">
-			<div id="logoutConfirm_background" class="popup_background" style="opacity: 0; visibility: hidden; background-color: black; position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; transition: all 0.3s; -webkit-transition: all 0.3s;" ></div>
-			
-			<div id="logoutConfirm_wrapper" class="popup_wrapper" style="opacity: 0; visibility: hidden; position: fixed; overflow: auto; z-index: 2001; transition: all 0.3s; -webkit-transition: all 0.3s; top: 0px; right: 0px; left: 0px; bottom: 0px; text-align: center; display: none;" >
-				<div class="custom-popup width-100 popup_content" id="logoutConfirm" data-popup-initialized="true" aria-hidden="true" role="dialog" aria-labelledby="open_67128750" style="opacity: 0; visibility: hidden; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;" >
-					<div class="padding-md">
-						<h4 class="m-top-none">Do you want to logout?</h4>
-					</div>
-					<div class="text-center">
-						<a class="btn btn-success m-right-sm" href="login.html">Logout</a> <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+		<aside class="fixed skin-6">
+			<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
+				<div class="sidebar-inner scrollable-sidebar" style="overflow: hidden; width: auto; height: 100%;">
+					<!-- NAVIGATOR -->
+					<div>
+						<hr/>
+						<a href="" ng-click="onClickCandidates()"><font color="white"><h4>Candidates</h4></font></a>
+						<div ng-if="isCandidatesMenuOn()" class="list-group">
+								<a class="list-group-item" ng-repeat="candidate in model.currentUser.candidates"
+								ng-click="onClickCandidate({{candidate.user}})" href="#"
+								ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
+								 >
+									&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{candidate.user.firstName}}.jpg">
+									{{candidate.user.firstName}}</a>
+								</div>	
+						</div>
+						<hr/>
+						<a href="" ng-click="onClickConnections()"><font color="white"><h4>Connections</h4></font></a>
+						<div ng-if="isConnectionsMenuOn()"  class="list-group">
+							<a class="list-group-item"  ng-repeat="connection in model.currentUser.connections"
+							ng-click="onClickConnection({{connection}})" href="#"
+							ng-class="{active: isUserSelected('{{connection.ref}}')}"
+								 >
+									&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{connection.firstName}}.jpg">
+									{{connection.firstName}}
+								</a>
+						</div>
+						<hr/>
+						<a href="" ng-click="onClickCliques()"><font color="white"><h4>Cliques</h4></font></a>
+						<div ng-if="isCliquesMenuOn()">
+							<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
+							ng-click="onClickClique({{clique}})" href="#"
+							ng-class="{active: isCliqueSelected({{'clique.ref'}})}"
+								 >
+									&nbsp;{{clique.name}}
+								</a>
+						</div>
+						<hr/>
 					</div>
 				</div>
-				<div class="popup_align" style="display: inline-block; vertical-align: middle; height: 100%;"></div>
-			</div>
-			
-			<!-- Overlay Div -->
-			<div id="overlay" class="transparent" style="display: none;"></div>
-			<div id="top-nav" class="fixed skin-6" >
-				<a href="#" class="brand"><span>{{model.currentUser.user.firstName}} is dating @ clickd</span></a>
-				<button type="button" class="navbar-toggle pull-left" id="sidebarToggle">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-				</button>
-				<ul class="nav-notification clearfix">
-					<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>{{model.currentUser.user.firstName}}</strong></span> <span><i class="fa fa-chevron-down"></i></span>
-					</a>
-						<ul class="dropdown-menu">
-							<li><a class="clearfix" href="#"> <span class="detail"> <strong>{{model.currentUser.user.firstName}} {{model.currentUser.user.lastName}}</strong><br/><span class="grey">{{model.currentUser.user.email}}</span>
-								</span>
-							</a></li>
-							<li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
-							<li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
-							<li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
-							<li class="divider"></li>
-							<li><a tabindex="-1" class="main-link logoutConfirm_open" href="#" data-popup-ordinal="0" id="link-sign-out" ng-click="signOut()">
-							<i class="fa fa-lock fa-lg" ></i>Sign out</a></li>
+				
+				<div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;" ></div>
+				<div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;" ></div>
+		</aside>
+		
+		<div id="main-container">
+			<div class="col-sm-8">
+				<div class="row content-row">
+					<div class="well content-well" id="content-window">
+						<h4 id="content-window-header">Current Selection : {{model.currentSelection}}</h4>
+					</div>
+				</div>
+				<div class="row chat-row">
+					<div class="well chat-well">
+						<ul class="nav nav-pills">
+							<li class="active"><a href="#">Candidates</a></li>
+							<li><a href="#">Connections</a></li>
+							<li><a href="#">Cliques</a></li>
 						</ul>
-					</li>
-				</ul>
-			</div>
-			<!-- /top-nav-->
-			
-			
-			<aside class="fixed skin-6">
-				<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;">
-					<div class="sidebar-inner scrollable-sidebar" style="overflow: hidden; width: auto; height: 100%;">
-						<!-- NAVIGATOR -->
-						<div>
-							<hr/>
-							<a href="" ng-click="onClickCandidates()"><font color="white"><h4>Candidates</h4></font></a>
-							<div ng-if="isCandidatesMenuOn()" class="list-group">
-									<a class="list-group-item" ng-repeat="candidate in model.currentUser.candidates"
-									ng-click="onClickCandidate({{candidate.user}})" href="#"
-									ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
-									 >
-										&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{candidate.user.firstName}}.jpg">
-										{{candidate.user.firstName}}</a>
-									</div>	
+						<br/>
+						<div class="row">
+							<div class="col-sm-2" align="left">
+								<img class="small-profile-img" ng-src="/assets/images/members/facebook_ralph.jpg">
+								<strong>Ralph :</strong>
 							</div>
-							<hr/>
-							<a href="" ng-click="onClickConnections()"><font color="white"><h4>Connections</h4></font></a>
-							<div ng-if="isConnectionsMenuOn()"  class="list-group">
-								<a class="list-group-item"  ng-repeat="connection in model.currentUser.connections"
-								ng-click="onClickConnection({{connection}})" href="#"
-								ng-class="{active: isUserSelected('{{connection.ref}}')}"
-									 >
-										&nbsp;<img class="small-profile-img" ng-src="/assets/images/members/facebook_{{connection.firstName}}.jpg">
-										{{connection.firstName}}
-									</a>
+							<div class="col-sm-10" align="left">
+								Hey - r u busy?
 							</div>
-							<hr/>
-							<a href="" ng-click="onClickCliques()"><font color="white"><h4>Cliques</h4></font></a>
-							<div ng-if="isCliquesMenuOn()">
-								<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
-								ng-click="onClickClique({{clique}})" href="#"
-								ng-class="{active: isCliqueSelected({{'clique.ref'}})}"
-									 >
-										&nbsp;{{clique.name}}
-									</a>
-							</div>
-							<hr/>
 						</div>
-					</div>
-					
-					<div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;" ></div>
-					<div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;" ></div>
-			</aside>
-			
-			
-			
-			
-			<div id="main-container">
-				<div class="col-sm-8">
-					<div class="row content-row">
-						<div class="well content-well" id="content-window">
-							<h4 id="content-window-header">Current Selection : {{model.currentSelection}}</h4>
-						</div>
-					</div>
-					<div class="row chat-row">
-						<div class="well chat-well">
-							<ul class="nav nav-pills">
-								<li class="active"><a href="#">Candidates</a></li>
-								<li><a href="#">Connections</a></li>
-								<li><a href="#">Cliques</a></li>
-							</ul>
-							<br/>
-							<div class="row">
-								<div class="col-sm-2" align="left">
-									<img class="small-profile-img" ng-src="/assets/images/members/facebook_ralph.jpg">
-									<strong>Ralph :</strong>
-								</div>
-								<div class="col-sm-10" align="left">
-									Hey - r u busy?
-								</div>
+						<br/>
+						<div class="row">
+							<div class="col-sm-2" align="left">
+								<img class="small-profile-img" ng-src="/assets/images/members/facebook_john.jpg">
+								<strong>John : </strong>
 							</div>
-							<br/>
-							<div class="row">
-								<div class="col-sm-2" align="left">
-									<img class="small-profile-img" ng-src="/assets/images/members/facebook_john.jpg">
-									<strong>John : </strong>
-								</div>
-								<div class="col-sm-10" align="left">
-									Yeah dude - get back to work 
-								</div>
+							<div class="col-sm-10" align="left">
+								Yeah dude - get back to work 
 							</div>
 						</div>
 					</div>
-
 				</div>
-				<!-- /.padding -->
-				<div class="col-sm-4 click-window custom-grid menu-grid click-col">
-					<div class="well click-well">
-						<div class="panel click-panel">
-							<div class="panel-heading click-panel-heading"">
-								<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}</h3>
-							</div>
-							
-							<div class="panel-body click-panel-body" id="click-panel-answers">
-					
-								<!--  Answers for this question -->
-								<div class="row">
-									<div class="col-sm-4" ng-repeat="answer in model.currentUser.currentAnswers" >
-										<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, {{answer}})" >
-											<span class="click-answer-span">{{answer.answerText}}</span>
-										</div>
+
+			</div>
+			<!-- /.padding -->
+			<div class="col-sm-4 click-window custom-grid menu-grid click-col">
+				<div class="well click-well">
+					<div class="panel click-panel">
+						<div class="panel-heading click-panel-heading"">
+							<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}</h3>
+						</div>
+						
+						<div class="panel-body click-panel-body" id="click-panel-answers">
+				
+							<!--  Answers for this question -->
+							<div class="row">
+								<div class="col-sm-4" ng-repeat="answer in model.currentUser.currentAnswers" >
+									<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, {{answer}})" >
+										<span class="click-answer-span">{{answer.answerText}}</span>
 									</div>
 								</div>
-								
-
 							</div>
+
 						</div>
-						<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
 					</div>
-						<!--  end click panel -->
+					<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
 				</div>
+					<!--  end click panel -->
 			</div>
 		</div>
+	</div>
+</div>
 			
 </body>
 

@@ -47,7 +47,6 @@ public class QuestionResource {
 		return Utilities.toJson(question);
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/next/{userRef}")
 	@Timed

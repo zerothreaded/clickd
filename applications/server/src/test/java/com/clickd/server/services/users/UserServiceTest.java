@@ -74,7 +74,7 @@ public class UserServiceTest {
 	public void signInSucceeds() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpUriRequest login = RequestBuilder.post().setUri(new URI("http://localhost:8080/users/signin")).addParameter("email", "ralph.masilamani@clickd.org")
-				.addParameter("password", "rr00").build();
+				.addParameter("password", "rr0101").build();
 
 		String jsonResponse = httpclient.execute(login, successResponseHandler);
 		System.out.println("POST /users/signin returned \n" + jsonResponse);
