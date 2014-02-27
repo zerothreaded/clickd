@@ -292,13 +292,14 @@ http://angular-ui.github.io/bootstrap/ -->
 			<!-- /.padding -->
 			<div class="col-sm-4 click-window custom-grid menu-grid click-col">
 				<div class="well click-well">
-					<div class="panel click-panel">
+				
+					<!-- If there are questions -->
+					<div ng-if="moreQuestionsToAsk()" class="panel click-panel">
 						<div class="panel-heading click-panel-heading"">
 							<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}</h3>
 						</div>
 						
 						<div class="panel-body click-panel-body" id="click-panel-answers">
-				
 							<!--  Answers for this question -->
 							<div class="row">
 								<div class="col-sm-4" ng-repeat="answer in model.currentUser.currentAnswers" >
@@ -307,10 +308,28 @@ http://angular-ui.github.io/bootstrap/ -->
 									</div>
 								</div>
 							</div>
-
+						</div>
+					</div>
+					
+					<!-- If there are NO MORE questions -->
+					<div ng-if="!moreQuestionsToAsk()" class="panel click-panel">
+						<div class="panel-heading click-panel-heading"">
+							<h3 class="click-panel-heading-h2">You've totally clickd!</h3>
+						</div>
+						
+						<div class="panel-body click-panel-body" id="click-panel-answers">
+							<!--  Answers for this question -->
+							<div class="row">
+								<div align="center" class="col-md-8" >
+									<div align="center"  class="click-answer-panel" >
+										<span>Ask your own questions</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
+				
 				</div>
 					<!--  end click panel -->
 			</div>
