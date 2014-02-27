@@ -87,4 +87,19 @@ public class ChoiceDao {
 		return answerChoices;
 	}
 
+	public List<Choice> findByAnswerText(String answerText) {
+		List<Choice> answerChoices = new ArrayList<Choice>();
+		List<Choice> allChoices = findAll();
+		for (Choice choice : allChoices) {
+		
+			if (null == choice.getAnswerText())
+				continue;
+			
+			if (choice.getAnswerText().equals(answerText)) {
+				answerChoices.add(choice);
+			}
+		}
+		return answerChoices;
+	}
+
 }

@@ -34,8 +34,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}; 
 
 	// Form Data
-	$scope.signInFormData = { };
-	$scope.registerFormData = { };
+	$scope.signInFormData = { signInFailed : false};
+	$scope.registerFormData = { registerFailed : false };
 	$scope.controlFlags = {
 		"requestMemberBio" : false
 	};
@@ -181,6 +181,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	        $scope.model.currentUser.userRef = theUserRef;
 			$scope.loadUserByRef(theUserRef);
 			$scope.loadNextQuestion();
+       }).error(function (data) { 
+    	   
+    	   $scope.signInFormData.signInFailed = true;
        });
 	}
 
@@ -220,6 +223,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         	$scope.signInFormData.email = $scope.registerFormData.email;
         	$scope.signInFormData.password = $scope.registerFormData.password;
         	$scope.signInFormSubmit();
+        }).error(function (data) {
+        	$scope.registerFormData.registerFailed = true;
         });
 	}
 	

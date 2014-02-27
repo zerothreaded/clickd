@@ -8,6 +8,7 @@
 <script src="/assets/common/js/jquery-1.10.2.min.js"></script>
 <script src="/assets/common/js/endless/endless.js"></script>
 <script src="/assets/dist/js/bootstrap.js"></script>
+<script src="/assets/common/js/jquery-ui-1.10.4.custom.js"></script>
 <script src="/assets/common/js/jquery.colorbox.min.js"></script>
 <script src="/assets/common/js/jquery.sparkline.min.js"></script>
 <script src="/assets/common/js/jquery.popupoverlay.min.js"></script>
@@ -38,7 +39,13 @@ http://angular-ui.github.io/bootstrap/ -->
 <!-- Project specific JS files -->
 <script src="/assets/angular/clickd.js"></script>
 
-<script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
+<script> window["_GOOG_TRANS_EXT_VER"] = "1";
+
+$(function() {
+    $( "#dateOfBirth" ).datepicker();
+  });
+  
+</script>
 <script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
 </head>
 <body>
@@ -49,7 +56,10 @@ http://angular-ui.github.io/bootstrap/ -->
 			<a href="#" class="brand"> <span>This is <strong>dating</strong> @ clickd</span>
 			</a>
 			<!-- /brand -->
-			<div class="col-md-4 col-md-offset-5">
+			<div class="col-md-2 col-md-offset-3">
+				<div class="label label-danger pull-right login-error" ng-if="signInFormData.signInFailed">Your login failed.</div>
+			</div>
+			<div class="col-md-4">
 				<form ng-submit="signInFormSubmit()" class="form-group login-form">
 					<div class="form-group-navbar">
 						<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-email-group">
@@ -118,7 +128,7 @@ http://angular-ui.github.io/bootstrap/ -->
 					<div ng-if="requestMemberBio()" class="panel" id="form-page-2">
 						<h2>Almost there...</h2>
 						<hr>
-						<span id="sign-up-failed" class="label label-danger hidden">Sorry, your sign up failed.</span>
+					<span class="label label-danger pull-right signup-error" ng-if="registerFormData.registerFailed">Your registration failed.</span>
 						<div class="row">
 							<div class="col-xs-6 col-sm-6 col-md-12">
 								<div class="form-group">
@@ -235,7 +245,7 @@ http://angular-ui.github.io/bootstrap/ -->
 						</div>
 						<hr/>
 						<a href="" ng-click="onClickCliques()"><font color="white"><h4>Cliques</h4></font></a>
-						<div ng-if="isCliquesMenuOn()">
+						<div ng-if="isCliquesMenuOn()"  class="list-group">
 							<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
 							ng-click="onClickClique({{clique}})" href="#"
 							ng-class="{active: isCliqueSelected({{'clique.ref'}})}"

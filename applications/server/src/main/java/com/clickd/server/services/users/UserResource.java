@@ -61,7 +61,7 @@ public class UserResource {
 	@Timed
 	@Path("/register")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String register(@FormParam("email") String email, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName,
+	public Response register(@FormParam("email") String email, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName,
 			@FormParam("password") String password, @FormParam("dateOfBirth") String dateOfBirth, @FormParam("gender") String gender,
 			@FormParam("postcode") String postcode) throws URISyntaxException {
 
@@ -105,9 +105,9 @@ public class UserResource {
 			postcodeChoice.setAnswerText(postcode);
 			choiceDao.create(postcodeChoice);
 
-			return Utilities.toJson(newUser);
+			return Response.status(200).entity( Utilities.toJson(newUser)).build();
 		} else {
-			return " { \"status\" : \"failed\" } ";
+			return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
 		}
 	}
 
@@ -581,25 +581,46 @@ public class UserResource {
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 		for (Choice myChoice : myChoices)
 		{
-			if (null == myChoice.get_Links().get("choice-answer"))
-				continue;
-			
-			String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
-			Answer answer = answerDao.findByRef(answerRef);
-			
-			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
-			
-			//now get list of users who made that choice
-			List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+			Clique thisClique = null;
 			List<User> cliqueMembers = new ArrayList<User>();
-					
-			for (Choice cliqueMemberChoice : cliqueMemberChoices)
+			
+			if (null == myChoice.get_Links().get("choice-answer"))
 			{
-				Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
-				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 				
-				if (!cliqueMember.getRef().equals("/users/"+userRef))
-					cliqueMembers.add(cliqueMember);
+				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
+				
+				//now get list of users who made that choice
+				List<Choice> cliqueMemberChoices = choiceDao.findByAnswerText(myChoice.getAnswerText());
+				
+						
+				for (Choice cliqueMemberChoice : cliqueMemberChoices)
+				{
+					Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
+					
+					if (!cliqueMember.getRef().equals("/users/"+userRef))
+						cliqueMembers.add(cliqueMember);
+				}
+			}
+			else
+			{
+				String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
+				Answer answer = answerDao.findByRef(answerRef);
+				
+				thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
+				
+				//now get list of users who made that choice
+				List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+				
+						
+				for (Choice cliqueMemberChoice : cliqueMemberChoices)
+				{
+					Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
+					
+					if (!cliqueMember.getRef().equals("/users/"+userRef))
+						cliqueMembers.add(cliqueMember);
+				}
 			}
 			
 			thisClique.get_Embedded().put("clique-members", cliqueMembers);
