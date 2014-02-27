@@ -285,11 +285,25 @@ public class UserResource {
 		
 		for (Choice choice : myChoices)
 		{
-			if (null == choice.get_Links().get("choice-answer"))
-				continue;
+			ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 			
-			Link answerLink = (Link)choice.get_Links().get("choice-answer");
-			List<Choice> sameAnswerChoices = choiceDao.findByAnswerRef(answerLink.getHref());
+			if (null == choice.get_Links().get("choice-answer"))
+			{
+				if (null == choice.getAnswerText())
+				{
+					continue;
+				}
+				else
+				{
+					sameAnswerChoices.addAll(choiceDao.findByAnswerText(choice.getAnswerText()));
+				}
+			}
+			
+			if (null != choice.get_Links().get("choice-answer"))
+			{
+				Link answerLink = (Link)choice.get_Links().get("choice-answer");
+				sameAnswerChoices.addAll(choiceDao.findByAnswerRef(answerLink.getHref()));
+			}
 			for (Choice otherUsersChoice : sameAnswerChoices)
 			{
 				Link otherUserLink = (Link)otherUsersChoice.get_Links().get("choice-user");
