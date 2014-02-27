@@ -192,7 +192,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	        url     : signOutUrl,
 	    })
         .success(function(data) {
-<<<<<<< HEAD
             console.log('Signed Out ' + data);
             $scope.model.currentSelection = "candidates";
 			$scope.model.currentUser.isLoggedIn = false;
@@ -202,9 +201,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.signInFormData.email = '';
 			$scope.signInFormData.password = '';
 			$scope.registerFormData = { };
-			
-=======
->>>>>>> 9fff02a72639d332a12165704dca4090e0e84e0a
+
 			$scope.resetModel();
 			delete $cookies["userSession"];
         });
