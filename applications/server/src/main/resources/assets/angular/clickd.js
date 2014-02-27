@@ -144,11 +144,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		});
 	};
 	
+	//////////////////////////////////////////////////////////////////////////////////
 	// APPLICATION INITIALIZATION CODE
 	// FIRST TIME ONLY - or on refresh
 	// Check for cookie and valid user session
+	//////////////////////////////////////////////////////////////////////////////////
 	var cookie = $cookies.userSession;
-	// $scope.model.cookie = cookie;
 	if (cookie !== undefined)
 	{
 		var cookie1 = JSON.parse(JSON.parse(cookie));
