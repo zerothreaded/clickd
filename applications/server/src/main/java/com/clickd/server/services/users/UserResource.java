@@ -276,16 +276,11 @@ public class UserResource {
 		//get my answers
 		User user = userDao.findByRef("/users/"+userRef);
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-
 		ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
-
 		List<Link> userConnectionLinks = new ArrayList<Link>();
-	
-		
 		for (Choice choice : myChoices)
 		{
 			ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
-			
 			if (null == choice.get_Links().get("choice-answer"))
 			{
 				if (null == choice.getAnswerText())
@@ -307,10 +302,8 @@ public class UserResource {
 			{
 				Link otherUserLink = (Link)otherUsersChoice.get_Links().get("choice-user");
 				User otherUser = userDao.findByRef(otherUserLink.getHref());
-				
 				if (otherUser.getRef().equals("/users/"+userRef))
 					continue;
-				
 				boolean alreadyExists = false;
 				for (CandidateResponse responseRow : responseList)
 				{
@@ -323,7 +316,6 @@ public class UserResource {
 						break;
 					}
 				}
-		
 				
 				if (!alreadyExists)
 				{
