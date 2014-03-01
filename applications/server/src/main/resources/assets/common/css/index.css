@@ -445,7 +445,7 @@ a.list-group-item:hover, a.list-group-item:focus
 .list-group
 {
 	overflow-y:scroll;
-	max-height:150px;
+	max-height:200px;
 }
 
 .login-error
