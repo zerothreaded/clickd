@@ -4,6 +4,8 @@ import javax.servlet.Filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoOperations;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ApplicationDao;
@@ -29,7 +31,11 @@ import com.yammer.dropwizard.views.ViewBundle;
 
 public class ApplicationService extends Service<UserConfiguration> {
 
-	private ApplicationContext context;
+	private static ApplicationContext context;
+
+	public static ApplicationContext getContext() {
+		return context;
+	}
 
 	public static void main(String[] args) throws Exception {
 		new ApplicationService().run(args);
@@ -52,7 +58,8 @@ public class ApplicationService extends Service<UserConfiguration> {
 		final String template = configuration.getTemplate();
 		final String defaultName = configuration.getDefaultName();
 
-		context = new ClassPathXmlApplicationContext(new String[] { "application.xml" });
+		context = new ClassPathXmlApplicationContext(new String[] { "spring\\application.xml" });
+		
 		UserDao userDao = (UserDao) context.getBean("userDao");
 		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
 		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
