@@ -45,11 +45,6 @@ public class UserDao {
 		return mongoOperations.findAll(User.class, collectionName);
 	}
 
-	public User findById(String id) {
-		User user = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), User.class, collectionName);
-		return user;
-	}
-
 	public User findByEmail(String email) {
 		User user = mongoOperations.findOne(new Query(Criteria.where("email").is(email)), User.class, collectionName);
 		return user;
