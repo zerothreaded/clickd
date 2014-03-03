@@ -13,6 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.QuestionDao;
@@ -27,17 +29,14 @@ import com.yammer.metrics.annotation.Timed;
 @Path("/questions")
 @Produces(MediaType.APPLICATION_JSON)
 public class QuestionResource {
+	@Autowired
 	private QuestionDao questionDao;
+	
+	@Autowired
 	private AnswerDao answerDao;
+	
+	@Autowired
 	private ChoiceDao choiceDao;
-
-	@GET
-	@Timed
-	public String getAll(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
-		List<Question> allQuestions = questionDao.findAll();
-		String result = Utilities.toJson(allQuestions);
-		return result;
-	}
 
 	@GET
 	@Path("/{ref}")
