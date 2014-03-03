@@ -3,14 +3,10 @@ package com.clickd.server.services.questions;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +34,7 @@ public class QuestionResource {
 	@Autowired
 	private ChoiceDao choiceDao;
 
-	@GET
-	@Path("/{ref}")
-	@Timed
-	public String getQuestion(@PathParam("ref") String ref) {
-		Question question = questionDao.findByRef("/questions/" + ref);
-		return Utilities.toJson(question);
-	}
-
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/next/{userRef}")
 	@Timed
@@ -79,19 +68,16 @@ public class QuestionResource {
 				if (!hasAnswered && !question.getTags().contains("user.bio")) {
 					unansweredQuestions.add(question);
 				}
-
 			}
 		}
 		
 		// TODO: Ralph clear up this conditional logic
 		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
 		if (unansweredQuestions.size() != 0) {
-			//int idx = (int) (Math.random() * (unansweredQuestions.size() - 1));
-			int idx = 0;
-			Question question = unansweredQuestions.get(idx);
+			int index = 0;
+			Question question = unansweredQuestions.get(index);
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
 			List<Link> answerLinks = (List<Link>) question.get_Links().get("question-answer-list");
-			
 			// DUDE
 			if (answerLinks != null) {
 				for (Link answerLink : answerLinks) {
@@ -108,7 +94,6 @@ public class QuestionResource {
 			System.out.println("NO MORE QUESTIONS TO ANSWER");
 			return "{ \"status\" : \"done\" }";
 		}
-
 	}
 
 	public QuestionDao getQuestionDao() {
@@ -121,7 +106,6 @@ public class QuestionResource {
 
 	public void setAnswerDao(AnswerDao answerDao) {
 		this.answerDao = answerDao;
-
 	}
 
 	public ChoiceDao getChoiceDao() {
