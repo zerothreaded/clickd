@@ -1,6 +1,5 @@
 package com.clickd.server.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -8,9 +7,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Choice;
-import com.clickd.server.model.Link;
 import com.clickd.server.model.Post;
-import com.clickd.server.model.Resource;
 
 public class PostDao {
 

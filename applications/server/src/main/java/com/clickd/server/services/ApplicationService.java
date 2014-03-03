@@ -4,8 +4,6 @@ import javax.servlet.Filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ApplicationDao;

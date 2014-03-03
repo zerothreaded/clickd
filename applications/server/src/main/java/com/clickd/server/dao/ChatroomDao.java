@@ -8,9 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Chatroom;
-import com.clickd.server.model.Chatroom;
 import com.clickd.server.model.Link;
-import com.clickd.server.model.Resource;
 
 public class ChatroomDao {
 

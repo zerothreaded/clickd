@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -16,12 +15,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import com.clickd.server.dao.ChatroomDao;
-import com.clickd.server.dao.ChatroomDao;
-import com.clickd.server.model.Chatroom;
 import com.clickd.server.model.Chatroom;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Post;
-import com.clickd.server.model.Resource;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
