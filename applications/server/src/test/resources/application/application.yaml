@@ -1,2 +1,3 @@
 template: Hello, %s!
 defaultName: John Dodds
+springContextFileName: application-test.xml

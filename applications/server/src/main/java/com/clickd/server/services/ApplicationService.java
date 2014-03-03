@@ -54,8 +54,10 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		final String template = configuration.getTemplate();
 		final String defaultName = configuration.getDefaultName();
+		final String springContextFileName = configuration.getSpringContextFileName();
 
-		context = new ClassPathXmlApplicationContext(new String[] { "spring/application.xml" });
+		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
+		
 		UserDao userDao = (UserDao) context.getBean("userDao");
 		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
 		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
@@ -108,9 +110,6 @@ public class ApplicationService extends Service<UserConfiguration> {
 		chatroomResource.setChatroomDao(chatroomDao);
 		environment.addResource(chatroomResource);
 		
-		
-
-
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
 		Filter filter = new TokenCheckFilter();
 		environment.addFilter(filter, "*");

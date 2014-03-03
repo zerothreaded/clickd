@@ -12,12 +12,11 @@ public class UserConfiguration extends Configuration {
 
 	@NotEmpty
 	@JsonProperty
+	private String springContextFileName;
+	
+	@NotEmpty
+	@JsonProperty
 	private String defaultName = "Stranger";
-
-//	@Valid
-//    @NotNull
-//    private ServerFactory server = new ServerFactory(http, defaultName);
-
 
 	public String getTemplate() {
 		return template;
@@ -25,6 +24,10 @@ public class UserConfiguration extends Configuration {
 
 	public String getDefaultName() {
 		return defaultName;
+	}
+	
+	public String getSpringContextFileName() {
+		return springContextFileName;
 	}
 
     
