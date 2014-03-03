@@ -115,7 +115,7 @@ public class UserServiceTest {
 	}
 
 	// @SuppressWarnings("unchecked")
-	@Test
+	//@Test
 	public void getAllUsersReturnsCorrectUsers() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		URI uri = new URIBuilder().setScheme("http").setHost("localhost:8080").setPath("/users").build();
@@ -126,7 +126,7 @@ public class UserServiceTest {
 		System.out.println("GET /users returned \n" + jsonResponse);
 	}
 
-	@Test
+	//@Test
 	public void signInSucceeds() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpUriRequest login = RequestBuilder.post().setUri(new URI("http://localhost:8080/users/signin"))
@@ -137,7 +137,7 @@ public class UserServiceTest {
 		System.out.println("POST /users/signin returned \n" + jsonResponse);
 	}
 
-	@Test
+	//@Test
 	public void signInFails() throws Exception {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpUriRequest login = RequestBuilder.post().setUri(new URI("http://localhost:8080/users/signin"))

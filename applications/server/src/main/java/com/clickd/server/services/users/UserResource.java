@@ -1,4 +1,4 @@
-	package com.clickd.server.services.users;
+package com.clickd.server.services.users;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.ConnectionDao;
@@ -34,6 +36,7 @@ import com.clickd.server.model.Answer;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
+import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
@@ -45,12 +48,39 @@ import com.yammer.metrics.annotation.Timed;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
+	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
 	private SessionDao sessionDao;
+	
+	@Autowired
 	private ChoiceDao choiceDao;
+	
+	@Autowired
 	private QuestionDao questionDao;
+	
+	@Autowired
 	private ConnectionDao connectionDao;
+	
+	@Autowired
 	private AnswerDao answerDao;
+
+	@GET
+	@Path("/{ref}")
+	@Timed
+	public Response getUser(@PathParam("ref") String ref) {
+		try {
+			User user = userDao.findByRef("/users/" + ref);
+			if (null != user) {
+				return Response.status(200).entity(user).build();
+			} else {
+				return Response.status(300).entity(new ErrorMessage("failed", "User Not Found")).build();
+			}
+		} catch(Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
 
 	@POST
 	@Timed
@@ -60,53 +90,60 @@ public class UserResource {
 			@FormParam("password") String password, @FormParam("dateOfBirth") String dateOfBirth, @FormParam("gender") String gender,
 			@FormParam("postcode") String postcode) throws URISyntaxException {
 
-		// check if user exists
-		User user = userDao.findByEmail(email);
-		boolean missingRegistrationDetails = false;
-		if (email == null || firstName == null || lastName == null || password == null || dateOfBirth == null || gender == null || postcode == null) {
-			missingRegistrationDetails = true;
-		}
-		
-		if (!missingRegistrationDetails && user == null) {
-			User newUser = new User();
-			newUser.setEmail(email);
-			newUser.setFirstName(firstName);
-			newUser.setLastName(lastName);
-			newUser.setPassword(password);
-			newUser.setDateOfBirth(Utilities.dateFromString(dateOfBirth));
-			newUser.setGender(gender);
-			newUser.setPostCode(postcode);
-			userDao.create(newUser);
+		try {
+			User user = userDao.findByEmail(email);
+			if (null != user) {
+				return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+			}
 			
-			String userRef = newUser.getRef();
+			boolean missingRegistrationDetails = false;
+			if (email == null || firstName == null || lastName == null || password == null || dateOfBirth == null || gender == null || postcode == null) {
+				missingRegistrationDetails = true;
+			}
 			
-			Choice ageChoice = new Choice();
-			Question ageQuestion = questionDao.findByTags("user.bio.age");
-			ageChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
-			ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-			ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
-			ageChoice.setAnswerText(dateOfBirth);
-			choiceDao.create(ageChoice);
-			
-			Choice genderChoice = new Choice();
-			Question genderQuestion = questionDao.findByTags("user.bio.gender");
-			genderChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
-			genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-			genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
-			genderChoice.setAnswerText(gender);
-			choiceDao.create(genderChoice);
-			
-			Choice postcodeChoice = new Choice();
-			Question postcodeQuestion = questionDao.findByTags("user.bio.postcode");
-			postcodeChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
-			postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-			postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
-			postcodeChoice.setAnswerText(postcode);
-			choiceDao.create(postcodeChoice);
-
-			return Response.status(200).entity( Utilities.toJson(newUser)).build();
-		} else {
-			return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
+			if (!missingRegistrationDetails) {
+				User newUser = new User();
+				newUser.setEmail(email);
+				newUser.setFirstName(firstName);
+				newUser.setLastName(lastName);
+				newUser.setPassword(password);
+				newUser.setDateOfBirth(Utilities.dateFromString(dateOfBirth));
+				newUser.setGender(gender);
+				newUser.setPostCode(postcode);
+				userDao.create(newUser);
+				
+				String userRef = newUser.getRef();
+				
+				Choice ageChoice = new Choice();
+				Question ageQuestion = questionDao.findByTags("user.bio.age");
+				ageChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
+				ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
+				ageChoice.setAnswerText(dateOfBirth);
+				choiceDao.create(ageChoice);
+				
+				Choice genderChoice = new Choice();
+				Question genderQuestion = questionDao.findByTags("user.bio.gender");
+				genderChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
+				genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
+				genderChoice.setAnswerText(gender);
+				choiceDao.create(genderChoice);
+				
+				Choice postcodeChoice = new Choice();
+				Question postcodeQuestion = questionDao.findByTags("user.bio.postcode");
+				postcodeChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
+				postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
+				postcodeChoice.setAnswerText(postcode);
+				choiceDao.create(postcodeChoice);
+	
+				return Response.status(200).entity(Utilities.toJson(newUser)).build();
+			} else {
+				return Response.status(300).entity(new ErrorMessage("failed", "Missing Registration Details")).build();
+			}
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
 	}
 
@@ -115,11 +152,9 @@ public class UserResource {
 	@Timed
 	@Path("/signin")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response signIn(@FormParam(value = "email") String email, @FormParam(value = "password") String password, @Context HttpServletRequest request,
-			@Context HttpServletResponse response) throws URISyntaxException {
-		User user = userDao.findByEmail(email);
-		
-		if (user != null) {
+	public Response signIn(@FormParam(value = "email") String email, @FormParam(value = "password") String password)  {
+		try {
+			User user = userDao.findByEmail(email);
 			if (user.getPassword().equals(password)) {
 				// User Authentication OK
 				// Lookup Existing Sessions for this user
@@ -135,7 +170,7 @@ public class UserResource {
 					}
 					sessionLinks = new ArrayList<Link>();
 				}
-				// Previous sessions SIGNED OUT - create a new one
+				// Previous sessions DELETED - create a new one
 				Session session = new Session(user, new Date(), new Date(), 1L, true);
 				Link sessionLink = new Link(session.getRef(), "self");
 				session.get_Links().put(Resource.KEY_LINK_SELF, sessionLink);
@@ -153,11 +188,13 @@ public class UserResource {
 				cookieData.put("userRef", user.getRef());
 
 				NewCookie newCookie = new NewCookie("userSession", Utilities.toJson(cookieData), "/", "", "", 60 * 60, false);
-
 				return Response.status(200).cookie(newCookie).entity(session).build();
+			} else {
+				return Response.status(300).entity(new ErrorMessage("failed", "Incorrect Password")).build();
 			}
+		} catch(Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
-		return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -168,11 +205,8 @@ public class UserResource {
 		User user = userDao.findByRef("/users/" + ref);
 		ArrayList<Session> userSessions = new ArrayList<Session>();
 		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
-		
-		
 		for (Link sessionLink : sessionLinks) {
 			Session session = sessionDao.findByRef(sessionLink.getHref());
-			
 			if (session.getIsLoggedIn()) {
 				session.setIsLoggedIn(Boolean.FALSE);
 				session = sessionDao.update(session);
@@ -184,40 +218,27 @@ public class UserResource {
 
 	@GET
 	@Timed
-	public String getAll(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
-		for (String key : headers.getCookies().keySet()) {
-			javax.ws.rs.core.Cookie cookie = headers.getCookies().get(key);
-			System.out.println("cookie.name=" + cookie.getName());
-			System.out.println("cookie.value=" + cookie.getValue());
-		}
+	public String getAll() {
 		List<User> allUsers = userDao.findAll();
 		String result = Utilities.toJson(allUsers);
 		return result;
 	}
-
-	@GET
-	@Path("/numberofregisteredusers")
-	@Timed
-	public String getNumberOfRegisteredUsers(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
-		List<User> allUsers = userDao.findAll();
-		return " { \"count\" : " + allUsers.size() + " }";
-	}
-
-	@GET
-	@Path("/numberofsignedinusers")
-	@Timed
-	public String getNumberOfSignedInUsers() {
-		int count = sessionDao.findAll().size();
-		return "{ \"value\" : \"" + count + "\" }";
-	}
-
-	@GET
-	@Path("/{ref}")
-	@Timed
-	public String getUser(@PathParam("ref") String ref) {
-		User user = userDao.findByRef("/users/" + ref);
-		return Utilities.toJson(user);
-	}
+//
+//	@GET
+//	@Path("/numberofregisteredusers")
+//	@Timed
+//	public String getNumberOfRegisteredUsers(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
+//		List<User> allUsers = userDao.findAll();
+//		return " { \"count\" : " + allUsers.size() + " }";
+//	}
+//
+//	@GET
+//	@Path("/numberofsignedinusers")
+//	@Timed
+//	public String getNumberOfSignedInUsers() {
+//		int count = sessionDao.findAll().size();
+//		return "{ \"value\" : \"" + count + "\" }";
+//	}
 
 	@SuppressWarnings("unchecked")
 	@GET
@@ -241,11 +262,8 @@ public class UserResource {
 		try
 		{
 			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
-			
 			if (session == null)
 				return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
-
-			
 			return Response.status(200).entity( Utilities.toJson(session)).build();
 		}
 		catch (Exception exception)
@@ -695,7 +713,6 @@ public class UserResource {
 			thisClique.get_Embedded().put("clique-choice", myChoice);
 			myCliques.add(thisClique);
 		}
-
 		return Utilities.toJson(myCliques);
 	}
 
@@ -704,10 +721,8 @@ public class UserResource {
 	@Timed
 	public String getConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
 		Connection connection = connectionDao.findByRef("/users/"+userRef+"/connections/"+connectionRef);
-
 		return Utilities.toJson(connection);
 	}
-	
 	
 	public SessionDao getSessionDao() {
 		return sessionDao;

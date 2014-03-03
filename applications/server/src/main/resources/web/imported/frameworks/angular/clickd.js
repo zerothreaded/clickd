@@ -272,7 +272,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'candidates';
 		if ($scope.model.currentUser.candidatesShowMenu == true) {
-			$scope.model.currentUser.candidatesShowMenu = false;
+			$scope.model.currentUser.candidatesShowMenu = true;
 		} else {
 			$scope.model.currentUser.candidatesShowMenu = true;
 		}
@@ -282,7 +282,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'connections';
 		if ($scope.model.currentUser.connectionsShowMenu == true) {
-			$scope.model.currentUser.connectionsShowMenu = false;
+			$scope.model.currentUser.connectionsShowMenu = true;
 		} else {
 			$scope.model.currentUser.connectionsShowMenu = true;
 		}
@@ -292,7 +292,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'cliques';
 		if ($scope.model.currentUser.cliquesShowMenu == true) {
-			$scope.model.currentUser.cliquesShowMenu = false;
+			$scope.model.currentUser.cliquesShowMenu = true;
 		} else {
 			$scope.model.currentUser.cliquesShowMenu = true;
 		}

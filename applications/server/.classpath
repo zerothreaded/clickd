@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
   <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
+  <classpathentry kind="src" path="src/test/resources" output="target/test-classes" excluding="**/*.java"/>
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="var" path="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/dropwizard/dropwizard-views/0.6.2/dropwizard-views-0.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/dropwizard/dropwizard-core/0.6.2/dropwizard-core-0.6.2.jar"/>
@@ -94,4 +96,10 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-http-shared/1.0-beta-6/wagon-http-shared-1.0-beta-6.jar"/>
   <classpathentry kind="var" path="M2_REPO/nekohtml/xercesMinimal/1.9.6.2/xercesMinimal-1.9.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/1.9.6.2/nekohtml-1.9.6.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/yammer/dropwizard/dropwizard-testing/0.6.2/dropwizard-testing-0.6.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-test-framework/jersey-test-framework-inmemory/1.17.1/jersey-test-framework-inmemory-1.17.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-test-framework/jersey-test-framework-core/1.17.1/jersey-test-framework-core-1.17.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/easytesting/fest-assert-core/2.0M10/fest-assert-core-2.0M10.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/easytesting/fest-util/1.2.5/fest-util-1.2.5.jar"/>
 </classpath>
