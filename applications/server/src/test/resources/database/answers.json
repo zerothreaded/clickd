@@ -1,0 +1,50 @@
+{"ref" : "/answers/a0", "tags" : "answers.system.skip", "answerText" : "Skip Question", "source" : "system", "_links" : {"self" : {"href":"/answers/a0", "rel" : "self"}}}
+{"ref" : "/answers/a1", "answerText" : "Tequila", "source" : "system", "_links" : {"self" : {"href":"/answers/a1", "rel" : "self"}}}
+{"ref" : "/answers/a2", "answerText" : "Whiskey", "source" : "system", "_links" : {"self" : {"href":"/answers/a2", "rel" : "self"}}}
+{"ref" : "/answers/a3", "answerText" : "Rum", "source" : "system", "_links" : {"self" : {"href":"/answers/a3", "rel" : "self"}}}
+{"ref" : "/answers/a4", "answerText" : "Gin", "source" : "system", "_links" : {"self" : {"href":"/answers/a4", "rel" : "self"}}}
+{"ref" : "/answers/a5", "answerText" : "Wine", "source" : "system", "_links" : {"self" : {"href":"/answers/a5", "rel" : "self"}}}
+{"ref" : "/answers/a6", "answerText" : "Cocktails", "source" : "system", "_links" : {"self" : {"href":"/answers/a6", "rel" : "self"}}}
+{"ref" : "/answers/a7", "answerText" : "Beer", "source" : "system", "_links" : {"self" : {"href":"/answers/a7", "rel" : "self"}}}
+{"ref" : "/answers/a8", "answerText" : "Other", "source" : "system", "_links" : {"self" : {"href":"/answers/a8", "rel" : "self"}}}
+{"ref" : "/answers/a9", "answerText" : "I Don't drink", "source" : "system", "_links" : {"self" : {"href":"/answers/a9", "rel" : "self"}}}
+{"ref" : "/answers/b1", "answerText" : "Rat", "imageName" : "rat", "source" : "system", "_links" : {"self" : {"href":"/answers/b1", "rel" : "self"}}}
+{"ref" : "/answers/b2", "answerText" : "Cat", "imageName" : "cat",  "source" : "system", "_links" : {"self" : {"href":"/answers/b2", "rel" : "self"}}}
+{"ref" : "/answers/b3", "answerText" : "Blowfish", "imageName" : "blowfish",  "source" : "system", "_links" : {"self" : {"href":"/answers/b3", "rel" : "self"}}}
+{"ref" : "/answers/b4", "answerText" : "Giraffe", "imageName" : "giraffe",  "source" : "system", "_links" : {"self" : {"href":"/answers/b4", "rel" : "self"}}}
+{"ref" : "/answers/b5", "answerText" : "Badger", "imageName" : "badger",  "source" : "system", "_links" : {"self" : {"href":"/answers/b5", "rel" : "self"}}}
+{"ref" : "/answers/b6", "answerText" : "Lion", "imageName" : "lion",  "source" : "system", "_links" : {"self" : {"href":"/answers/b6", "rel" : "self"}}}
+{"ref" : "/answers/b7", "answerText" : "Snake", "imageName" : "snake",  "source" : "system", "_links" : {"self" : {"href":"/answers/b7", "rel" : "self"}}}
+{"ref" : "/answers/b8", "answerText" : "Puppy", "imageName" : "puppy",  "source" : "system", "_links" : {"self" : {"href":"/answers/b8", "rel" : "self"}}}
+{"ref" : "/answers/b9", "answerText" : "Bear", "imageName" : "bear",  "source" : "system", "_links" : {"self" : {"href":"/answers/b9", "rel" : "self"}}}
+{"ref" : "/answers/c1", "answerText" : "Steak", "imageName" : "1", "source" : "system", "_links" : {"self" : {"href":"/answers/c1", "rel" : "self"}}}
+{"ref" : "/answers/c2", "answerText" : "Sushi", "imageName" : "2",  "source" : "system", "_links" : {"self" : {"href":"/answers/c2", "rel" : "self"}}}
+{"ref" : "/answers/c3", "answerText" : "Soup", "imageName" : "3",  "source" : "system", "_links" : {"self" : {"href":"/answers/c3", "rel" : "self"}}}
+{"ref" : "/answers/c4", "answerText" : "Ham", "imageName" : "4",  "source" : "system", "_links" : {"self" : {"href":"/answers/c4", "rel" : "self"}}}
+{"ref" : "/answers/c5", "answerText" : "Bread", "imageName" : "5",  "source" : "system", "_links" : {"self" : {"href":"/answers/c5", "rel" : "self"}}}
+{"ref" : "/answers/c6", "answerText" : "Burgers", "imageName" : "6",  "source" : "system", "_links" : {"self" : {"href":"/answers/c6", "rel" : "self"}}}
+{"ref" : "/answers/c7", "answerText" : "Tacos", "imageName" : "7",  "source" : "system", "_links" : {"self" : {"href":"/answers/c7", "rel" : "self"}}}
+{"ref" : "/answers/c8", "answerText" : "Sweets", "imageName" : "8",  "source" : "system", "_links" : {"self" : {"href":"/answers/c8", "rel" : "self"}}}
+{"ref" : "/answers/c9", "answerText" : "Tea", "imageName" : "9",  "source" : "system", "_links" : {"self" : {"href":"/answers/c9", "rel" : "self"}}}
+{"ref" : "/answers/d1", "answerText" : "Rock", "imageName" : "1", "source" : "system", "_links" : {"self" : {"href":"/answers/d1", "rel" : "self"}}}
+{"ref" : "/answers/d2", "answerText" : "Pop", "imageName" : "2",  "source" : "system", "_links" : {"self" : {"href":"/answers/d2", "rel" : "self"}}}
+{"ref" : "/answers/e1", "answerText" : "Sword", "imageName" : "1", "source" : "system", "_links" : {"self" : {"href":"/answers/e1", "rel" : "self"}}}
+{"ref" : "/answers/e2", "answerText" : "Bow and Arrow", "imageName" : "2",  "source" : "system", "_links" : {"self" : {"href":"/answers/e2", "rel" : "self"}}}
+{"ref" : "/answers/e3", "answerText" : "Throwing Knives", "imageName" : "3",  "source" : "system", "_links" : {"self" : {"href":"/answers/e3", "rel" : "self"}}}
+{"ref" : "/answers/e4", "answerText" : "Hatchet", "imageName" : "4",  "source" : "system", "_links" : {"self" : {"href":"/answers/e4", "rel" : "self"}}}
+{"ref" : "/answers/f1", "answerText" : "Baltimore", "imageName" : "1", "source" : "system", "_links" : {"self" : {"href":"/answers/f1", "rel" : "self"}}}
+{"ref" : "/answers/f2", "answerText" : "Denver", "imageName" : "2",  "source" : "system", "_links" : {"self" : {"href":"/answers/f2", "rel" : "self"}}}
+{"ref" : "/answers/f3", "answerText" : "Las Vegas", "imageName" : "3",  "source" : "system", "_links" : {"self" : {"href":"/answers/f3", "rel" : "self"}}}
+{"ref" : "/answers/f4", "answerText" : "The Midwest", "imageName" : "4",  "source" : "system", "_links" : {"self" : {"href":"/answers/f4", "rel" : "self"}}}
+{"ref" : "/answers/f5", "answerText" : "New Orleans", "imageName" : "5",  "source" : "system", "_links" : {"self" : {"href":"/answers/f5", "rel" : "self"}}}
+{"ref" : "/answers/f6", "answerText" : "Phoenix", "imageName" : "6",  "source" : "system", "_links" : {"self" : {"href":"/answers/f6", "rel" : "self"}}}
+{"ref" : "/answers/g1", "answerText" : "Arm Wrestling", "imageName" : "1", "source" : "system", "_links" : {"self" : {"href":"/answers/g1", "rel" : "self"}}}
+{"ref" : "/answers/g2", "answerText" : "Crafts", "imageName" : "2",  "source" : "system", "_links" : {"self" : {"href":"/answers/g2", "rel" : "self"}}}
+{"ref" : "/answers/g3", "answerText" : "Leaving parties", "imageName" : "3",  "source" : "system", "_links" : {"self" : {"href":"/answers/g3", "rel" : "self"}}}
+{"ref" : "/answers/g4", "answerText" : "Napping", "imageName" : "4",  "source" : "system", "_links" : {"self" : {"href":"/answers/g4", "rel" : "self"}}}
+{"ref" : "/answers/g5", "answerText" : "Petting Dogs", "imageName" : "5",  "source" : "system", "_links" : {"self" : {"href":"/answers/g5", "rel" : "self"}}}
+{"ref" : "/answers/g6", "answerText" : "Making Puns", "imageName" : "6",  "source" : "system", "_links" : {"self" : {"href":"/answers/g6", "rel" : "self"}}}
+{"ref" : "/answers/g7", "answerText" : "Quoting Movies", "imageName" : "7",  "source" : "system", "_links" : {"self" : {"href":"/answers/76", "rel" : "self"}}}
+{"ref" : "/answers/g8", "answerText" : "Being Stylish", "imageName" : "8",  "source" : "system", "_links" : {"self" : {"href":"/answers/g8", "rel" : "self"}}}
+{"ref" : "/answers/k1", "answerText" : "Male", "source" : "system", "_links" : {"self" : {"href":"/answers/k1", "rel" : "self"}}}
+{"ref" : "/answers/k2", "answerText" : "Female",  "source" : "system", "_links" : {"self" : {"href":"/answers/k2", "rel" : "self"}}}
