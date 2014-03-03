@@ -199,30 +199,70 @@ public class UserResource {
 
 	@SuppressWarnings("unchecked")
 	@PUT
-	@Path("/{ref}/signout")
+	@Path("/{userRef}/signout")
 	@Timed
-	public String signOut(@PathParam("ref") String ref) {
-		User user = userDao.findByRef("/users/" + ref);
-		ArrayList<Session> userSessions = new ArrayList<Session>();
-		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
-		for (Link sessionLink : sessionLinks) {
-			Session session = sessionDao.findByRef(sessionLink.getHref());
-			if (session.getIsLoggedIn()) {
-				session.setIsLoggedIn(Boolean.FALSE);
-				session = sessionDao.update(session);
-				userSessions.add(session);
+	public Response signOut(@PathParam("userRef") String userRef) {
+		try
+		{
+			User user = userDao.findByRef("/users/" + userRef);
+			if (user == null) {
+				return Response.status(300).entity(new ErrorMessage("failed", "User not found")).build();
 			}
+			ArrayList<Session> userSessions = new ArrayList<Session>();
+			List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+			for (Link sessionLink : sessionLinks) {
+				Session session = sessionDao.findByRef(sessionLink.getHref());
+				sessionDao.delete(session);
+			}
+			return Response.status(200).build();			
 		}
-		return Utilities.toJson(userSessions);
+		catch (Exception e)
+		{
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
+		}
 	}
 
-	@GET
-	@Timed
-	public String getAll() {
-		List<User> allUsers = userDao.findAll();
-		String result = Utilities.toJson(allUsers);
-		return result;
-	}
+
+
+//	@GET
+//	@Path("/{userRef}/sessions/{sessionRef}")
+//	@Timed
+//	public Response getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
+//		try
+//		{
+//			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
+//			if (session == null)
+//				return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
+//			return Response.status(200).entity( Utilities.toJson(session)).build();
+//		}
+//		catch (Exception exception)
+//		{
+//			return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
+//		}
+//	}
+	
+//	@SuppressWarnings("unchecked")
+//	@GET
+//	@Path("/{userRef}/sessions/")
+//	@Timed
+//	public String getUserSessions(@PathParam("userRef") String userRef) {
+//		User user = userDao.findByRef("/users/" + userRef);
+//		ArrayList<Session> userSessions = new ArrayList<Session>();
+//		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+//		for (Link sessionLink : sessionLinks) {
+//			Session session = sessionDao.findByRef(sessionLink.getHref());
+//			userSessions.add(session);
+//		}
+//		return Utilities.toJson(userSessions);
+//	}
+
+//	@GET
+//	@Timed
+//	public String getAll() {
+//		List<User> allUsers = userDao.findAll();
+//		String result = Utilities.toJson(allUsers);
+//		return result;
+//	}
 //
 //	@GET
 //	@Path("/numberofregisteredusers")
@@ -239,38 +279,6 @@ public class UserResource {
 //		int count = sessionDao.findAll().size();
 //		return "{ \"value\" : \"" + count + "\" }";
 //	}
-
-	@SuppressWarnings("unchecked")
-	@GET
-	@Path("/{userRef}/sessions/")
-	@Timed
-	public String getUserSessions(@PathParam("userRef") String userRef) {
-		User user = userDao.findByRef("/users/" + userRef);
-		ArrayList<Session> userSessions = new ArrayList<Session>();
-		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
-		for (Link sessionLink : sessionLinks) {
-			Session session = sessionDao.findByRef(sessionLink.getHref());
-			userSessions.add(session);
-		}
-		return Utilities.toJson(userSessions);
-	}
-
-	@GET
-	@Path("/{userRef}/sessions/{sessionRef}")
-	@Timed
-	public Response getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
-		try
-		{
-			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
-			if (session == null)
-				return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
-			return Response.status(200).entity( Utilities.toJson(session)).build();
-		}
-		catch (Exception exception)
-		{
-			return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
-		}
-	}
 	
 	class CandidateResponse
 	{

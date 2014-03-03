@@ -12,6 +12,15 @@ public class Session extends Resource {
 	@Id
 	protected String id;
 	protected String ref;
+	protected String userRef;
+
+	public String getUserRef() {
+		return userRef;
+	}
+
+	public void setUserRef(String userRef) {
+		this.userRef = userRef;
+	}
 
 	protected Date createdOn;
 	protected Date lastModified;
@@ -25,6 +34,7 @@ public class Session extends Resource {
 	public Session(User user, Date createdOn, Date lastModified, Long numberOfLogins, Boolean isLoggedIn) {
 		super();
 		createRef(user.getRef());
+		this.userRef = user.getRef();
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
 		this.numberOfLogins = numberOfLogins;

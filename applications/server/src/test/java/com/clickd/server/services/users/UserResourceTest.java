@@ -34,8 +34,14 @@ public class UserResourceTest {
 		// DB setup - drop collection(s) then insert fixture(s)
 		userResource.getSessionDao().getMongoOperations().dropCollection("sessions");
 		userResource.getUserDao().getMongoOperations().dropCollection("users");
+		userResource.getUserDao().getMongoOperations().dropCollection("questions");
+		userResource.getUserDao().getMongoOperations().dropCollection("question_answers");
+
 		
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\question_answers.json" , "question_answers");
+
 	}
 	
 	@After
@@ -79,6 +85,52 @@ public class UserResourceTest {
 		
 		// Verify 1 and ONLY 1 session created in DB
 		Assert.assertEquals(1, userResource.getSessionDao().findAll().size());
+	}
+	
+	
+	@Test
+	public void signOutSucceedsWithSignedInUserRef() throws Exception {
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+		
+		// Verify 1 and ONLY 1 session created in DB
+		Assert.assertEquals(1, userResource.getSessionDao().findAll().size());
+		
+		String userRef = session.getUserRef();
+		userRef = userRef.split("/")[2];
+		
+		//make the sign out call
+		Response response2 = userResource.signOut(userRef);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, response2.getStatus());
+
+		//VERIFY response is empty
+		Assert.assertEquals(null, response2.getEntity());
+
+		
+		// Verify 0 and ONLY 0 sessions exist in DB
+		Assert.assertEquals(0, userResource.getSessionDao().findAll().size());		
+	}
+	
+	@Test
+	public void signOutFailsWithIncorrectUserRef() throws Exception {
+
+		String userRef = "NOTRIGHT";
+		
+		//make the sign out call
+		Response response = userResource.signOut(userRef);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(300, response.getStatus());
+		
+		ErrorMessage errorMessage = (ErrorMessage)response.getEntity();
+		Assert.assertEquals(errorMessage.getStatus(), "failed");
+		Assert.assertEquals(errorMessage.getMessage(), "User not found");
 	}
 	
 	@Test
@@ -155,6 +207,7 @@ public class UserResourceTest {
 				"male",
 				"SE1 3BB");
 		
+		Assert.assertEquals(300, response.getStatus());
 		ErrorMessage errorMessage = (ErrorMessage)response.getEntity();
 		Assert.assertEquals(errorMessage.getStatus(), "failed");
 		Assert.assertEquals(errorMessage.getMessage(), "Email address not available");

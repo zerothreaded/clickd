@@ -38,7 +38,7 @@ public class SessionDao {
 	}
 
 	public void delete(Session session) {
-		mongoOperations.remove(session);
+		mongoOperations.remove(session, collectionName);
 	}
 
 	public Session findById(String id) {
