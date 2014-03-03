@@ -45,11 +45,10 @@ public class ApplicationService extends Service<UserConfiguration> {
 	public void initialize(Bootstrap<UserConfiguration> bootstrap) {
 		bootstrap.setName("application");
 		bootstrap.addBundle(new ViewBundle());
-		bootstrap.addBundle(new AssetsBundle("/assets", "/assets"));
-		bootstrap.addBundle(new AssetsBundle("/html", "/clickd", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/new", "/angular", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/assets/angular/includes", "/form", "form.html"));
-		bootstrap.addBundle(new AssetsBundle("/html/home", "/timeline", "timeline.html"));
+	//	bootstrap.addBundle(new AssetsBundle("/resources", "/web2"));
+
+		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
+		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
 	}
 
 	@Override
@@ -58,8 +57,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		final String template = configuration.getTemplate();
 		final String defaultName = configuration.getDefaultName();
 
-		context = new ClassPathXmlApplicationContext(new String[] { "spring\\application.xml" });
-		
+		context = new ClassPathXmlApplicationContext(new String[] { "spring/application.xml" });
 		UserDao userDao = (UserDao) context.getBean("userDao");
 		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
 		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
@@ -73,7 +71,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		// Create REST End Points
 
-		// Application
+		// Application 	
 		ApplicationResource applicationResource = new ApplicationResource();
 		applicationResource.setApplicationDao(applicationDao);
 		applicationResource.setSessionDao(sessionDao);

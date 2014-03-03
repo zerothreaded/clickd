@@ -237,9 +237,21 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/sessions/{sessionRef}")
 	@Timed
-	public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
-		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
-		return Utilities.toJson(session);
+	public Response getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
+		try
+		{
+			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
+			
+			if (session == null)
+				return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
+
+			
+			return Response.status(200).entity( Utilities.toJson(session)).build();
+		}
+		catch (Exception exception)
+		{
+			return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
+		}
 	}
 	
 	class CandidateResponse
@@ -302,25 +314,35 @@ public class UserResource {
 			{
 				Link otherUserLink = (Link)otherUsersChoice.get_Links().get("choice-user");
 				User otherUser = userDao.findByRef(otherUserLink.getHref());
-				if (otherUser.getRef().equals("/users/"+userRef))
-					continue;
-				boolean alreadyExists = false;
-				for (CandidateResponse responseRow : responseList)
-				{
-					if (responseRow.getUser().getRef().equals(otherUser.getRef()))
-					{
-						responseList.remove(responseRow);
-						responseRow.setScore(responseRow.getScore() + 1);
-						responseList.add(responseRow);
-						alreadyExists = true;
-						break;
+				if (null != otherUser) {
+					//check if potential candidate is not the signed in user
+					if (!otherUser.getRef().equals("/users/"+userRef)) {
+						boolean alreadyExists = false;
+						for (CandidateResponse responseRow : responseList)
+						{
+							if (responseRow.getUser().getRef().equals(otherUser.getRef()))
+							{
+								responseList.remove(responseRow);
+								responseRow.setScore(responseRow.getScore() + 1);
+								responseList.add(responseRow);
+								alreadyExists = true;
+								break;
+							}
+						}
+						
+						if (!alreadyExists)
+						{
+							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+							responseList.add(responseRow);
+						}
+							
+					} else {
+						
 					}
-				}
-				
-				if (!alreadyExists)
-				{
-					CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
-					responseList.add(responseRow);
+				} else {
+					// Return NON 202
+					// return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
+
 				}
 			}
 		}
