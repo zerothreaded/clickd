@@ -531,16 +531,12 @@ public class UserResource {
 		if (null != user.get_Links().get("connection-list"))	{
 			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
 		}
-
 		List<Connection> userConnections = new ArrayList<Connection>();
-
-		
 		for (Link connectionLink : userConnectionLinks)
 		{
 			Connection c = connectionDao.findByRef(connectionLink.getHref());
 			userConnections.add(c);
 		}
-		
 		return Utilities.toJson(userConnections);
 	}
 	
@@ -549,16 +545,14 @@ public class UserResource {
 	@Timed
 	public String acceptConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
 		User user = userDao.findByRef("/users/" + userRef);
-		
-		String thisHref = "/users/"+userRef+"/connections/"+connectionRef;
-
-		Connection c = connectionDao.findByRef(thisHref);
-		c.setStatus("active");
-		connectionDao.update(c);
+		String thisHref = "/users/"+userRef+"/connections/" + connectionRef;
+		Connection connection = connectionDao.findByRef(thisHref);
+		connection.setStatus("active");
+		connectionDao.update(connection);
 		
 		//now find the other user, find the connection to me in their connection list
 		//and set its status to active too
-		User otherUser = userDao.findByRef(((Link)c.get_Links().get("connection-other-user")).getHref());
+		User otherUser = userDao.findByRef(((Link)connection.get_Links().get("connection-other-user")).getHref());
 		List<Link> otherUserConnectionList = (List<Link>)otherUser.get_Links().get("connection-list");
 		for (Link connectionLink : otherUserConnectionList)
 		{
@@ -571,7 +565,7 @@ public class UserResource {
 			}
 		}
 		
-		return Utilities.toJson(c);
+		return Utilities.toJson(connection);
 	}
 	
 	@GET
