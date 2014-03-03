@@ -2,54 +2,26 @@ package com.clickd.server.services.users;
 
 import javax.ws.rs.core.Response;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.data.mongodb.MongoDbFactory;
 
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
-import com.clickd.server.utilities.Utilities;
+import com.clickd.server.services.AbstractResourceTest;
 import com.google.gson.Gson;
-import com.mongodb.DB;
 
-public class UserResourceTest {
+public class UserResourceTest extends AbstractResourceTest {
 
-	private ApplicationContext applicationContext;
 	private UserResource userResource;
-	private DB mongoDb;
 
 	@Before
 	public void setup() {
-		applicationContext = new ClassPathXmlApplicationContext(new String[] { "spring/application.xml" });
-		MongoDbFactory mongoDbFactory = (MongoDbFactory) applicationContext.getBean("mongoDbFactory");
-		mongoDb = mongoDbFactory.getDb();
-		
+		super.setup();
 		userResource = (UserResource) applicationContext.getBean("userResource");
-
-		// DB setup - drop collection(s) then insert fixture(s)
-		userResource.getSessionDao().getMongoOperations().dropCollection("sessions");
-		userResource.getUserDao().getMongoOperations().dropCollection("users");
-		userResource.getUserDao().getMongoOperations().dropCollection("questions");
-		userResource.getUserDao().getMongoOperations().dropCollection("question_answers");
-
-		
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\question_answers.json" , "question_answers");
-
 	}
-	
-	@After
-	public void teardown() {
-		userResource.getUserDao().getMongoOperations().dropCollection("sessions");	
-		userResource.getUserDao().getMongoOperations().dropCollection("users");	
-	}
-	
+
 	@Test
 	public void getUserByRefSucceedsForExistingUser() throws Exception {
 		Response response = userResource.getUser("1");

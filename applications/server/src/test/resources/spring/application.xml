@@ -63,4 +63,7 @@
 	</bean>
 	
 	<bean id="userResource" class="com.clickd.server.services.users.UserResource" />
+
+	<bean id="questionResource" class="com.clickd.server.services.questions.QuestionResource" />
+
 </beans>
