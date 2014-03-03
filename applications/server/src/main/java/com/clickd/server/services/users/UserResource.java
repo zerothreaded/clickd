@@ -436,7 +436,7 @@ public class UserResource {
 		if (!alreadyPresent)
 		{
 			User otherUser = userDao.findByRef("/users/"+otherUserRef);
-			Connection connection = new Connection(user, new Date(), new Date(), "pending");
+			Connection connection = new Connection(user, new Date(), new Date(), "proposed");
 			Link otherUserLink = new Link("/users/" + otherUserRef, "other-user");
 			connection.get_Links().put("connection-other-user", otherUserLink);
 			connectionDao.create(connection);
