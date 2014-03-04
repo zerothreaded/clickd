@@ -363,7 +363,8 @@ public class UserResourceTest extends AbstractResourceTest {
 		userRef2 = userRef2.split("/")[2];
 		
 		// Request a connection between John and Ralph
-		userResource.addConnectionRequest(userRef1, userRef2);
+		Response addConnectionRequestResponse = userResource.addConnectionRequest(userRef1, userRef2);
+		Assert.assertEquals(200, addConnectionRequestResponse.getStatus());
 		
 		// Grab the connections - there should be only 1 in the DB
 		Connection connection = userResource.getConnectionDao().findAll().get(0);
