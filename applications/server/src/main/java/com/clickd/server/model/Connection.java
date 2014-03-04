@@ -20,17 +20,17 @@ public class Connection extends Resource {
 		super();
 	}
 	
-	public Connection(User user, Date createdOn, Date lastModified, String status) {
+	public Connection(Date createdOn, Date lastModified, String status) {
 		super();
-		createRef(user.getRef());
+		createRef();
 		this.createdOn = createdOn;
 		this.lastModified = lastModified;
 		this.status = status;
 	}
 	
-	private void createRef(String userRef) {
+	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = userRef + "/connections/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/connections/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	

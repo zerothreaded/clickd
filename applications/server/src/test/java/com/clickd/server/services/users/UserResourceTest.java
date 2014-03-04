@@ -369,7 +369,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Connection connection = userResource.getConnectionDao().findAll().get(0);
 		
 		// Accept the connection
-		userResource.acceptConnection(userRef1, connection.getRef().split("/")[4]);
+		userResource.acceptConnection(userRef1, connection.getRef().split("/")[2]);
 		
 		//make the get candidates call
 		Response getCandidatesResponse = userResource.getCandidates(userRef1);
@@ -377,7 +377,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		// TODO: Verify REMAINING expected session state
 		Assert.assertEquals(200, getCandidatesResponse.getStatus());
 
-		// VERIFY response list contains the 2 other users
+		// VERIFY response list contains the 1 other users
 		
 		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
 		Assert.assertEquals(1,  responseList.size());
