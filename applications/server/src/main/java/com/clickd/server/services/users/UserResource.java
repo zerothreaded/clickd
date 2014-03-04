@@ -154,7 +154,10 @@ public class UserResource {
 			if (user.getPassword().equals(password)) {
 				// User Authentication OK
 				// Lookup Existing Sessions for this user
-				List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+				
+				// List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+				List<Link> sessionLinks = user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
+				
 				if (sessionLinks == null) {
 					sessionLinks = new ArrayList<Link>();
 				}
@@ -204,8 +207,8 @@ public class UserResource {
 			if (user == null) {
 				return Response.status(300).entity(new ErrorMessage("failed", "User not found")).build();
 			}
-			ArrayList<Session> userSessions = new ArrayList<Session>();
-			List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+			// List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
+			List<Link> sessionLinks =user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
 			for (Link sessionLink : sessionLinks) {
 				Session session = sessionDao.findByRef(sessionLink.getHref());
 				sessionDao.delete(session);
@@ -218,64 +221,6 @@ public class UserResource {
 		}
 	}
 
-
-
-//	@GET
-//	@Path("/{userRef}/sessions/{sessionRef}")
-//	@Timed
-//	public Response getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
-//		try
-//		{
-//			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
-//			if (session == null)
-//				return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
-//			return Response.status(200).entity( Utilities.toJson(session)).build();
-//		}
-//		catch (Exception exception)
-//		{
-//			return Response.status(300).entity( "{ \"status\" : \"failed\" }").build();
-//		}
-//	}
-	
-//	@SuppressWarnings("unchecked")
-//	@GET
-//	@Path("/{userRef}/sessions/")
-//	@Timed
-//	public String getUserSessions(@PathParam("userRef") String userRef) {
-//		User user = userDao.findByRef("/users/" + userRef);
-//		ArrayList<Session> userSessions = new ArrayList<Session>();
-//		List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
-//		for (Link sessionLink : sessionLinks) {
-//			Session session = sessionDao.findByRef(sessionLink.getHref());
-//			userSessions.add(session);
-//		}
-//		return Utilities.toJson(userSessions);
-//	}
-
-//	@GET
-//	@Timed
-//	public String getAll() {
-//		List<User> allUsers = userDao.findAll();
-//		String result = Utilities.toJson(allUsers);
-//		return result;
-//	}
-//
-//	@GET
-//	@Path("/numberofregisteredusers")
-//	@Timed
-//	public String getNumberOfRegisteredUsers(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
-//		List<User> allUsers = userDao.findAll();
-//		return " { \"count\" : " + allUsers.size() + " }";
-//	}
-//
-//	@GET
-//	@Path("/numberofsignedinusers")
-//	@Timed
-//	public String getNumberOfSignedInUsers() {
-//		int count = sessionDao.findAll().size();
-//		return "{ \"value\" : \"" + count + "\" }";
-//	}
-	
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/{userRef}/candidates")
@@ -293,14 +238,17 @@ public class UserResource {
 
 				// This test checks if there is a LINK to an answer i.e. The answer is a reference
 				if (null != choice.get_Links().get("choice-answer")) {
-					Link answerLink = (Link) choice.get_Links().get("choice-answer");
+					// Link answerLink = (Link) choice.get_Links().get("choice-answer");
+					Link answerLink = choice.getLink("choice-answer");
 					sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByHref(answerLink.getHref()));
 				}
 				
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
-					Link otherUserLink = (Link) otherUsersChoice.get_Links().get("choice-user");
+					// Link otherUserLink = (Link) otherUsersChoice.get_Links().get("choice-user");
+					Link otherUserLink = (Link) otherUsersChoice.getLink("choice-user");
+					
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
 
 						// check if potential candidate is not the signed in user
@@ -323,12 +271,12 @@ public class UserResource {
 						}
 
 
-					if (null != user.get_Links().get("connection-list")) {
-						userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
+					if (null != user.getLinks("connection-list")) {
+						userConnectionLinks = user.getLinks("connection-list");
 						for (Link userConnectionLink : userConnectionLinks) {
 							Connection connection = connectionDao.findByRef(userConnectionLink.getHref());
 							if (null != connection) {
-								Link otherUserConnectionLink = (Link) connection.get_Links().get("connection-other-user");
+								Link otherUserConnectionLink = connection.getLink("connection-other-user");
 								String connectionUserRef = otherUserConnectionLink.getHref();
 
 								for (CandidateResponse responseRow : responseList) {
@@ -373,8 +321,8 @@ public class UserResource {
 		{
 			for (Choice choice2 : otherUserChoices)
 			{
-				Link answerLink = (Link)choice.get_Links().get("choice-answer");
-				Link answerLink2 = (Link)choice2.get_Links().get("choice-answer");
+				Link answerLink = choice.getLink("choice-answer");
+				Link answerLink2 = choice2.getLink("choice-answer");
 			
 				if (null == answerLink || null == answerLink2)
 					continue;
@@ -393,15 +341,15 @@ public class UserResource {
 	@POST
 	@Path("/{userRef}/connections/add/{otherUserRef}")
 	@Timed
-	public String addConnection(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef)
+	public Response addConnectionRequest(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef)
 	{
 		User user = userDao.findByRef("/users/" + userRef);
 		
 		//create the connection object
 		//get the pre existing connections
 		List<Link> userConnectionLinks = new ArrayList<Link>();
-		if (null != user.get_Links().get("connection-list"))	{
-			userConnectionLinks = (List<Link>)user.get_Links().get("connection-list");
+		if (null != user.getLinks("connection-list"))	{
+			userConnectionLinks = user.getLinks("connection-list");
 		}
 		
 		//am i already connected
@@ -409,7 +357,7 @@ public class UserResource {
 		for (Link userConnectionLink : userConnectionLinks)
 		{
 			Connection connectionToTest = connectionDao.findByRef(userConnectionLink.getHref());
-			if (((Link)connectionToTest.get_Links().get("connection-other-user")).getHref().equals("/users/"+otherUserRef))
+			if ((connectionToTest.getLink("connection-other-user")).getHref().equals("/users/" + otherUserRef))
 				alreadyPresent = true;
 		}
 		
@@ -429,21 +377,21 @@ public class UserResource {
 		}
 		else
 		{
-			return "{\"status\" : \"already-present\"}";
+			return Response.status(200).entity("FIXME_ALREADY_PRESENT").build();
 		}
 		
 		alreadyPresent = false;
 		User otherUser = userDao.findByRef("/users/"+otherUserRef);
 		
 		List<Link> otherUserConnectionLinks = new ArrayList<Link>();
-		if (null != otherUser.get_Links().get("connection-list"))	{
-			otherUserConnectionLinks =  (List<Link>)otherUser.get_Links().get("connection-list");
+		if (null != otherUser.getLinks("connection-list"))	{
+			otherUserConnectionLinks = otherUser.getLinks("connection-list");
 		}
 		
 		for (Link otherUserConnectionLink : otherUserConnectionLinks)
 		{
 			Connection connectionToTest = connectionDao.findByRef(otherUserConnectionLink.getHref());
-			if (((Link)connectionToTest.get_Links().get("connection-other-user")).getHref().equals("/users/"+userRef))
+			if ((connectionToTest.getLink("connection-other-user")).getHref().equals("/users/" + userRef))
 				alreadyPresent = true;
 		}
 		
@@ -465,12 +413,12 @@ public class UserResource {
 		}
 		else
 		{
-			return "{\"status\" : \"already-present\"}";
+			return Response.status(200).entity("FIXME_ALREADY_PRESENT").build();
 		}
 		
 		//todo: add code if other user has already requested connection, set status to active
 		
-		return "{\"status\" : \"ok\"}";
+		return Response.status(200).entity("FIXME_STATUS_OK").build();
 	}
 	
 	
@@ -484,8 +432,8 @@ public class UserResource {
 			
 			//get the pre existing connections
 			List<Link> userConnectionLinks = new ArrayList<Link>();
-			if (null != user.get_Links().get("connection-list"))	{
-				userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
+			if (null != user.getLinks("connection-list"))	{
+				userConnectionLinks = user.getLinks("connection-list");
 			}
 			List<Connection> userConnections = new ArrayList<Connection>();
 			for (Link connectionLink : userConnectionLinks)
@@ -513,19 +461,18 @@ public class UserResource {
 		
 		//now find the other user, find the connection to me in their connection list
 		//and set its status to active too
-		User otherUser = userDao.findByRef(((Link)connection.get_Links().get("connection-other-user")).getHref());
-		List<Link> otherUserConnectionList = (List<Link>)otherUser.get_Links().get("connection-list");
+		User otherUser = userDao.findByRef((connection.getLink("connection-other-user")).getHref());
+		List<Link> otherUserConnectionList = otherUser.getLinks("connection-list");
 		for (Link connectionLink : otherUserConnectionList)
 		{
 			Connection c2 = connectionDao.findByRef(connectionLink.getHref());
-			Link otherUserLink = (Link)c2.get_Links().get("connection-other-user");
-			if (otherUserLink.getHref().equals("/users/"+userRef))
+			Link otherUserLink = c2.getLink("connection-other-user");
+			if (otherUserLink.getHref().equals("/users/" + userRef))
 			{
 				c2.setStatus("active");
 				connectionDao.update(c2);
 			}
 		}
-		
 		return Utilities.toJson(connection);
 	}
 	
@@ -539,7 +486,7 @@ public class UserResource {
 
 		Connection c = connectionDao.findByRef(thisHref);
 		
-		List<Link> userConnectionList = (List<Link>)user.get_Links().get("connection-list");
+		List<Link> userConnectionList = user.getLinks("connection-list");
 		Link connectionLinkToRemove = null;
 		for (Link connectionLink : userConnectionList)
 		{
@@ -554,13 +501,13 @@ public class UserResource {
 		//now find the other user, find the connection to me in their connection list
 		//and set its status to active too
 		User otherUser = userDao.findByRef(((Link)c.get_Links().get("connection-other-user")).getHref());
-		List<Link> otherUserConnectionList = (List<Link>)otherUser.get_Links().get("connection-list");
+		List<Link> otherUserConnectionList = otherUser.getLinks("connection-list");
 		Link otherConnectionLinkToRemove = null;
 		for (Link connectionLink : otherUserConnectionList)
 		{
 			Connection c2 = connectionDao.findByRef(connectionLink.getHref());
-			Link otherUserLink = (Link)c2.get_Links().get("connection-other-user");
-			if (otherUserLink.getHref().equals("/users/"+userRef))
+			Link otherUserLink = c2.getLink("connection-other-user");
+			if (otherUserLink.getHref().equals("/users/" + userRef))
 			{
 				connectionDao.delete(c2);
 				otherConnectionLinkToRemove = connectionLink;
@@ -579,54 +526,42 @@ public class UserResource {
 	public String getCliques(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
 		User user = userDao.findByRef("/users/" + userRef);
 		
-		//get the pre existing connections
-		List<Link> userCliques = new ArrayList<Link>();
-
-		userCliques =  (List<Link>)user.get_Links().get("clique-list");
-		
 		List<Clique> myCliques = new ArrayList<Clique>();	
-			
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 		for (Choice myChoice : myChoices)
 		{
 			Clique thisClique = null;
 			List<User> cliqueMembers = new ArrayList<User>();
 			
-			if (null == myChoice.get_Links().get("choice-answer"))
+			if (null == myChoice.getLinks("choice-answer"))
 			{
 				
 				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
 				
 				//now get list of users who made that choice
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
-				
-						
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
-					Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+					Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
 					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 					
-					if (!cliqueMember.getRef().equals("/users/"+userRef))
+					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
 				}
 			}
 			else
 			{
-				String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
+				String answerRef = myChoice.getLink("choice-answer").getHref();
 				Answer answer = answerDao.findByRef(answerRef);
-				
 				thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 				
 				//now get list of users who made that choice
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
-				
-						
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
-					Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+					Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
 					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
-					
-					if (!cliqueMember.getRef().equals("/users/"+userRef))
+					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
 				}
 			}
@@ -644,17 +579,11 @@ public class UserResource {
 	public String getClique(@PathParam("userRef") String userRef) {
 		User user = userDao.findByRef("/users/" + userRef);
 		
-		//get the pre existing connections
-		List<Link> userCliques = new ArrayList<Link>();
-
-		userCliques =  (List<Link>)user.get_Links().get("clique-list");
-		
 		List<Clique> myCliques = new ArrayList<Clique>();	
-			
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 		for (Choice myChoice : myChoices)
 		{
-			String answerRef = ((Link)myChoice.get_Links().get("choice-answer")).getHref();
+			String answerRef = myChoice.getLink("choice-answer").getHref();
 			Answer answer = answerDao.findByRef(answerRef);
 			
 			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
@@ -665,10 +594,9 @@ public class UserResource {
 					
 			for (Choice cliqueMemberChoice : cliqueMemberChoices)
 			{
-				Link cliqueMemberLink = (Link)cliqueMemberChoice.get_Links().get("choice-user");
+				Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
 				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
-				
-				if (!cliqueMember.getRef().equals("/users/"+userRef))
+				if (!cliqueMember.getRef().equals("/users/" + userRef))
 					cliqueMembers.add(cliqueMember);
 			}
 			
@@ -683,7 +611,7 @@ public class UserResource {
 	@Path("/{userRef}/connections/{connectionRef}")
 	@Timed
 	public String getConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
-		Connection connection = connectionDao.findByRef("/users/"+userRef+"/connections/"+connectionRef);
+		Connection connection = connectionDao.findByRef("/users/" + userRef + "/connections/" + connectionRef);
 		return Utilities.toJson(connection);
 	}
 	

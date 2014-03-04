@@ -1,6 +1,7 @@
 package com.clickd.server.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class Resource {
@@ -32,4 +33,14 @@ public abstract class Resource {
 		this._embedded = embedded;
 	}
 
+	public Link getLink(String name) {
+		return (Link)_links.get(name);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Link> getLinks(String name) {
+		return (List<Link>)_links.get(name);
+	}
+	
+	
 }
