@@ -308,10 +308,7 @@ public class UserResource {
 		//get my answers
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 		List<Choice> otherUserChoices = choiceDao.findByUserRef(otherUserRef);
-		
 		ArrayList<String> same = new ArrayList<String>();
-
-		
 		for (Choice choice : myChoices)
 		{
 			for (Choice choice2 : otherUserChoices)
@@ -329,7 +326,6 @@ public class UserResource {
 				}
 			}
 		}
-		
 		return Utilities.toJson(same);
 	}
 	
