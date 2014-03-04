@@ -28,6 +28,7 @@ public abstract class AbstractResourceTest {
 		mongoOperations.dropCollection("questions");
 		mongoOperations.dropCollection("answers");
 		mongoOperations.dropCollection("question_answers");
+		mongoOperations.dropCollection("choices");
 		
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
