@@ -62,7 +62,7 @@ public class ConnectionDao {
 		return Connection;
 	}
 	
-	public ArrayList<Connection> findAllByUserRef(String userRef)
+	public List<Connection> findAllByUserRef(String userRef)
 	{
 		List<Connection> connections = (List<Connection>)mongoOperations.findAll(Connection.class, collectionName);
 	
@@ -70,14 +70,14 @@ public class ConnectionDao {
 		
 		for (Connection connection : connections)
 		{
-			List<Link> links = (List<Link>)connection.get_Links();
+			List<Link> links = connection.getLinks("connection-user");
 			
 			for (Link link : links)
 			{
-				if (link.getRel() == "user-from" || link.getRel() == "user-to")
+				if (link.getRel().equals("from-user") || link.getRel().equals("to-user"))
 				{
 					String userHref = link.getHref();
-					if (userHref == userRef)
+					if (userHref.equals(userRef))
 						returnList.add(connection);
 				}
 			}

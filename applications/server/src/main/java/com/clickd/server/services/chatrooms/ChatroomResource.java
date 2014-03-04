@@ -1,4 +1,4 @@
-	package com.clickd.server.services.chatrooms;
+package com.clickd.server.services.chatrooms;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,56 +54,43 @@ public class ChatroomResource {
 	{
 		Chatroom chatroom = chatroomDao.findByRef("/chatrooms/"+chatroomRef);
 		Link memberLink = new Link("/users/"+userRef, "chatroom-member");
-		((List<Link>)chatroom.get_Links().get("member-list")).add(memberLink);
+		chatroom.getLinks("member-list").add(memberLink);
 		chatroomDao.update(chatroom);
-		
 		return Utilities.toJson(chatroom);
 	}
 	
 	@GET
 	@Timed
 	@Path("/{chatroomRef}/{userRef}/posts/{postText}")
-	public String post(@PathParam("chatroomRef") String chatroomRef,  @PathParam("userRef") String userRef, @PathParam("postText") String postText, @Context HttpServletRequest request, @Context HttpServletResponse response,
-			@Context HttpHeaders header)
+	public String post(@PathParam("chatroomRef") String chatroomRef,  @PathParam("userRef") String userRef, @PathParam("postText") String postText)
 	{
 		Chatroom chatroom = chatroomDao.findByRef("/chatrooms/"+chatroomRef);
-		
 		Post post = new Post(userRef, postText, new Date());
-		
-		
 		List<Post> postList;
-		
-		
-		if (null == chatroom.get_Embedded().get("post-list"))
+		if (null == chatroom.get_Embedded().get("post-list")) {
 			postList = new ArrayList<Post>();
-		else
+		} else {
 			postList = (List<Post>)chatroom.get_Embedded().get("post-list");
-		
+		}
 		postList.add(post);
 		chatroom.get_Embedded().put("post-list", postList);
-		
 		chatroomDao.update(chatroom);
-		
 		return Utilities.toJson(chatroom);
 	}
-
 
 	@GET
 	@Timed
 	@Path("/{chatroomRef}")
-	public String getChatroom(@PathParam("chatroomRef") String chatroomRef, @Context HttpServletRequest request, @Context HttpServletResponse response,
-			@Context HttpHeaders headers) {
-		Chatroom chatroom = chatroomDao.findByRef("/chatrooms/"+chatroomRef);
+	public String getChatroom(@PathParam("chatroomRef") String chatroomRef) {
+		Chatroom chatroom = chatroomDao.findByRef("/chatrooms/" + chatroomRef);
 		String result = Utilities.toJson(chatroom);
 		return result;
 	}
 	
-	
 	@GET
 	@Timed
 	@Path("/byuser/{userRef}")
-	public String getUsersChatrooms(@PathParam("userRef") String userRef, @Context HttpServletRequest request, @Context HttpServletResponse response,
-			@Context HttpHeaders headers) {
+	public String getUsersChatrooms(@PathParam("userRef") String userRef) {
 		List<Chatroom> usersChatrooms = chatroomDao.findByUserRef(userRef);
 		String result = Utilities.toJson(usersChatrooms);
 		return result;

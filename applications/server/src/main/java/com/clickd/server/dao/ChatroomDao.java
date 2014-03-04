@@ -55,16 +55,15 @@ public class ChatroomDao {
 		
 		for (Chatroom room : allChatrooms)
 		{
-			List<Link> memberList = (List<Link>)room.get_Links().get("member-list");
+			List<Link> memberList = room.getLinks("member-list");
 			for (Link l : memberList)
 			{
-				if (l.getHref().equals("/users/"+userRef))
+				if (l.getHref().equals("/users/" + userRef))
 				{
 					response.add(room);
 				}
 			}
 		}
-		
 		return response;
 	}
 	

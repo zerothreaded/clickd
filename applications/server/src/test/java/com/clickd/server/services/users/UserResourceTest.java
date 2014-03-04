@@ -168,6 +168,7 @@ public class UserResourceTest extends AbstractResourceTest {
 	public void getCandidatesWithNoChoices() throws Exception {
 		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Assert.assertEquals(200, response.getStatus());
+		
 		Session session = (Session) response.getEntity();
 		
 		// TODO: Verify REMAINING expected session state
@@ -362,13 +363,13 @@ public class UserResourceTest extends AbstractResourceTest {
 		userRef2 = userRef2.split("/")[2];
 		
 		// Request a connection between John and Ralph
-		userResource.addConnection(userRef1, userRef2);
+		userResource.addConnectionRequest(userRef1, userRef2);
 		
 		// Grab the connections - there should be only 1 in the DB
 		Connection connection = userResource.getConnectionDao().findAll().get(0);
 		
 		// Accept the connection
-		userResource.acceptConnection(userRef1, connection.getRef().split("/")[4]);
+		userResource.acceptConnection(userRef1, connection.getRef().split("/")[2]);
 		
 		//make the get candidates call
 		Response getCandidatesResponse = userResource.getCandidates(userRef1);
@@ -376,7 +377,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		// TODO: Verify REMAINING expected session state
 		Assert.assertEquals(200, getCandidatesResponse.getStatus());
 
-		// VERIFY response list contains the 2 other users
+		// VERIFY response list contains the 1 other users
 		
 		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
 		Assert.assertEquals(1,  responseList.size());
@@ -390,6 +391,26 @@ public class UserResourceTest extends AbstractResourceTest {
 		}
 	}
 	
+	//@Test
+	public void addConnectionSucceeds() throws Exception {
+		
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+		
+		Connection connection = (Connection)response.getEntity();
+		
+		// Verify User session updates
+		
+		// Verify 2 Sessions created
+		
+		
+		int stop = 123;
+	}
 	
 	@Test
 	public void registerFailsWithEmailNotAvailable() throws Exception {

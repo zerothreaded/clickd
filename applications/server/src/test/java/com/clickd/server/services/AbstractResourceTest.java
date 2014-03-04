@@ -42,9 +42,11 @@ public abstract class AbstractResourceTest {
 		MongoOperations mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
 		mongoOperations.dropCollection("users");
 		mongoOperations.dropCollection("sessions");
+		mongoOperations.dropCollection("connections");
 		mongoOperations.dropCollection("questions");
 		mongoOperations.dropCollection("answers");
 		mongoOperations.dropCollection("question_answers");
+		
 	}
 	
 	@Test
