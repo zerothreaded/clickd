@@ -394,7 +394,6 @@ public class UserResourceTest extends AbstractResourceTest {
 	
 	//@Test
 	public void addConnectionSucceeds() throws Exception {
-		
 		// Setup test data
 		String userRefRalph = "1";
 		String userRefJohn = "2";
@@ -404,13 +403,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(200, response.getStatus());
 		
 		Connection connection = (Connection)response.getEntity();
-		
-		// Verify User session updates
-		
-		// Verify 2 Sessions created
-		
-		
-		int stop = 123;
+		Assert.assertNotNull(connection);
 	}
 	
 	@Test

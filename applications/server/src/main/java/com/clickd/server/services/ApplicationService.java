@@ -51,9 +51,6 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 	@Override
 	public void run(UserConfiguration configuration, Environment environment) {
-
-		final String template = configuration.getTemplate();
-		final String defaultName = configuration.getDefaultName();
 		final String springContextFileName = configuration.getSpringContextFileName();
 
 		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
@@ -67,7 +64,6 @@ public class ApplicationService extends Service<UserConfiguration> {
 		ConnectionDao connectionDao = (ConnectionDao) context.getBean("connectionDao");
 		ChatroomDao chatroomDao = (ChatroomDao) context.getBean("chatroomDao");
 		PostDao postDao = (PostDao) context.getBean("postDao");
-
 
 		// Create REST End Points
 
