@@ -310,97 +310,85 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
-	public String getCandidates(@PathParam("userRef") String userRef) {
-		//get my answers
-		User user = userDao.findByRef("/users/"+userRef);
-		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-		ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
-		List<Link> userConnectionLinks = new ArrayList<Link>();
-		for (Choice choice : myChoices)
-		{
-			ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
-			if (null == choice.get_Links().get("choice-answer"))
-			{
-				if (null == choice.getAnswerText())
-				{
-					continue;
+	public Response getCandidates(@PathParam("userRef") String userRef) {
+		try {
+			// get my answers
+			User user = userDao.findByRef("/users/" + userRef);
+			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
+			List<Link> userConnectionLinks = new ArrayList<Link>();
+			for (Choice choice : myChoices) {
+				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
+				if (null == choice.get_Links().get("choice-answer")) {
+					if (null == choice.getAnswerText()) {
+						continue;
+					} else {
+						sameAnswerChoices.addAll(choiceDao.findByAnswerText(choice.getAnswerText()));
+					}
 				}
-				else
-				{
-					sameAnswerChoices.addAll(choiceDao.findByAnswerText(choice.getAnswerText()));
+
+				if (null != choice.get_Links().get("choice-answer")) {
+					Link answerLink = (Link) choice.get_Links().get("choice-answer");
+					sameAnswerChoices.addAll(choiceDao.findByAnswerRef(answerLink.getHref()));
+				}
+				for (Choice otherUsersChoice : sameAnswerChoices) {
+					Link otherUserLink = (Link) otherUsersChoice.get_Links().get("choice-user");
+					User otherUser = userDao.findByRef(otherUserLink.getHref());
+					if (null != otherUser) {
+						// check if potential candidate is not the signed in
+						// user
+						if (!otherUser.getRef().equals("/users/" + userRef)) {
+							boolean alreadyExists = false;
+							for (CandidateResponse responseRow : responseList) {
+								if (responseRow.getUser().getRef().equals(otherUser.getRef())) {
+									responseList.remove(responseRow);
+									responseRow.setScore(responseRow.getScore() + 1);
+									responseList.add(responseRow);
+									alreadyExists = true;
+									break;
+								}
+							}
+
+							if (!alreadyExists) {
+								CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+								responseList.add(responseRow);
+							}
+						}
+					}
+
+					if (null != user.get_Links().get("connection-list")) {
+						userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
+						for (Link userConnectionLink : userConnectionLinks) {
+							Connection connection = connectionDao.findByRef(userConnectionLink.getHref());
+							if (null != connection) {
+								Link otherUserConnectionLink = (Link) connection.get_Links().get("connection-other-user");
+								String connectionUserRef = otherUserConnectionLink.getHref();
+
+								for (CandidateResponse responseRow : responseList) {
+									if (connectionUserRef.equals(responseRow.getUser().getRef())) {
+										responseList.remove(responseRow);
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					Collections.sort(responseList, new Comparator<CandidateResponse>() {
+						@Override
+						public int compare(CandidateResponse cr1, CandidateResponse cr2) {
+
+							return cr2.score - cr1.score;
+						}
+					});
+
 				}
 			}
 			
-			if (null != choice.get_Links().get("choice-answer"))
-			{
-				Link answerLink = (Link)choice.get_Links().get("choice-answer");
-				sameAnswerChoices.addAll(choiceDao.findByAnswerRef(answerLink.getHref()));
-			}
-			for (Choice otherUsersChoice : sameAnswerChoices)
-			{
-				Link otherUserLink = (Link)otherUsersChoice.get_Links().get("choice-user");
-				User otherUser = userDao.findByRef(otherUserLink.getHref());
-				if (null != otherUser) {
-					//check if potential candidate is not the signed in user
-					if (!otherUser.getRef().equals("/users/"+userRef)) {
-						boolean alreadyExists = false;
-						for (CandidateResponse responseRow : responseList)
-						{
-							if (responseRow.getUser().getRef().equals(otherUser.getRef()))
-							{
-								responseList.remove(responseRow);
-								responseRow.setScore(responseRow.getScore() + 1);
-								responseList.add(responseRow);
-								alreadyExists = true;
-								break;
-							}
-						}
-						
-						if (!alreadyExists)
-						{
-							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
-							responseList.add(responseRow);
-						}
-							
-					} else {
-						
-					}
-				} else {
-					// Return NON 202
-					// return Response.status(300).entity(" { \"status\" : \"failed\" } ").build();
-
-				}
-			}
+			return Response.status(200).entity(Utilities.toJson(responseList)).build();
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
-		
-		if (null != user.get_Links().get("connection-list")) {
-			userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
-			for (Link userConnectionLink : userConnectionLinks) {
-				Connection connection = connectionDao.findByRef(userConnectionLink.getHref());
-				if (null != connection) {
-					Link otherUserConnectionLink = (Link) connection.get_Links().get("connection-other-user");
-					String connectionUserRef = otherUserConnectionLink.getHref();
-	
-					for (CandidateResponse responseRow : responseList) {
-						if (connectionUserRef.equals(responseRow.getUser().getRef())) {
-							responseList.remove(responseRow);
-							break;
-						}
-					}
-				}
-			}
-		}
-		
-		Collections.sort(responseList, new Comparator<CandidateResponse>() {
-	        @Override
-	        public int compare(CandidateResponse  cr1, CandidateResponse  cr2)
-	        {
-
-	            return cr2.score - cr1.score;
-	        }
-	    });
-		
-		return Utilities.toJson(responseList);
 	}
 	
 	
@@ -524,20 +512,27 @@ public class UserResource {
 	@Path("/{userRef}/connections")
 	@Timed
 	public String getConnections(@PathParam("userRef") String userRef) {
-		User user = userDao.findByRef("/users/" + userRef);
-		
-		//get the pre existing connections
-		List<Link> userConnectionLinks = new ArrayList<Link>();
-		if (null != user.get_Links().get("connection-list"))	{
-			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
-		}
-		List<Connection> userConnections = new ArrayList<Connection>();
-		for (Link connectionLink : userConnectionLinks)
-		{
-			Connection c = connectionDao.findByRef(connectionLink.getHref());
-			userConnections.add(c);
-		}
-		return Utilities.toJson(userConnections);
+//		try
+//		{
+			User user = userDao.findByRef("/users/" + userRef);
+			
+			//get the pre existing connections
+			List<Link> userConnectionLinks = new ArrayList<Link>();
+			if (null != user.get_Links().get("connection-list"))	{
+				userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
+			}
+			List<Connection> userConnections = new ArrayList<Connection>();
+			for (Link connectionLink : userConnectionLinks)
+			{
+				Connection c = connectionDao.findByRef(connectionLink.getHref());
+				userConnections.add(c);
+			}
+			return Utilities.toJson(userConnections);
+//		}
+//		catch (Exception e)
+//		{
+//			return 
+//		}
 	}
 	
 	@GET
