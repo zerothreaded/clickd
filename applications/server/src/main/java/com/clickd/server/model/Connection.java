@@ -16,11 +16,8 @@ public class Connection extends Resource {
 	
 	protected String status;
 	
-	
-	
 	public Connection() {
 		super();
-
 	}
 	
 	public Connection(User user, Date createdOn, Date lastModified, String status) {

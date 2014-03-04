@@ -16,7 +16,7 @@ public class QuestionResourceTest extends AbstractResourceTest {
 	}
 
 	@Test
-	public void nothing() {
+	public void nextQuestionReturnsFirstQuestionWhenNoPreviousChoices() {
 		
 	}
 }

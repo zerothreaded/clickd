@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,8 +16,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -280,32 +276,6 @@ public class UserResource {
 //		return "{ \"value\" : \"" + count + "\" }";
 //	}
 	
-	class CandidateResponse
-	{
-		public CandidateResponse(User user, Integer score) {
-			super();
-			this.user = user;
-			this.score = score;
-		}
-		User user;
-		Integer score;
-		
-		
-		public User getUser() {
-			return user;
-		}
-		public void setUser(User user) {
-			this.user = user;
-		}
-		public Integer getScore() {
-			return score;
-		}
-		public void setScore(Integer score) {
-			this.score = score;
-		}
-		
-	}
-	
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/{userRef}/candidates")
@@ -315,28 +285,25 @@ public class UserResource {
 			// get my answers
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
+			List<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
 			List<Link> userConnectionLinks = new ArrayList<Link>();
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
-				if (null == choice.get_Links().get("choice-answer")) {
-					if (null == choice.getAnswerText()) {
-						continue;
-					} else {
-						sameAnswerChoices.addAll(choiceDao.findByAnswerText(choice.getAnswerText()));
-					}
-				}
+				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerText(choice.getAnswerText()));
 
+				// This test checks if there is a LINK to an answer i.e. The answer is a reference
 				if (null != choice.get_Links().get("choice-answer")) {
 					Link answerLink = (Link) choice.get_Links().get("choice-answer");
-					sameAnswerChoices.addAll(choiceDao.findByAnswerRef(answerLink.getHref()));
+					sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByHref(answerLink.getHref()));
 				}
+				
+				// Now we have all the choices that gave the same answer
+				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.get_Links().get("choice-user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
-					if (null != otherUser) {
-						// check if potential candidate is not the signed in
-						// user
+
+						// check if potential candidate is not the signed in user
 						if (!otherUser.getRef().equals("/users/" + userRef)) {
 							boolean alreadyExists = false;
 							for (CandidateResponse responseRow : responseList) {
@@ -354,7 +321,7 @@ public class UserResource {
 								responseList.add(responseRow);
 							}
 						}
-					}
+
 
 					if (null != user.get_Links().get("connection-list")) {
 						userConnectionLinks = (List<Link>) user.get_Links().get("connection-list");
@@ -373,19 +340,18 @@ public class UserResource {
 							}
 						}
 					}
-
+					// Sort the responses
 					Collections.sort(responseList, new Comparator<CandidateResponse>() {
 						@Override
 						public int compare(CandidateResponse cr1, CandidateResponse cr2) {
-
-							return cr2.score - cr1.score;
+							return cr2.getScore() - cr1.getScore();
 						}
 					});
 
 				}
 			}
 			
-			return Response.status(200).entity(Utilities.toJson(responseList)).build();
+			return Response.status(200).entity(responseList).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
@@ -435,7 +401,7 @@ public class UserResource {
 		//get the pre existing connections
 		List<Link> userConnectionLinks = new ArrayList<Link>();
 		if (null != user.get_Links().get("connection-list"))	{
-			userConnectionLinks =  (List<Link>)user.get_Links().get("connection-list");
+			userConnectionLinks = (List<Link>)user.get_Links().get("connection-list");
 		}
 		
 		//am i already connected
@@ -632,7 +598,7 @@ public class UserResource {
 				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
 				
 				//now get list of users who made that choice
-				List<Choice> cliqueMemberChoices = choiceDao.findByAnswerText(myChoice.getAnswerText());
+				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
 				
 						
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
@@ -652,7 +618,7 @@ public class UserResource {
 				thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 				
 				//now get list of users who made that choice
-				List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
 				
 						
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
@@ -694,7 +660,7 @@ public class UserResource {
 			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 			
 			//now get list of users who made that choice
-			List<Choice> cliqueMemberChoices = choiceDao.findByAnswerRef(answerRef);
+			List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
 			List<User> cliqueMembers = new ArrayList<User>();
 					
 			for (Choice cliqueMemberChoice : cliqueMemberChoices)
@@ -719,6 +685,11 @@ public class UserResource {
 	public String getConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
 		Connection connection = connectionDao.findByRef("/users/"+userRef+"/connections/"+connectionRef);
 		return Utilities.toJson(connection);
+	}
+	
+	
+	public ConnectionDao getConnectionDao() {
+		return connectionDao;
 	}
 	
 	public SessionDao getSessionDao() {

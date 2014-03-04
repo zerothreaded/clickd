@@ -49,8 +49,7 @@ public class ChoiceResource {
 	@POST
 	@Timed
 	@Path("/{userRef}/{questionRef}/{answerRef}")
-	public String createWithAnswerRef(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerRef") String answerRef,
-			@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
+	public String createWithAnswerRef(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerRef") String answerRef ) {
 		Choice choice = new Choice();
 		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
@@ -76,8 +75,7 @@ public class ChoiceResource {
 	@POST
 	@Timed
 	@Path("/{userRef}/{questionRef}/answerText/{text}")
-	public String createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText,
-			@Context HttpServletRequest request, @Context HttpServletResponse response, @Context HttpHeaders headers) {
+	public String createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText ) {
 		Choice choice = new Choice();
 		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
 		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));

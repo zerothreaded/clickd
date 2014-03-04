@@ -1,6 +1,5 @@
 package com.clickd.server.services.users;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -9,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
@@ -186,15 +186,54 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(200, response2.getStatus());
 
 		//VERIFY response list is empty
-		List responseList = new Gson().fromJson((String)response2.getEntity(), List.class);
+		List<CandidateResponse> responseList = (List<CandidateResponse>) response2.getEntity();
 
 		Assert.assertEquals(0, responseList.size());
 	}
 	
 	@Test
-	public void getCandidatesWithEqualChoicesBetweenUsers() throws Exception {
+	public void getCandidatesWithEqualAnswerTextChoicesBetweenUsers() throws Exception {
 		
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts.json" , "choices");
+
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		Response response2 = userResource.signIn("john.dodds@clickd.org", "jj0101");
+		Assert.assertEquals(200, response2.getStatus());
+		Session session2 = (Session) response2.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session2.getIsLoggedIn(), true);
+		
+		// Verify 2 and ONLY 2 sessions created in DB
+		Assert.assertEquals(2, userResource.getSessionDao().findAll().size());
+		
+		String userRef1 = session.getUserRef();
+		userRef1 = userRef1.split("/")[2];
+		
+		String userRef2 = session.getUserRef();
+		userRef2 = userRef2.split("/")[2];
+		
+		//make the get candidates call
+		Response getCandidatesResponse = userResource.getCandidates(userRef1);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, getCandidatesResponse.getStatus());
+
+		// VERIFY response list is not empty
+		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
+		Assert.assertEquals(1,  responseList.size());
+	}
+	
+	@Test
+	public void getCandidatesWithEqualAnswerRefChoicesBetweenUsers() throws Exception {
+		
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_refs.json" , "choices");
 
 		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Assert.assertEquals(200, response.getStatus());
@@ -226,8 +265,129 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(200, getCandidatesResponse.getStatus());
 
 		//VERIFY response list is not empty
-		List responseList = new Gson().fromJson((String)getCandidatesResponse.getEntity(), List.class);
+		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
 		Assert.assertEquals(1,  responseList.size());
+	}
+	
+	@Test
+	public void getCandidatesReturnsCandidatesRankedByScore() throws Exception {
+		
+		// Setup 3 user set
+		mongoOperations.dropCollection("users");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users_3.json" , "users");
+
+		// Setup 2 questions for each 3 users - Score = 2 and 1
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts_scores.json" , "choices");
+
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		Response response2 = userResource.signIn("john.dodds@clickd.org", "jj0101");
+		Assert.assertEquals(200, response2.getStatus());
+		Session session2 = (Session) response2.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session2.getIsLoggedIn(), true);
+		
+		// Verify 2 and ONLY 2 sessions created in DB
+		Assert.assertEquals(2, userResource.getSessionDao().findAll().size());
+		
+		String userRef1 = session.getUserRef();
+		userRef1 = userRef1.split("/")[2];
+		
+		String userRef2 = session.getUserRef();
+		userRef2 = userRef2.split("/")[2];
+		
+		//make the get candidates call
+		Response getCandidatesResponse = userResource.getCandidates(userRef1);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, getCandidatesResponse.getStatus());
+
+		// VERIFY response list contains the 2 other users
+		
+		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
+		Assert.assertEquals(2,  responseList.size());
+		
+		// VERIFY the scores of the candidates as 2 then 1
+		// i.e. John score = 2
+		// and  Ed score  = 1
+		for (CandidateResponse candidateResponse : responseList) {
+			if (candidateResponse.getUser().getEmail().equals("john.dodds@clickd.org")) {
+				Assert.assertEquals(2,  candidateResponse.getScore().intValue());
+			}
+			if (candidateResponse.getUser().getEmail().equals("edward.dodds@clickd.org")) {
+				Assert.assertEquals(1,  candidateResponse.getScore().intValue());
+			}
+		}
+	}
+	
+	@Test
+	public void getCandidatesIgnoresConnections() throws Exception {
+		
+		// Setup 3 user set
+		mongoOperations.dropCollection("users");
+		mongoOperations.dropCollection("connections");
+			
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users_3.json" , "users");
+
+		// Setup 2 questions for each 3 users - Score = 2 and 1
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts_scores.json" , "choices");
+
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		Response response2 = userResource.signIn("john.dodds@clickd.org", "jj0101");
+		Assert.assertEquals(200, response2.getStatus());
+		Session session2 = (Session) response2.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session2.getIsLoggedIn(), true);
+		
+		// Verify 2 and ONLY 2 sessions created in DB
+		Assert.assertEquals(2, userResource.getSessionDao().findAll().size());
+		
+		String userRef1 = session.getUserRef();
+		userRef1 = userRef1.split("/")[2];
+		
+		String userRef2 = session2.getUserRef();
+		userRef2 = userRef2.split("/")[2];
+		
+		// Request a connection between John and Ralph
+		userResource.addConnection(userRef1, userRef2);
+		
+		// Grab the connections - there should be only 1 in the DB
+		Connection connection = userResource.getConnectionDao().findAll().get(0);
+		
+		// Accept the connection
+		userResource.acceptConnection(userRef1, connection.getRef().split("/")[4]);
+		
+		//make the get candidates call
+		Response getCandidatesResponse = userResource.getCandidates(userRef1);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, getCandidatesResponse.getStatus());
+
+		// VERIFY response list contains the 2 other users
+		
+		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
+		Assert.assertEquals(1,  responseList.size());
+		
+		// VERIFY the scores of the 1 candidate 
+		// and  Ed score  = 1
+		for (CandidateResponse candidateResponse : responseList) {
+			if (candidateResponse.getUser().getEmail().equals("edward.dodds@clickd.org")) {
+				Assert.assertEquals(1,  candidateResponse.getScore().intValue());
+			}
+		}
 	}
 	
 	

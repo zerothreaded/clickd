@@ -70,15 +70,14 @@ public class ChoiceDao {
 		this.mongoOperations = mongoOperations;
 	}
 
-	public List<Choice> findByAnswerRef(String href) {
+	public List<Choice> findChoicesWithTheSameAnswerByHref(String href) {
 		List<Choice> answerChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
 			Link choiceAnswerLink =  (Link)choice.get_Links().get("choice-answer");
-			
-			if (null == choiceAnswerLink)
-				continue;
-			
+			// WTF is this???
+//			if (null == choiceAnswerLink)
+//				continue;
 			String choiceAnswerRef =  choiceAnswerLink.getHref();
 			if (choiceAnswerRef.equals(href)) {
 				answerChoices.add(choice);
@@ -87,14 +86,12 @@ public class ChoiceDao {
 		return answerChoices;
 	}
 
-	public List<Choice> findByAnswerText(String answerText) {
+	public List<Choice> findChoicesWithTheSameAnswerByAnswerText(String answerText) {
 		List<Choice> answerChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
-		
 			if (null == choice.getAnswerText())
 				continue;
-			
 			if (choice.getAnswerText().equals(answerText)) {
 				answerChoices.add(choice);
 			}

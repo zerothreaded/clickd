@@ -14,13 +14,14 @@ import com.mongodb.DB;
 public abstract class AbstractResourceTest {
 
 	protected ApplicationContext applicationContext;
+	protected MongoOperations mongoOperations;
 	protected DB mongoDb;
 	
 	@Before
 	public void setup() {
 		applicationContext = new ClassPathXmlApplicationContext(new String[] { "spring/application.xml" });
 		MongoDbFactory mongoDbFactory = (MongoDbFactory) applicationContext.getBean("mongoDbFactory");
-		MongoOperations mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
+		mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
 		mongoDb = mongoDbFactory.getDb();
 
 		mongoOperations.dropCollection("users");
