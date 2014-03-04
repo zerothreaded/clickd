@@ -112,25 +112,25 @@ public class UserResource {
 				
 				Choice ageChoice = new Choice();
 				Question ageQuestion = questionDao.findByTags("user.bio.age");
-				ageChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
-				ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				ageChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
+				ageChoice.addLink(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
+				ageChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				ageChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
 				ageChoice.setAnswerText(dateOfBirth);
 				choiceDao.create(ageChoice);
 				
 				Choice genderChoice = new Choice();
 				Question genderQuestion = questionDao.findByTags("user.bio.gender");
-				genderChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
-				genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				genderChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
+				genderChoice.addLink(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
+				genderChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				genderChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
 				genderChoice.setAnswerText(gender);
 				choiceDao.create(genderChoice);
 				
 				Choice postcodeChoice = new Choice();
 				Question postcodeQuestion = questionDao.findByTags("user.bio.postcode");
-				postcodeChoice.get_Links().put(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
-				postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				postcodeChoice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
+				postcodeChoice.addLink(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
+				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
+				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
 				postcodeChoice.setAnswerText(postcode);
 				choiceDao.create(postcodeChoice);
 	
@@ -155,7 +155,6 @@ public class UserResource {
 				// User Authentication OK
 				// Lookup Existing Sessions for this user
 				
-				// List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
 				List<Link> sessionLinks = user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
 				
 				if (sessionLinks == null) {
@@ -172,14 +171,14 @@ public class UserResource {
 				// Previous sessions DELETED - create a new one
 				Session session = new Session(user, new Date(), new Date(), 1L, true);
 				Link sessionLink = new Link(session.getRef(), "self");
-				session.get_Links().put(Resource.KEY_LINK_SELF, sessionLink);
+				session.addLink(Resource.KEY_LINK_SELF, sessionLink);
 				sessionDao.create(session);
 
 				// Add the new session to the user
 				Link userSessionLink = new Link(user.getRef(), "self");
-				user.get_Links().put(Resource.KEY_LINK_SELF, userSessionLink);
+				user.addLink(Resource.KEY_LINK_SELF, userSessionLink);
 				sessionLinks.add(new Link(session.getRef(), "user-session"));
-				user.get_Links().put(Resource.KEY_LINK_USER_SESSION_LIST, sessionLinks);
+				user.addLinks(Resource.KEY_LINK_USER_SESSION_LIST, sessionLinks);
 				userDao.update(user);
 
 				Map<String, String> cookieData = new HashMap<String, String>();
@@ -207,7 +206,6 @@ public class UserResource {
 			if (user == null) {
 				return Response.status(300).entity(new ErrorMessage("failed", "User not found")).build();
 			}
-			// List<Link> sessionLinks = (List<Link>) user.get_Links().get(Resource.KEY_LINK_USER_SESSION_LIST);
 			List<Link> sessionLinks =user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
 			for (Link sessionLink : sessionLinks) {
 				Session session = sessionDao.findByRef(sessionLink.getHref());
@@ -237,8 +235,7 @@ public class UserResource {
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerText(choice.getAnswerText()));
 
 				// This test checks if there is a LINK to an answer i.e. The answer is a reference
-				if (null != choice.get_Links().get("choice-answer")) {
-					// Link answerLink = (Link) choice.get_Links().get("choice-answer");
+				if (null != choice.getLink("choice-answer")) {
 					Link answerLink = choice.getLink("choice-answer");
 					sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByHref(answerLink.getHref()));
 				}
@@ -246,9 +243,7 @@ public class UserResource {
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
-					// Link otherUserLink = (Link) otherUsersChoice.get_Links().get("choice-user");
 					Link otherUserLink = (Link) otherUsersChoice.getLink("choice-user");
-					
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
 
 						// check if potential candidate is not the signed in user
@@ -365,13 +360,13 @@ public class UserResource {
 		{
 			Connection connection = new Connection(user, new Date(), new Date(), "proposed");
 			Link otherUserLink = new Link("/users/" + otherUserRef, "other-user");
-			connection.get_Links().put("connection-other-user", otherUserLink);
+			connection.addLink("connection-other-user", otherUserLink);
 			connectionDao.create(connection);
 			
 			//add the connection link to the user connection list
 			Link connectionLink = new Link(connection.getRef(), "connection");
 			userConnectionLinks.add(connectionLink);
-			user.get_Links().put("connection-list", userConnectionLinks);
+			user.addLinks("connection-list", userConnectionLinks);
 			userDao.update(user);
 		}
 		else
@@ -401,13 +396,13 @@ public class UserResource {
 		{
 			Connection connection2 = new Connection(otherUser, new Date(), new Date(), "pending");
 			Link myUserLink = new Link("/users/" + userRef, "other-user");
-			connection2.get_Links().put("connection-other-user", myUserLink);
+			connection2.addLink("connection-other-user", myUserLink);
 			connectionDao.create(connection2);
 
 			//add the connection link to the user connection list
 			Link connectionLink2 = new Link(connection2.getRef(), "connection");
 			otherUserConnectionLinks.add(connectionLink2);
-			otherUser.get_Links().put("connection-list", otherUserConnectionLinks);
+			otherUser.addLinks("connection-list", otherUserConnectionLinks);
 			userDao.update(otherUser);	
 		}
 		else
@@ -499,7 +494,7 @@ public class UserResource {
 		
 		//now find the other user, find the connection to me in their connection list
 		//and set its status to active too
-		User otherUser = userDao.findByRef(((Link)c.get_Links().get("connection-other-user")).getHref());
+		User otherUser = userDao.findByRef((c.getLink("connection-other-user")).getHref());
 		List<Link> otherUserConnectionList = otherUser.getLinks("connection-list");
 		Link otherConnectionLinkToRemove = null;
 		for (Link connectionLink : otherUserConnectionList)

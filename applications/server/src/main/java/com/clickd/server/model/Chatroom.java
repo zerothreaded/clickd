@@ -20,7 +20,7 @@ public class Chatroom extends Resource {
 	public Chatroom(String chatroomType) {
 		this.chatroomType = chatroomType;
 		createRef();
-		this.get_Links().put("member-list", new ArrayList<Link>());
+		this.addLinks("member-list", new ArrayList<Link>());
 		this.get_Embedded().put("post-list", new ArrayList<Post>());
 	}
 

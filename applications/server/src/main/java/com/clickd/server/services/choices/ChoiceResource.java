@@ -51,16 +51,16 @@ public class ChoiceResource {
 	@Path("/{userRef}/{questionRef}/{answerRef}")
 	public String createWithAnswerRef(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerRef") String answerRef ) {
 		Choice choice = new Choice();
-		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
-		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
-		choice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
-		choice.get_Links().put(Resource.KEY_LINK_CHOICE_ANSWER, new Link("/answers/" + answerRef, "answer"));
+		choice.addLink(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
+		choice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
+		choice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
+		choice.addLink(Resource.KEY_LINK_CHOICE_ANSWER, new Link("/answers/" + answerRef, "answer"));
 		
 		// Ensure question has not been answered before
 		// TODO : Revisit this once we allow editing of previous answers
 		List<Choice> usersChoices = choiceDao.findByUserRef(userRef);
 		for (Choice existingChoice : usersChoices) {
-			Link questionLink = (Link) existingChoice.get_Links().get(Resource.KEY_LINK_CHOICE_QUESTION);
+			Link questionLink = existingChoice.getLink(Resource.KEY_LINK_CHOICE_QUESTION);
 			if (questionLink.getHref().equals("/questions/" + questionRef)) {
 				// Already answered so don't save it
 				choice = existingChoice;
@@ -77,9 +77,9 @@ public class ChoiceResource {
 	@Path("/{userRef}/{questionRef}/answerText/{text}")
 	public String createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText ) {
 		Choice choice = new Choice();
-		choice.get_Links().put(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
-		choice.get_Links().put(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
-		choice.get_Links().put(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
+		choice.addLink(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
+		choice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
+		choice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
 		choice.setAnswerText(answerText);
 		choiceDao.create(choice);
 		String result = Utilities.toJson(choice);

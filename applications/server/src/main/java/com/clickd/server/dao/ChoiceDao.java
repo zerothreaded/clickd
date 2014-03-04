@@ -54,7 +54,7 @@ public class ChoiceDao {
 		List<Choice> usersChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
-			String choiceUserRef = ((Link) choice.get_Links().get(Resource.KEY_LINK_CHOICE_USER)).getHref();
+			String choiceUserRef = choice.getLink(Resource.KEY_LINK_CHOICE_USER).getHref();
 			if (choiceUserRef.equals("/users/" + userRef)) {
 				usersChoices.add(choice);
 			}
@@ -74,10 +74,7 @@ public class ChoiceDao {
 		List<Choice> answerChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
-			Link choiceAnswerLink =  (Link)choice.get_Links().get("choice-answer");
-			// WTF is this???
-//			if (null == choiceAnswerLink)
-//				continue;
+			Link choiceAnswerLink = choice.getLink("choice-answer");
 			String choiceAnswerRef =  choiceAnswerLink.getHref();
 			if (choiceAnswerRef.equals(href)) {
 				answerChoices.add(choice);
