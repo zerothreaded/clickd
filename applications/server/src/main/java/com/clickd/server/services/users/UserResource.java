@@ -426,7 +426,7 @@ public class UserResource {
 			Clique thisClique = null;
 			List<User> cliqueMembers = new ArrayList<User>();
 			
-			if (null == myChoice.getLinks("choice-answer"))
+			if (null == myChoice.getLink("choice-answer"))
 			{
 				
 				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
