@@ -1,5 +1,8 @@
 package com.clickd.server.services.users;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
@@ -10,6 +13,7 @@ import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.services.AbstractResourceTest;
+import com.clickd.server.utilities.Utilities;
 import com.google.gson.Gson;
 
 public class UserResourceTest extends AbstractResourceTest {
@@ -32,7 +36,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals("/users/1", user.getRef());
 		
 		// Verify 1 and ONLY 1 USER in DB
-		Assert.assertEquals(1, userResource.getUserDao().findAll().size());
+		Assert.assertEquals(2, userResource.getUserDao().findAll().size());
 
 	}
 	
@@ -140,7 +144,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals("test_ralph.masilamani@clickd.org", user.getEmail());
 		
 		// Verify 1 and ONLY 1 USER created in DB
-		Assert.assertEquals(2, userResource.getUserDao().findAll().size());
+		Assert.assertEquals(3, userResource.getUserDao().findAll().size());
 	}
 	
 	@Test
@@ -158,6 +162,74 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(errorMessage.getStatus(), "failed");
 		Assert.assertEquals(errorMessage.getMessage(), "Missing Registration Details");
 	}
+	
+	
+	@Test
+	public void getCandidatesWithNoChoices() throws Exception {
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+		
+		// Verify 1 and ONLY 1 session created in DB
+		Assert.assertEquals(1, userResource.getSessionDao().findAll().size());
+		
+		String userRef = session.getUserRef();
+		userRef = userRef.split("/")[2];
+		
+		//make the get candidates call
+		Response response2 = userResource.getCandidates(userRef);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, response2.getStatus());
+
+		//VERIFY response list is empty
+		List responseList = new Gson().fromJson((String)response2.getEntity(), List.class);
+
+		Assert.assertEquals(0, responseList.size());
+	}
+	
+	@Test
+	public void getCandidatesWithEqualChoicesBetweenUsers() throws Exception {
+		
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
+
+		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
+		Assert.assertEquals(200, response.getStatus());
+		Session session = (Session) response.getEntity();
+		
+		Response response2 = userResource.signIn("john.dodds@clickd.org", "jj0101");
+		Assert.assertEquals(200, response2.getStatus());
+		Session session2 = (Session) response2.getEntity();
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session.getIsLoggedIn(), true);
+
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(session2.getIsLoggedIn(), true);
+		
+		// Verify 2 and ONLY 2 sessions created in DB
+		Assert.assertEquals(2, userResource.getSessionDao().findAll().size());
+		
+		String userRef1 = session.getUserRef();
+		userRef1 = userRef1.split("/")[2];
+		
+		String userRef2 = session.getUserRef();
+		userRef2 = userRef2.split("/")[2];
+		
+		//make the get candidates call
+		Response getCandidatesResponse = userResource.getCandidates(userRef1);
+		
+		// TODO: Verify REMAINING expected session state
+		Assert.assertEquals(200, getCandidatesResponse.getStatus());
+
+		//VERIFY response list is not empty
+		List responseList = new Gson().fromJson((String)getCandidatesResponse.getEntity(), List.class);
+		Assert.assertEquals(1,  responseList.size());
+	}
+	
 	
 	@Test
 	public void registerFailsWithEmailNotAvailable() throws Exception {
