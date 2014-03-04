@@ -131,7 +131,7 @@ public class ConnectionDao {
 		List<Connection> connections = (List<Connection>)mongoOperations.findAll(Connection.class, collectionName);
 		for (Connection connection : connections)
 		{
-			List<Link> links = (List<Link>)connection.get_Links();
+			List<Link> links = connection.getLinks("connection-user");
 			
 			boolean firstMatches = false;
 			for (Link link : links)
