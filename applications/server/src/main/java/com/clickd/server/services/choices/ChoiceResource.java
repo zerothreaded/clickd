@@ -60,7 +60,7 @@ public class ChoiceResource {
 		// TODO : Revisit this once we allow editing of previous answers
 		List<Choice> usersChoices = choiceDao.findByUserRef(userRef);
 		for (Choice existingChoice : usersChoices) {
-			Link questionLink = existingChoice.getLink(Resource.KEY_LINK_CHOICE_QUESTION);
+			Link questionLink = existingChoice.getLinkByName(Resource.KEY_LINK_CHOICE_QUESTION);
 			if (questionLink.getHref().equals("/questions/" + questionRef)) {
 				// Already answered so don't save it
 				choice = existingChoice;

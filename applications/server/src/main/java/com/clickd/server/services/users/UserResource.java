@@ -154,7 +154,7 @@ public class UserResource {
 				// User Authentication OK
 				// Lookup Existing Sessions for this user
 				
-				List<Link> sessionLinks = user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
+				List<Link> sessionLinks = user.getLinkLists(Resource.KEY_LINK_USER_SESSION_LIST);
 				
 				if (sessionLinks == null) {
 					sessionLinks = new ArrayList<Link>();
@@ -177,7 +177,7 @@ public class UserResource {
 				Link userSessionLink = new Link(user.getRef(), "self");
 				user.addLink(Resource.KEY_LINK_SELF, userSessionLink);
 				sessionLinks.add(new Link(session.getRef(), "user-session"));
-				user.addLinks(Resource.KEY_LINK_USER_SESSION_LIST, sessionLinks);
+				user.addLinkLists(Resource.KEY_LINK_USER_SESSION_LIST, sessionLinks);
 				userDao.update(user);
 
 				Map<String, String> cookieData = new HashMap<String, String>();
@@ -204,7 +204,7 @@ public class UserResource {
 			if (user == null) {
 				return Response.status(300).entity(new ErrorMessage("failed", "User not found")).build();
 			}
-			List<Link> sessionLinks =user.getLinks(Resource.KEY_LINK_USER_SESSION_LIST);
+			List<Link> sessionLinks =user.getLinkLists(Resource.KEY_LINK_USER_SESSION_LIST);
 			for (Link sessionLink : sessionLinks) {
 				Session session = sessionDao.findByRef(sessionLink.getHref());
 				sessionDao.delete(session);
@@ -229,15 +229,15 @@ public class UserResource {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerText(choice.getAnswerText()));
 				// This test checks if there is a LINK to an answer i.e. The answer is a reference
-				if (null != choice.getLink("choice-answer")) {
-					Link answerLink = choice.getLink("choice-answer");
+				if (null != choice.getLinkByName("choice-answer")) {
+					Link answerLink = choice.getLinkByName("choice-answer");
 					sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByHref(answerLink.getHref()));
 				}
 				ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
-					Link otherUserLink = (Link) otherUsersChoice.getLink("choice-user");
+					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("choice-user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
 						// check if potential candidate is not the signed in user
 						if (!otherUser.getRef().equals("/users/" + userRef))
@@ -255,7 +255,7 @@ public class UserResource {
 							boolean isACandidate = false;
 							for (Connection connection : myConnections)
 							{
-									for (Link link : connection.getLinks("connection-user"))
+									for (Link link : connection.getLinkLists("connection-user"))
 									{
 										if (link.getHref().equals(otherUser.getRef()))
 										{
@@ -297,8 +297,8 @@ public class UserResource {
 		{
 			for (Choice choice2 : otherUserChoices)
 			{
-				Link answerLink = choice.getLink("choice-answer");
-				Link answerLink2 = choice2.getLink("choice-answer");
+				Link answerLink = choice.getLinkByName("choice-answer");
+				Link answerLink2 = choice2.getLinkByName("choice-answer");
 				if (null == answerLink || null == answerLink2)
 					continue;
 				if (answerLink.getHref().equals(answerLink2.getHref()))
@@ -327,7 +327,7 @@ public class UserResource {
 			ArrayList<Link> userLinks = new ArrayList<Link>();
 			userLinks.add(myUserLink);
 			userLinks.add(otherUserLink);
-			connection.addLinks("connection-user", userLinks);
+			connection.addLinkLists("connection-user", userLinks);
 			connectionDao.create(connection);
 			return Response.status(200).entity(Utilities.toJsonNoPretty(connection)).build();
 		} else {
@@ -396,20 +396,20 @@ public class UserResource {
 		{
 			Clique thisClique = null;
 			List<User> cliqueMembers = new ArrayList<User>();
-			if (null == myChoice.getLink("choice-answer"))
+			if (null == myChoice.getLinkByName("choice-answer"))
 			{
 				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
 				//now get list of users who made that choice
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
-					Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
+					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
 					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
 				}
 			} else {
-				String answerRef = myChoice.getLink("choice-answer").getHref();
+				String answerRef = myChoice.getLinkByName("choice-answer").getHref();
 				Answer answer = answerDao.findByRef(answerRef);
 				thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 				
@@ -417,7 +417,7 @@ public class UserResource {
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
-					Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
+					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
 					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
@@ -440,7 +440,7 @@ public class UserResource {
 		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 		for (Choice myChoice : myChoices)
 		{
-			String answerRef = myChoice.getLink("choice-answer").getHref();
+			String answerRef = myChoice.getLinkByName("choice-answer").getHref();
 			Answer answer = answerDao.findByRef(answerRef);
 			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 			
@@ -449,7 +449,7 @@ public class UserResource {
 			List<User> cliqueMembers = new ArrayList<User>();
 			for (Choice cliqueMemberChoice : cliqueMemberChoices)
 			{
-				Link cliqueMemberLink = cliqueMemberChoice.getLink("choice-user");
+				Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
 				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 				if (!cliqueMember.getRef().equals("/users/" + userRef))
 					cliqueMembers.add(cliqueMember);

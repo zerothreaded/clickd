@@ -11,14 +11,16 @@ public abstract class Resource {
 	public static final String KEY_LINK_CHOICE_QUESTION = "choice-question";
 	public static final String KEY_LINK_CHOICE_ANSWER = "choice-answer";
 
-	private Map<String, Object> _links = new HashMap<String, Object>();
+	private Map<String, Link> _links = new HashMap<String, Link>();
+	private Map<String, List<Link>> _linkLists = new HashMap<String, List<Link>>();
+	
 	private Map<String, Object> _embedded = new HashMap<String, Object>();
 
-	public Map<String, Object> get_Links() {
+	public Map<String, Link> get_Links() {
 		return _links;
 	}
 
-	public void set_Links(Map<String, Object> links) {
+	public void set_Links(Map<String, Link> links) {
 		this._links = links;
 	}
 
@@ -29,22 +31,25 @@ public abstract class Resource {
 	public void set_Embedded(Map<String, Object> embedded) {
 		this._embedded = embedded;
 	}
+	
 
-	public Link getLink(String name) {
+	
+
+	public Link getLinkByName(String name) {
 		return (Link)_links.get(name);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Link> getLinks(String name) {
-		return (List<Link>)_links.get(name);
-	}
-	
+
 	public void addLink(String name, Link link) {
 		_links.put(name, link);
 	}
+
 	
-	public void addLinks(String name, List<Link> link) {
-		_links.put(name, link);
+	public List<Link> getLinkLists(String name) {
+		return _linkLists.get(name);
+	}
+	
+	public void addLinkLists(String name, List<Link> link) {
+		_linkLists.put(name, link);
 	}
 	
 }

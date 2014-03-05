@@ -54,7 +54,7 @@ public class ChatroomResource {
 	{
 		Chatroom chatroom = chatroomDao.findByRef("/chatrooms/"+chatroomRef);
 		Link memberLink = new Link("/users/"+userRef, "chatroom-member");
-		chatroom.getLinks("member-list").add(memberLink);
+		chatroom.getLinkLists("member-list").add(memberLink);
 		chatroomDao.update(chatroom);
 		return Utilities.toJson(chatroom);
 	}
