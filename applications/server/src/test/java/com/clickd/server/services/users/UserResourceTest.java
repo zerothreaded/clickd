@@ -404,7 +404,30 @@ public class UserResourceTest extends AbstractResourceTest {
 		
 		String connectionJson = (String)response.getEntity();
 		Connection connection = new Gson().fromJson(connectionJson, Connection.class);
-		Assert.assertNotNull(connectionJson);
+		Assert.assertNotNull(connection);
+		
+		Assert.assertEquals("pending", connection.getStatus());
+	}
+	
+	
+	@Test
+	public void addConnectionRequestFailsIfConnectionExists() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+		
+		Response secondRequestResponse = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(300, secondRequestResponse.getStatus());
+	
+		String connectionJson = (String)response.getEntity();
+		Connection connection = new Gson().fromJson(connectionJson, Connection.class);
+		Assert.assertNotNull(connection);
+		
+		Assert.assertEquals("pending", connection.getStatus());
 	}
 	
 	@Test

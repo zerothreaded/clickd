@@ -332,7 +332,7 @@ public class UserResource {
 	public Response addConnectionRequest(@PathParam("fromUserRef") String fromUserRef, @PathParam("toUserRef") String toUserRef)
 	{
 		// am i already connected
-		Connection preExisting = connectionDao.findByBothUserRefsIgnoreRole(fromUserRef, toUserRef);
+		Connection preExisting = connectionDao.findByBothUserRefsIgnoreRole("/users/" + fromUserRef, "/users/" + toUserRef);
 		
 		if (preExisting == null)
 		{

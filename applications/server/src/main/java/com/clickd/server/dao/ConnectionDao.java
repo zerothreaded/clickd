@@ -132,14 +132,13 @@ public class ConnectionDao {
 		for (Connection connection : connections)
 		{
 			List<Link> links = connection.getLinkLists("connection-user");
-			
 			boolean firstMatches = false;
 			for (Link link : links)
 			{
-				if (link.getRel() == "user-from" || link.getRel() == "user-to")
+				if (link.getRel().equals("from-user") || link.getRel().equals("to-user") )
 				{
 					String userHref = link.getHref();
-					if (userHref == fromUserRef)
+					if (userHref.equals(fromUserRef) || userHref.equals(toUserRef) )
 					{
 						if (firstMatches)
 							return connection;
@@ -149,7 +148,6 @@ public class ConnectionDao {
 				}
 			}
 		}
-		
 		return null;
 	}
 }
