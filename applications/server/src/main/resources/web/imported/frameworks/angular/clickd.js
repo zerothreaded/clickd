@@ -78,9 +78,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		    	if (typeof(data) != 'undefined' && data != null) {
 			        data.forEach(function(connection) {
 			        	if (typeof(connection) != 'undefined' &&  connection != null) {
-					    	var otherUserRef = connection["_links"]["connection-user"][0]["href"];
+			        		console.log(connection);
+					    	var otherUserRef = connection["_linkLists"]["connection-user"][0]["href"];
 					    	if (otherUserRef == $scope.model.currentUser.user.ref)
-					    		otherUserRef = connection["_links"]["connection-user"][1]["href"];
+					    		otherUserRef = connection["_linkLists"]["connection-user"][1]["href"];
 					    	
 					    	// Get the USER data for this connection
 							$http({ url : otherUserRef, method : "GET" })
@@ -345,7 +346,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onAcceptConnection = function(connection)
 	{
-		var acceptConnectionUrl = connection.ref+"/accept";
+		// 	@Path("/{userRef}/connections/{connectionRef}/accept")
+		var acceptConnectionUrl = "/users/" + $scope.model.currentUser.userRef + connection.ref + "/accept";
 		$http({ url : acceptConnectionUrl, method : "GET" })
 		.success(function(connectionData) {
 			$scope.model.selectedUser.connectionData = connectionData;
@@ -356,7 +358,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onRejectConnection = function(connection)
 	{
-		var rejectConnectionUrl = connection.ref+"/reject";
+		// 	@Path("/{userRef}/connections/{connectionRef}/accept")
+		var rejectConnectionUrl = "/users/" + $scope.model.currentUser.userRef + connection.ref + "/reject";
 		$http({ url : rejectConnectionUrl, method : "GET" })
 		.success(function(connectionData) {
 			$scope.model.selectedUser.connectionData = connectionData;

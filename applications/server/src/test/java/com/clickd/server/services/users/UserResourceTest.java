@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.clickd.server.dao.ConnectionDao;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Session;
@@ -429,6 +430,84 @@ public class UserResourceTest extends AbstractResourceTest {
 		
 		Assert.assertEquals("pending", connection.getStatus());
 	}
+	
+	@Test
+	public void getConnectionsSucceeds() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+
+		// Check if there is 1 connection
+		Response responseConnections = userResource.getConnections(userRefJohn);
+		Assert.assertEquals(200, response.getStatus());
+		
+		String json = ((String)responseConnections.getEntity());
+		List<Connection> connections = ((List<Connection>)new Gson().fromJson(json, List.class));
+		Assert.assertEquals(1, connections.size());
+
+	}
+	
+	@Test
+	public void getConnectionsFails() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+
+		// Check if there is a failure on NULL
+		userResource.setConnectionDao(null);
+		Response responseConnections = userResource.getConnections(null);
+		Assert.assertEquals(300, responseConnections.getStatus());
+
+	}
+	
+	@Test
+	public void rejectConnectionSucceeds() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+
+		String connectionJson = (String)response.getEntity();
+		Connection connection = new Gson().fromJson(connectionJson, Connection.class);
+		Assert.assertNotNull(connection);
+		Assert.assertEquals("pending", connection.getStatus());
+
+		Response rejectResponse = userResource.rejectConnection(userRefJohn, connection.getRef());
+		Assert.assertEquals(200, rejectResponse.getStatus());
+		// TODO: VERIFY connection NOT IN DB
+	}
+	
+	@Test
+	public void rejectConnectionFails() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Request a connection between Ralph and John
+		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
+		Assert.assertEquals(200, response.getStatus());
+
+		String connectionJson = (String)response.getEntity();
+		Connection connection = new Gson().fromJson(connectionJson, Connection.class);
+		Assert.assertNotNull(connection);
+		Assert.assertEquals("pending", connection.getStatus());
+
+		userResource.setConnectionDao(null);
+		Response rejectResponse = userResource.rejectConnection(null, null);
+		Assert.assertEquals(300, rejectResponse.getStatus());
+	}
+	
 	
 	@Test
 	public void registerFailsWithEmailNotAvailable() throws Exception {

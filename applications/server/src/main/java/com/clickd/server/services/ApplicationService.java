@@ -106,6 +106,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		chatroomResource.setChatroomDao(chatroomDao);
 		environment.addResource(chatroomResource);
 		
+		
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
 		Filter filter = new TokenCheckFilter();
 		environment.addFilter(filter, "*");

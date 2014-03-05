@@ -277,9 +277,10 @@ $(function() {
 							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
 							{{model.selectedUser.firstName}}<br/>
 							{{model.selectedUser.connectionData.status}}
-							<br/><br/>
-							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
-							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
+							<br/><br/><br/><br/>
+							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status != 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
+							<br/>
+							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status != 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
 							</div>
 						</div>
 						</div>
