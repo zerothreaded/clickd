@@ -70,7 +70,7 @@ public class ConnectionDao {
 		
 		for (Connection connection : connections)
 		{
-			List<Link> links = connection.getLinks("connection-user");
+			List<Link> links = connection.getLinkLists("connection-user");
 			
 			for (Link link : links)
 			{
@@ -131,7 +131,7 @@ public class ConnectionDao {
 		List<Connection> connections = (List<Connection>)mongoOperations.findAll(Connection.class, collectionName);
 		for (Connection connection : connections)
 		{
-			List<Link> links = connection.getLinks("connection-user");
+			List<Link> links = connection.getLinkLists("connection-user");
 			
 			boolean firstMatches = false;
 			for (Link link : links)

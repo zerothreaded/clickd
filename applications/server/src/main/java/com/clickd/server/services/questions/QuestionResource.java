@@ -55,7 +55,7 @@ public class QuestionResource {
 				System.out.println("Evaluating question " + questionRef);
 				boolean hasAnswered = false;
 				for (Choice choice : userChoices) {
-					String choiceQuestionRef = choice.getLink(Resource.KEY_LINK_CHOICE_QUESTION).getHref();
+					String choiceQuestionRef = choice.getLinkByName(Resource.KEY_LINK_CHOICE_QUESTION).getHref();
 					if (choiceQuestionRef.equals(questionRef)) {
 						// User has answered this one so flag it
 						hasAnswered = true;
@@ -77,7 +77,7 @@ public class QuestionResource {
 			int index = 0;
 			Question question = unansweredQuestions.get(index);
 			ArrayList<Answer> answerList = new ArrayList<Answer>();
-			List<Link> answerLinks = question.getLinks("question-answer-list");
+			List<Link> answerLinks = question.getLinkLists("question-answer-list");
 			// DUDE
 			if (answerLinks != null) {
 				for (Link answerLink : answerLinks) {
