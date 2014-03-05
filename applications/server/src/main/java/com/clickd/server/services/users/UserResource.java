@@ -218,6 +218,14 @@ public class UserResource {
 	}
 
 	@GET
+	@Path("/{userRef}/sessions/{sessionRef}")
+	@Timed
+	public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
+		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
+		return Utilities.toJson(session);
+	}
+	
+	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
 	public Response getCandidates(@PathParam("userRef") String userRef) {
@@ -239,6 +247,10 @@ public class UserResource {
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.getLink("choice-user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
+					
+					if (otherUser == null)
+						continue;
+					
 						// check if potential candidate is not the signed in user
 						if (!otherUser.getRef().equals("/users/" + userRef))
 						{
@@ -252,32 +264,35 @@ public class UserResource {
 									break;
 								}
 							}
-							boolean isACandidate = false;
+							boolean isAConnection = false;
 							for (Connection connection : myConnections)
 							{
 									for (Link link : connection.getLinks("connection-user"))
 									{
 										if (link.getHref().equals(otherUser.getRef()))
 										{
-											isACandidate = true;
+											isAConnection = true;
 										}
 									}
 							}
-							if (!alreadyExists && !isACandidate) {
+							if (!alreadyExists && !isAConnection) {
 								CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
 								responseList.add(responseRow);
 							}
 						}
 				}
-				// Sort the responses
-				// TODO: Sort this shit
-				Collections.sort(responseList, new Comparator<CandidateResponse>() {
-					@Override
-					public int compare(CandidateResponse cr1, CandidateResponse cr2) {
-						return cr2.getScore() - cr1.getScore();
-					}
-				});
+
+			
 			}
+			
+			// Sort the responses
+			Collections.sort(responseList, new Comparator<CandidateResponse>() {
+				@Override
+				public int compare(CandidateResponse cr1, CandidateResponse cr2) {
+					return cr2.getScore() - cr1.getScore();
+				}
+			});
+			
 			return Response.status(200).entity(responseList).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();

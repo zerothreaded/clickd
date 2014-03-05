@@ -75,9 +75,13 @@ public class ChoiceDao {
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {
 			Link choiceAnswerLink = choice.getLink("choice-answer");
-			String choiceAnswerRef =  choiceAnswerLink.getHref();
-			if (choiceAnswerRef.equals(href)) {
-				answerChoices.add(choice);
+			
+			if (choiceAnswerLink != null){
+				
+				String choiceAnswerRef =  choiceAnswerLink.getHref();
+				if (choiceAnswerRef.equals(href)) {
+					answerChoices.add(choice);
+				}
 			}
 		}
 		return answerChoices;

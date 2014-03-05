@@ -78,7 +78,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		    	if (typeof(data) != 'undefined' && data != null) {
 			        data.forEach(function(connection) {
 			        	if (typeof(connection) != 'undefined' &&  connection != null) {
-					    	var userRef = connection["_links"]["connection-other-user"]["href"];
+					    	var links = connection["_links"]["connection-user"][0]["href"];
+					    	if (userRef == $scope.model.currentUser.ref)
+					    		userRef = connection["_links"]["connection-user"][1]["href"];
 					    	// Get the USER data for this connection
 							$http({ url : userRef, method : "GET" })
 								.success(function(user) {
@@ -143,7 +145,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	// GET USER + CCC From Server
 	$scope.loadUserByRef = function(theUserRef)
-	{
+	{	
 		
 		
 		var userResource = $resource("/users/:userRef");
