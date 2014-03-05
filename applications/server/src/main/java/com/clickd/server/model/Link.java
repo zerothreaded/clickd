@@ -6,7 +6,6 @@ public class Link {
 	protected String rel;
 
 	public Link(String href, String rel) {
-		super();
 		this.href = href;
 		this.rel = rel;
 	}

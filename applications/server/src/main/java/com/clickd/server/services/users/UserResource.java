@@ -329,7 +329,7 @@ public class UserResource {
 			userLinks.add(otherUserLink);
 			connection.addLinks("connection-user", userLinks);
 			connectionDao.create(connection);
-			return Response.status(200).entity(Utilities.toJson(connection)).build();
+			return Response.status(200).entity(Utilities.toJsonNoPretty(connection)).build();
 		} else {
 			return Response.status(300).entity(new ErrorMessage("failed", "User already connected")).build();
 		}

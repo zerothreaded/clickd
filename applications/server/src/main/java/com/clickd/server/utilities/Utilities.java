@@ -32,7 +32,7 @@ public class Utilities {
 	}
 
 	public static String toJsonNoPretty(Object object) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().create();
 		String json = gson.toJson(object);
 		return json;
 	}

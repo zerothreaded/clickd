@@ -392,8 +392,8 @@ public class UserResourceTest extends AbstractResourceTest {
 		}
 	}
 	
-	//@Test
-	public void addConnectionSucceeds() throws Exception {
+	@Test
+	public void addConnectionRequestSucceeds() throws Exception {
 		// Setup test data
 		String userRefRalph = "1";
 		String userRefJohn = "2";
@@ -402,8 +402,9 @@ public class UserResourceTest extends AbstractResourceTest {
 		Response response = userResource.addConnectionRequest(userRefJohn, userRefRalph);
 		Assert.assertEquals(200, response.getStatus());
 		
-		Connection connection = (Connection)response.getEntity();
-		Assert.assertNotNull(connection);
+		String connectionJson = (String)response.getEntity();
+		Connection connection = new Gson().fromJson(connectionJson, Connection.class);
+		Assert.assertNotNull(connectionJson);
 	}
 	
 	@Test
