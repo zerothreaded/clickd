@@ -143,7 +143,6 @@ public class UserResource {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@POST
 	@Timed
 	@Path("/signin")
@@ -195,7 +194,6 @@ public class UserResource {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@PUT
 	@Path("/{userRef}/signout")
 	@Timed
@@ -219,7 +217,6 @@ public class UserResource {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
