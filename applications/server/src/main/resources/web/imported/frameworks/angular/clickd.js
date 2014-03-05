@@ -78,11 +78,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		    	if (typeof(data) != 'undefined' && data != null) {
 			        data.forEach(function(connection) {
 			        	if (typeof(connection) != 'undefined' &&  connection != null) {
-					    	var links = connection["_links"]["connection-user"][0]["href"];
-					    	if (userRef == $scope.model.currentUser.ref)
-					    		userRef = connection["_links"]["connection-user"][1]["href"];
+					    	var otherUserRef = connection["_links"]["connection-user"][0]["href"];
+					    	if (otherUserRef == $scope.model.currentUser.user.ref)
+					    		otherUserRef = connection["_links"]["connection-user"][1]["href"];
+					    	
 					    	// Get the USER data for this connection
-							$http({ url : userRef, method : "GET" })
+							$http({ url : otherUserRef, method : "GET" })
 								.success(function(user) {
 									user.connectionData = connection;
 									$scope.model.currentUser.connections = $scope.model.currentUser.connections.concat(user);
