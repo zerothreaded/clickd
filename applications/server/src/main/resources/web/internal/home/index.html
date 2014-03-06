@@ -267,8 +267,8 @@ $(function() {
 							</div>
 							<div class="col-md-6">
 							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
-							{{model.selectedUser.firstName}}
-							<button class="btn btn-large" href="#" ng-click="onAddConnection({{model.selectedUser}})">Add connection</button>
+							{{model.selectedUser.firstName}} <div ng-if="model.selectedUserPresentation.connectionRequestSent == true"> was sent your connection request.</div>
+							<button ng-if="model.selectedUserPresentation.connectionRequestSent == false" class="btn btn-large" href="#" ng-click="onAddConnection({{model.selectedUser}})">Add connection</button>
 							
 							</div>
 						</div>

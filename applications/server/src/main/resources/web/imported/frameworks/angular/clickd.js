@@ -319,6 +319,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		
 		$scope.model.currentSelection = 'candidates.user';
 		$scope.model.selectedUser = candidate;
+		$scope.model.selectedUserPresentation.connectionRequestSent = false;
 	}
 	
 	$scope.onAddConnection = function(connection) { 
@@ -330,7 +331,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		.success(function(data) { 
 			$scope.updateCCC();
 		});
-	
+		$scope.model.selectedUserPresentation.connectionRequestSent = true;
 	}
 
 	
@@ -378,6 +379,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		// 	@Path("/{userRef}/connections/{connectionRef}/accept")
 		var rejectConnectionUrl = "/users/" + $scope.model.currentUser.userRef + connection.ref + "/reject";
+		
+		console.log("getting reject result");
 		$http({ url : rejectConnectionUrl, method : "GET" })
 		.success(function(connectionData) {
 			$scope.model.selectedUser.connectionData = connectionData;
