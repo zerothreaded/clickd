@@ -409,9 +409,12 @@ public class UserResource {
 			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 			for (Choice myChoice : myChoices)
 			{
-				String answerRef = myChoice.getLinkByName("choice-answer").getHref();
-				
 				// TODO: CHANGE THIS SHIT
+				Link answerRefLink = myChoice.getLinkByName("choice-answer");
+				String answerRef = "";
+				if (answerRefLink != null) {
+					answerRef = myChoice.getLinkByName("choice-answer").getHref();
+				}
 				// So BIO questions have no ANSWER LINK - that's just WRONG!
 				String name = "";
 				Answer answer = answerDao.findByRef(answerRef);
