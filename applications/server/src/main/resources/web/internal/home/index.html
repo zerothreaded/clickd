@@ -274,19 +274,28 @@ $(function() {
 						</div>
 						</div>
 						
+						<div ng-if="model.currentSelection == 'connections'" class="panel candidates-panel">
+								<div class="member-md-panel" ng-repeat="connection in model.currentUser.connections" ng-click="onClickConnection({{connection}})" href="#"  >
+									&nbsp;<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{connection.firstName}}.jpg">
+									{{connection.firstName}} {{connection.lastName}}</a>
+								</div>	
+						</div>
+						
 						<!-- VIEW CONNECTION (X) -->
 						<div ng-if="model.currentSelection == 'connections.user'" class="panel candidates-panel">
 						<div class="row">
 							<div class="col-md-6">
 							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
-							{{model.selectedUser.firstName}}<br/>
+							{{model.selectedUser.firstName}}<span ng-if="model.selectedUserPresentation.hasBeenRejectedByUser==true">'s connection request was rejected.</span><br/>
 							{{model.selectedUser.connectionData.status}}
 							<br/><br/><br/><br/>
 							<div ng-if="model.selectedUserPresentation.isConnectionRecipient == true">
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
 							<br/>
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
-
+							<span ng-repeat="choice in model.selectedUserComparison" >
+										We both like {{choice}}<br/>
+								</span>
 							</div>
 							</div>
 						</div>

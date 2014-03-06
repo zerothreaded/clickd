@@ -341,7 +341,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		console.log(connection);
 		
 		$scope.model.selectedUser = connection;
-		
+		$scope.model.selectedUserPresentation.hasBeenRejectedByUser = false;
 		
 		var connectionUserList = connection.connectionData["_linkLists"]["connection-user"];
 		
@@ -384,7 +384,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$http({ url : rejectConnectionUrl, method : "GET" })
 		.success(function(connectionData) {
 			$scope.model.selectedUser.connectionData = connectionData;
-			console.log(connectionData);
+			$scope.model.selectedUserPresentation.hasBeenRejectedByUser = true;
 			$scope.updateCCC();
 		} );
 	}
