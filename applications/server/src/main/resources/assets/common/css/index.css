@@ -437,15 +437,18 @@ a.list-group-item:hover, a.list-group-item:focus
 		background-color:#596B7C;
 }
 
-.list-group-item, a.list-group-item
+list-group-item, a.list-group-item
 {
 	color:#fff;
 }
 
-.list-group
+div.list-group
 {
-	overflow-y:scroll;
-	max-height:200px;
+	/*
+	// overflow-y:scroll;
+		*/
+
+	max-height:300px;
 }
 
 .login-error
