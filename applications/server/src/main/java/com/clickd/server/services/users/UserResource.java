@@ -402,34 +402,21 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/cliques")
 	@Timed
-	public String getCliques(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
-		User user = userDao.findByRef("/users/" + userRef);
-		
-		List<Clique> myCliques = new ArrayList<Clique>();	
-		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-		for (Choice myChoice : myChoices)
-		{
-			Clique thisClique = null;
-			List<User> cliqueMembers = new ArrayList<User>();
-			if (null == myChoice.getLinkByName("choice-answer"))
+	public Response getCliquesForUser(@PathParam("userRef") String userRef) {
+	
+		try {
+			User user = userDao.findByRef("/users/" + userRef);
+			List<Clique> myCliques = new ArrayList<Clique>();	
+			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+			for (Choice myChoice : myChoices)
 			{
-				thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
-				//now get list of users who made that choice
-				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
-				for (Choice cliqueMemberChoice : cliqueMemberChoices)
-				{
-					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
-					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
-					if (!cliqueMember.getRef().equals("/users/" + userRef))
-						cliqueMembers.add(cliqueMember);
-				}
-			} else {
 				String answerRef = myChoice.getLinkByName("choice-answer").getHref();
 				Answer answer = answerDao.findByRef(answerRef);
-				thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
 				
 				//now get list of users who made that choice
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
+				List<User> cliqueMembers = new ArrayList<User>();
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
 					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
@@ -437,43 +424,15 @@ public class UserResource {
 					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
 				}
+				thisClique.get_Embedded().put("clique-members", cliqueMembers);
+				thisClique.get_Embedded().put("clique-choice", myChoice);
+				myCliques.add(thisClique);
 			}
-			thisClique.get_Embedded().put("clique-members", cliqueMembers);
-			thisClique.get_Embedded().put("clique-choice", myChoice);
-			myCliques.add(thisClique);
+			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
-		return Utilities.toJson(myCliques);
-	}
-	
-	@GET
-	@Path("/{userRef}/cliques/{cliqueRef}")
-	@Timed
-	public String getClique(@PathParam("userRef") String userRef) {
-		User user = userDao.findByRef("/users/" + userRef);
-		
-		List<Clique> myCliques = new ArrayList<Clique>();	
-		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-		for (Choice myChoice : myChoices)
-		{
-			String answerRef = myChoice.getLinkByName("choice-answer").getHref();
-			Answer answer = answerDao.findByRef(answerRef);
-			Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
-			
-			//now get list of users who made that choice
-			List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
-			List<User> cliqueMembers = new ArrayList<User>();
-			for (Choice cliqueMemberChoice : cliqueMemberChoices)
-			{
-				Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
-				User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
-				if (!cliqueMember.getRef().equals("/users/" + userRef))
-					cliqueMembers.add(cliqueMember);
-			}
-			thisClique.get_Embedded().put("clique-members", cliqueMembers);
-			thisClique.get_Embedded().put("clique-choice", myChoice);
-			myCliques.add(thisClique);
-		}
-		return Utilities.toJson(myCliques);
+
 	}
 
 	@GET
@@ -500,23 +459,23 @@ public class UserResource {
 		return userDao;
 	}
 
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public void setChoiceDao(ChoiceDao choiceDao) {
-		this.choiceDao = choiceDao;
-	}
-
-	public void setQuestionDao(QuestionDao questionDao) {
-		this.questionDao = questionDao;
-	}
+//	public void setUserDao(UserDao userDao) {
+//		this.userDao = userDao;
+//	}
+//
+//	public void setChoiceDao(ChoiceDao choiceDao) {
+//		this.choiceDao = choiceDao;
+//	}
+//
+//	public void setQuestionDao(QuestionDao questionDao) {
+//		this.questionDao = questionDao;
+//	}
 
 	public void setConnectionDao(ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
 	}
 
-	public void setAnswerDao(AnswerDao answerDao) {
-		this.answerDao = answerDao;
-	}
+//	public void setAnswerDao(AnswerDao answerDao) {
+//		this.answerDao = answerDao;
+//	}
 }

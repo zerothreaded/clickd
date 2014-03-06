@@ -54,57 +54,63 @@ public class ApplicationService extends Service<UserConfiguration> {
 		final String springContextFileName = configuration.getSpringContextFileName();
 
 		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
-		
-		UserDao userDao = (UserDao) context.getBean("userDao");
-		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
-		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
-		QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
-		AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
-		ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
-		ConnectionDao connectionDao = (ConnectionDao) context.getBean("connectionDao");
-		ChatroomDao chatroomDao = (ChatroomDao) context.getBean("chatroomDao");
-		PostDao postDao = (PostDao) context.getBean("postDao");
+//		
+//		UserDao userDao = (UserDao) context.getBean("userDao");
+//		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
+//		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
+//		QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
+//		AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
+//		ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
+//		ConnectionDao connectionDao = (ConnectionDao) context.getBean("connectionDao");
+//		ChatroomDao chatroomDao = (ChatroomDao) context.getBean("chatroomDao");
+//		PostDao postDao = (PostDao) context.getBean("postDao");
 
 		// Create REST End Points
 
-		// Application 	
-		ApplicationResource applicationResource = new ApplicationResource();
-		applicationResource.setApplicationDao(applicationDao);
-		applicationResource.setSessionDao(sessionDao);
-		applicationResource.setUserDao(userDao);
-		environment.addResource(applicationResource);
+//		// Application 	
+//		ApplicationResource applicationResource = new ApplicationResource();
+//		applicationResource.setApplicationDao(applicationDao);
+//		applicationResource.setSessionDao(sessionDao);
+//		applicationResource.setUserDao(userDao);
 
-		// /users/*
-		UserResource userResource = new UserResource();
-		userResource.setUserDao(userDao);
-		userResource.setSessionDao(sessionDao);
-		userResource.setChoiceDao(choiceDao);
-		userResource.setQuestionDao(questionDao);
-		userResource.setConnectionDao(connectionDao);
-		userResource.setAnswerDao(answerDao);
+//		ApplicationResource applicationResource = context.getBean(ApplicationResource.class);
+//		environment.addResource(applicationResource);
+//
+//		// /users/*
+//		UserResource userResource = new UserResource();
+//		userResource.setUserDao(userDao);
+//		userResource.setSessionDao(sessionDao);
+//		userResource.setChoiceDao(choiceDao);
+//		userResource.setQuestionDao(questionDao);
+//		userResource.setConnectionDao(connectionDao);
+//		userResource.setAnswerDao(answerDao);
+		UserResource userResource = context.getBean(UserResource.class);
 		environment.addResource(userResource);
-
-		// /questions/*
-		QuestionResource questionResource = new QuestionResource();
-		questionResource.setQuestionDao(questionDao);
-		questionResource.setAnswerDao(answerDao);
-		questionResource.setChoiceDao(choiceDao);
+//
+//		// /questions/*
+//		QuestionResource questionResource = new QuestionResource();
+//		questionResource.setQuestionDao(questionDao);
+//		questionResource.setAnswerDao(answerDao);
+//		questionResource.setChoiceDao(choiceDao);
+		QuestionResource questionResource = context.getBean(QuestionResource.class);
 		environment.addResource(questionResource);
-
-		// /answers/*
-		AnswerResource answerResource = new AnswerResource();
-		answerResource.setAnswerDao(answerDao);
+//
+//		// /answers/*
+//		AnswerResource answerResource = new AnswerResource();
+//		answerResource.setAnswerDao(answerDao);
+		AnswerResource answerResource = context.getBean(AnswerResource.class);
 		environment.addResource(answerResource);
-
-		// /choices/*
-		ChoiceResource choiceResource = new ChoiceResource();
-		choiceResource.setChoiceDao(choiceDao);
+//
+//		// /choices/*
+//		ChoiceResource choiceResource = new ChoiceResource();
+//		choiceResource.setChoiceDao(choiceDao);
+		ChoiceResource choiceResource = context.getBean(ChoiceResource.class);
 		environment.addResource(choiceResource);
 		
-		// /chatrooms/*
-		ChatroomResource chatroomResource = new ChatroomResource();
-		chatroomResource.setChatroomDao(chatroomDao);
-		environment.addResource(chatroomResource);
+//		// /chatrooms/*
+//		ChatroomResource chatroomResource = new ChatroomResource();
+//		chatroomResource.setChatroomDao(chatroomDao);
+//		environment.addResource(chatroomResource);
 		
 		
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));

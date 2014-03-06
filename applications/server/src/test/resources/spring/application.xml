@@ -66,4 +66,6 @@
 
 	<bean id="questionResource" class="com.clickd.server.services.questions.QuestionResource" />
 
+	<bean id="choiceResource" class="com.clickd.server.services.choices.ChoiceResource" />
+
 </beans>

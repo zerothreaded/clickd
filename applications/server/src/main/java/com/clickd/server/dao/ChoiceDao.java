@@ -51,6 +51,9 @@ public class ChoiceDao {
 	}
 
 	public List<Choice> findByUserRef(String userRef) {
+		if (userRef == null) {
+			return null;
+		}
 		List<Choice> usersChoices = new ArrayList<Choice>();
 		List<Choice> allChoices = findAll();
 		for (Choice choice : allChoices) {

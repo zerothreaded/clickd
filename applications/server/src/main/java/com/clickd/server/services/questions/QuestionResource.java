@@ -41,6 +41,7 @@ public class QuestionResource {
 	public String getNextQuestion(@PathParam("userRef") String userRef) {
 		List<Question> unansweredQuestions = new ArrayList<Question>();
 		List<Question> questions = questionDao.findAllSortedBy("questionText");
+		//List<Question> questions = questionDao.findAll();
 		List<Choice> userChoices = choiceDao.findByUserRef(userRef);
 
 		if (userChoices.size() == 0) {
@@ -96,24 +97,24 @@ public class QuestionResource {
 		}
 	}
 
-	public QuestionDao getQuestionDao() {
-		return questionDao;
-	}
-
-	public void setQuestionDao(QuestionDao questionDao) {
-		this.questionDao = questionDao;
-	}
-
-	public void setAnswerDao(AnswerDao answerDao) {
-		this.answerDao = answerDao;
-	}
-
-	public ChoiceDao getChoiceDao() {
-		return choiceDao;
-	}
-
-	public void setChoiceDao(ChoiceDao choiceDao) {
-		this.choiceDao = choiceDao;
-	}
+//	public QuestionDao getQuestionDao() {
+//		return questionDao;
+//	}
+//
+//	public void setQuestionDao(QuestionDao questionDao) {
+//		this.questionDao = questionDao;
+//	}
+//
+//	public void setAnswerDao(AnswerDao answerDao) {
+//		this.answerDao = answerDao;
+//	}
+//
+//	public ChoiceDao getChoiceDao() {
+//		return choiceDao;
+//	}
+//
+//	public void setChoiceDao(ChoiceDao choiceDao) {
+//		this.choiceDao = choiceDao;
+//	}
 
 }

@@ -9,22 +9,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.clickd.server.dao.ConnectionDao;
+import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.services.AbstractResourceTest;
+import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.utilities.Utilities;
 import com.google.gson.Gson;
 
 public class UserResourceTest extends AbstractResourceTest {
 
 	private UserResource userResource;
+	private ChoiceResource choiceResource;
 
 	@Before
 	public void setup() {
 		super.setup();
 		userResource = (UserResource) applicationContext.getBean("userResource");
+		choiceResource = (ChoiceResource) applicationContext.getBean("choiceResource");
 	}
 
 	@Test
@@ -39,6 +43,13 @@ public class UserResourceTest extends AbstractResourceTest {
 		// Verify 1 and ONLY 1 USER in DB
 		Assert.assertEquals(2, userResource.getUserDao().findAll().size());
 
+	}
+	
+
+	@Test
+	public void getUserByRefFailsForNull() throws Exception {
+		Response response = userResource.getUser(null);
+		Assert.assertEquals(300, response.getStatus());
 	}
 	
 	@Test
@@ -109,6 +120,14 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(errorMessage.getStatus(), "failed");
 		Assert.assertEquals(errorMessage.getMessage(), "User not found");
 	}
+	
+	@Test
+	public void signOutFailsWithNullRef() throws Exception {
+		//make the sign out call
+		Response response = userResource.signOut(null);
+		Assert.assertEquals(300, response.getStatus());
+	}
+	
 	
 	@Test
 	public void signInFailsWithInCorrectCredentials() throws Exception {
@@ -191,6 +210,13 @@ public class UserResourceTest extends AbstractResourceTest {
 		List<CandidateResponse> responseList = (List<CandidateResponse>) response2.getEntity();
 
 		Assert.assertEquals(0, responseList.size());
+	}
+	
+	@Test
+	public void getCandidatesFailsWithNULL() throws Exception {
+		//make the get candidates call
+		Response response = userResource.getCandidates(null);
+		Assert.assertEquals(300, response.getStatus());
 	}
 	
 	@Test
@@ -508,6 +534,29 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(300, rejectResponse.getStatus());
 	}
 	
+	
+	@Test
+	public void getUserCliquesSucceeds() throws Exception {
+		// Setup test data
+		String userRefRalph = "1";
+		String userRefJohn = "2";
+		
+		// Make user choices
+		String questionRef = "1";
+		String answerRef = "a1";
+		Response response = choiceResource.createWithAnswerRef(userRefRalph, questionRef, answerRef);
+		Assert.assertEquals(200, response.getStatus());
+		
+		// Get Cliques for Ralph
+		Response getCliquesResponse = userResource.getCliquesForUser(userRefRalph);
+		Assert.assertEquals(200, getCliquesResponse.getStatus());
+		
+		// Verify Cliques match choices
+		String json = ((String)getCliquesResponse.getEntity());
+		List<Clique> cliques = ((List<Clique>)new Gson().fromJson(json, List.class));
+		Assert.assertEquals(1, cliques.size());
+
+	}
 	
 	@Test
 	public void registerFailsWithEmailNotAvailable() throws Exception {
