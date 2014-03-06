@@ -1,6 +1,8 @@
 package com.clickd.server.services.users;
 
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -424,6 +426,17 @@ public class UserResource {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
+			
+			// Add BIO wired cliques
+			Clique genderClique = new Clique(user, new Date(), new Date(), "system", user.getGender());
+			Clique postcodeClique = new Clique(user, new Date(), new Date(), "system", user.getPostCode());
+			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			Clique dateOfBirthClique = new Clique(user, new Date(), new Date(), "system", df.format(user.getDateOfBirth()));
+			myCliques.add(genderClique);
+			myCliques.add(postcodeClique);
+			myCliques.add(dateOfBirthClique);
+			
+			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 			for (Choice myChoice : myChoices)
 			{
@@ -455,8 +468,11 @@ public class UserResource {
 				}
 				thisClique.get_Embedded().put("clique-members", cliqueMembers);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
-				myCliques.add(thisClique);
+				if (myChoice.getAnswerText() == null) {
+					myCliques.add(thisClique);
+				}
 			}
+
 			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 

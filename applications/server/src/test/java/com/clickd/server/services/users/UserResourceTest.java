@@ -662,7 +662,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		// Verify Cliques match choices
 		String json = ((String)getCliquesResponse.getEntity());
 		List<Clique> cliques = ((List<Clique>)new Gson().fromJson(json, List.class));
-		Assert.assertEquals(1, cliques.size());
+		Assert.assertEquals(4, cliques.size());
 
 	}
 	
