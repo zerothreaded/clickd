@@ -345,14 +345,27 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		
 		var connectionUserList = connection.connectionData["_linkLists"]["connection-user"];
 		
+		var otherUserRef =  "";
+		
 		$scope.model.selectedUserPresentation.isConnectionRecipient = true;
 		connectionUserList.forEach(function(connectionUser) {
 			console.log(connectionUser);
 			console.log ($scope.model.currentUser.user.ref);
+			if (connectionUser.href != $scope.model.currentUser.user.ref)
+				otherUserRef = connectionUser.href;
+			
 			if (connectionUser.rel == "from-user" && connectionUser.href == $scope.model.currentUser.user.ref)
 				$scope.model.selectedUserPresentation.isConnectionRecipient = false;
 			
 		});
+		
+		var getComparisonUrl = $scope.model.currentUser.user.ref + "/candidates/comparison/"+ getRefParam(otherUserRef,2);
+		
+		console.log(getComparisonUrl);
+		
+		$http({ method  : 'GET', url : getComparisonUrl })
+		.success(function(data) { $scope.model.selectedUserComparison = data; });
+		
 	}
 	
 	$scope.onClickClique = function(clique) { $scope.model.currentSelection = 'Clique : ' + clique.name; $scope.model.selectedClique = clique; }

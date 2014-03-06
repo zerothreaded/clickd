@@ -288,14 +288,14 @@ $(function() {
 							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
 							{{model.selectedUser.firstName}}<span ng-if="model.selectedUserPresentation.hasBeenRejectedByUser==true">'s connection request was rejected.</span><br/>
 							{{model.selectedUser.connectionData.status}}
-							<br/><br/><br/><br/>
+							<br/><br/>
 							<div ng-if="model.selectedUserPresentation.isConnectionRecipient == true">
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
 							<br/>
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
 							<span ng-repeat="choice in model.selectedUserComparison" >
 										We both like {{choice}}<br/>
-								</span>
+								</span>	
 							</div>
 							</div>
 						</div>
