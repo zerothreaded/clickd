@@ -471,19 +471,8 @@ public class UserResource {
 		this.userDao = userDao;
 	}
 
-//	public void setChoiceDao(ChoiceDao choiceDao) {
-//		this.choiceDao = choiceDao;
-//	}
-//
-//	public void setQuestionDao(QuestionDao questionDao) {
-//		this.questionDao = questionDao;
-//	}
-
 	public void setConnectionDao(ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
 	}
-
-//	public void setAnswerDao(AnswerDao answerDao) {
-//		this.answerDao = answerDao;
-//	}
+	
 }
