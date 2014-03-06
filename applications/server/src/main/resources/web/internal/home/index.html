@@ -288,6 +288,14 @@ $(function() {
 								</div>
 							</div>
 						</div>
+						
+						<!-- VIEW CLIQUES -->
+						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
+								<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique.name}})" href="#" ng-class="{active: isCliqueSelected('{{clique.name}}')}" >
+									{{clique.name}}<br/>
+								</div>	
+						</div>
+						
 					</div>
 				</div>
 				<div class="row chat-row">
