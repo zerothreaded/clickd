@@ -570,9 +570,24 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertNotNull(connection);
 		Assert.assertEquals("pending", connection.getStatus());
 
-		Response rejectResponse = userResource.rejectConnection(userRefJohn, connection.getRef());
+		String connectionRef = connection.getRef().split("/")[2];
+		Response rejectResponse = userResource.rejectConnection(userRefRalph, connectionRef);
 		Assert.assertEquals(200, rejectResponse.getStatus());
-		// TODO: VERIFY connection NOT IN DB
+
+		//check empty response for from user (john)
+		Response fromUserResponseConnections = userResource.getConnections(userRefJohn);
+		Assert.assertEquals(200, fromUserResponseConnections.getStatus());
+		String fromUserJson = ((String)fromUserResponseConnections.getEntity());
+		List<Connection> fromUserConnections = ((List<Connection>)new Gson().fromJson(fromUserJson, List.class));
+		Assert.assertEquals(0, fromUserConnections.size());
+		
+
+		//check empty response for to user (ralph)
+		Response toUserResponseConnections = userResource.getConnections(userRefRalph);
+		Assert.assertEquals(200, toUserResponseConnections.getStatus());
+		String toUserJson = ((String)toUserResponseConnections.getEntity());
+		List<Connection> toUserConnections = ((List<Connection>)new Gson().fromJson(toUserJson, List.class));
+		Assert.assertEquals(0, toUserConnections.size());
 	}
 	
 	@Test

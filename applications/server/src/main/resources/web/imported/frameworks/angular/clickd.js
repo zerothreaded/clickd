@@ -30,7 +30,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// Questions and Answers
 			"currentQuestion" : { },
 			"currentAnswers" : [ ]
-		}
+		},
+		
+		"selectedUserPresentation" : 
+			{
+			
+			}
 	}; 
 
 	// Form Data
@@ -335,6 +340,18 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		console.log(connection);
 		
 		$scope.model.selectedUser = connection;
+		
+		
+		var connectionUserList = connection.connectionData["_linkLists"]["connection-user"];
+		
+		$scope.model.selectedUserPresentation.isConnectionRecipient = true;
+		connectionUserList.forEach(function(connectionUser) {
+			console.log(connectionUser);
+			console.log ($scope.model.currentUser.user.ref);
+			if (connectionUser.rel == "from-user" && connectionUser.href == $scope.model.currentUser.user.ref)
+				$scope.model.selectedUserPresentation.isConnectionRecipient = false;
+			
+		});
 	}
 	
 	$scope.onClickClique = function(clique) { $scope.model.currentSelection = 'Clique : ' + clique.name; $scope.model.selectedClique = clique; }
@@ -351,6 +368,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$http({ url : acceptConnectionUrl, method : "GET" })
 		.success(function(connectionData) {
 			$scope.model.selectedUser.connectionData = connectionData;
+
 			console.log(connectionData);
 			$scope.updateCCC();
 		} );

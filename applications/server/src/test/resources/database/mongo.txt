@@ -82,7 +82,7 @@ db.answers.insert({"ref" : "/answers/g2", "answerText" : "Crafts", "imageName" :
 db.answers.insert({"ref" : "/answers/g3", "answerText" : "Leaving parties", "imageName" : "3",  "source" : "system", "_links" : {"self" : {"href":"/answers/g3", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/g4", "answerText" : "Napping", "imageName" : "4",  "source" : "system", "_links" : {"self" : {"href":"/answers/g4", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/g5", "answerText" : "Petting Dogs", "imageName" : "5",  "source" : "system", "_links" : {"self" : {"href":"/answers/g5", "rel" : "self"}}});
-db.answers.insert({"ref" : "/answers/g6", "answerText" : "Making Puns", "imageName" : "6",  "source" : "system", "_links" : {"self" : {"href":"/answers/g6", "rel" : "self"}}});
+db.answers.insert({"ref" : "/answers/g6", "answerText" : "Making 	Puns", "imageName" : "6",  "source" : "system", "_links" : {"self" : {"href":"/answers/g6", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/g7", "answerText" : "Quoting Movies", "imageName" : "7",  "source" : "system", "_links" : {"self" : {"href":"/answers/76", "rel" : "self"}}});
 db.answers.insert({"ref" : "/answers/g8", "answerText" : "Being Stylish", "imageName" : "8",  "source" : "system", "_links" : {"self" : {"href":"/answers/g8", "rel" : "self"}}});
 

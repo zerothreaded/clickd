@@ -276,18 +276,22 @@ $(function() {
 						
 						<!-- VIEW CONNECTION (X) -->
 						<div ng-if="model.currentSelection == 'connections.user'" class="panel candidates-panel">
-							<div class="row">
-								<div class="col-md-6">
-									<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
-									{{model.selectedUser.firstName}}<br/>
-									{{model.selectedUser.connectionData.status}}
-									<br/><br/><br/><br/>
-									<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
-									<br/>
-									<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
-								</div>
+						<div class="row">
+							<div class="col-md-6">
+							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
+							{{model.selectedUser.firstName}}<br/>
+							{{model.selectedUser.connectionData.status}}
+							<br/><br/><br/><br/>
+							<div ng-if="model.selectedUserPresentation.isConnectionRecipient == true">
+							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
+							<br/>
+							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
+
+							</div>
 							</div>
 						</div>
+						</div>
+						
 						
 						<!-- VIEW CLIQUES -->
 						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
