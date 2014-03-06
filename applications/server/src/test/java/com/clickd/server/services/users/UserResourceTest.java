@@ -543,8 +543,9 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertNotNull(connection);
 		Assert.assertEquals("pending", connection.getStatus());
 
-		Response rejectResponse = userResource.acceptConnection(userRefJohn, connection.getRef());
-		Assert.assertEquals(200, rejectResponse.getStatus());
+		String connectionRef = connection.getRef().split("/")[2];
+		Response acceptResponse = userResource.acceptConnection(userRefJohn, connectionRef);
+		Assert.assertEquals(200, acceptResponse.getStatus());
 		// TODO: VERIFY connection NOT IN DB
 	}
 	
