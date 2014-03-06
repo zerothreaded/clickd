@@ -371,7 +371,7 @@ public class UserResource {
 	public Response acceptConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
 		try
 		{
-			Connection connection = connectionDao.findByRef(connectionRef);
+			Connection connection = connectionDao.findByRef("/connections/"+connectionRef);
 			connection.setStatus("active");
 			connectionDao.update(connection);
 			return Response.status(200).entity(Utilities.toJson(connection)).build();
