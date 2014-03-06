@@ -314,12 +314,18 @@ public class UserResource {
 				{
 					Link answerLink = choice.getLinkByName("choice-answer");
 					Link answerLink2 = choice2.getLinkByName("choice-answer");
-					if (null == answerLink || null == answerLink2)
-						continue;
-					if (answerLink.getHref().equals(answerLink2.getHref()))
+					if(null != answerLink && null != answerLink2)
 					{
-						Answer answer = answerDao.findByRef(answerLink.getHref());
-						same.add(answer.getAnswerText());
+						if (answerLink.getHref().equals(answerLink2.getHref()))
+						{
+							Answer answer = answerDao.findByRef(answerLink.getHref());
+							same.add(answer.getAnswerText());
+						}
+					}
+					else if (null != choice.getAnswerText())
+					{
+						if (choice.getAnswerText().equals(choice2.getAnswerText()))
+							same.add(choice.getAnswerText());
 					}
 				}
 			}
@@ -359,7 +365,18 @@ public class UserResource {
 		try
 		{
 			List<Connection> userConnections = connectionDao.findAllByUserRef("/users/"+userRef);
-			return Response.status(200).entity(Utilities.toJson(userConnections)).build();
+			
+			ArrayList<Connection> userConnectionsResponse = new ArrayList();
+			
+			for (Connection connection : userConnections)
+			{
+				if (!connection.getStatus().equals("rejected"))
+				{
+					userConnectionsResponse.add(connection);
+				}
+			}
+			
+			return Response.status(200).entity(Utilities.toJson(userConnectionsResponse)).build();
 		}
 		catch (Exception e)
 		{
@@ -392,7 +409,8 @@ public class UserResource {
 		try
 		{
 			Connection connection = connectionDao.findByRef("/connections/"+connectionRef);
-			connectionDao.delete(connection);
+			connection.setStatus("rejected");
+			connectionDao.update(connection);
 			return Response.status(200).build();
 		}
 		catch (Exception e)
