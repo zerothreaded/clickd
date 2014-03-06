@@ -40,7 +40,7 @@ public class ConnectionDao {
 	}
 
 	public void delete(Connection connection) {
-		mongoOperations.remove(connection);
+		mongoOperations.remove(connection, collectionName);
 	}
 
 	public Connection findById(String id) {

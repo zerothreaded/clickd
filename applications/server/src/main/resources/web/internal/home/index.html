@@ -278,9 +278,11 @@ $(function() {
 							{{model.selectedUser.firstName}}<br/>
 							{{model.selectedUser.connectionData.status}}
 							<br/><br/><br/><br/>
+							<div ng-if="model.selectedUserPresentation.isConnectionRecipient == true">
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'" ng-click="onAcceptConnection({{model.selectedUser.connectionData}})">Accept connection</button><br/>
 							<br/>
 							<button class="btn btn-large" href="#" ng-if="model.selectedUser.connectionData.status == 'pending'"  ng-click="onRejectConnection({{model.selectedUser.connectionData}})">Reject connection</button>
+							</div>
 							</div>
 						</div>
 						</div>

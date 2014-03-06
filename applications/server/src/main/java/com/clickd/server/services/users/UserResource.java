@@ -391,7 +391,7 @@ public class UserResource {
 	{
 		try
 		{
-			Connection connection = connectionDao.findByRef(connectionRef);
+			Connection connection = connectionDao.findByRef("/connections/"+connectionRef);
 			connectionDao.delete(connection);
 			return Response.status(200).build();
 		}
