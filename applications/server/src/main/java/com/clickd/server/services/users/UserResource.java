@@ -220,9 +220,13 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/sessions/{sessionRef}")
 	@Timed
-	public String getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
-		Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
-		return Utilities.toJson(session);
+	public Response getSession(@PathParam("userRef") String userRef, @PathParam("sessionRef") String sessionRef) {
+		try {
+			Session session = sessionDao.findByRef("/users/" + userRef + "/sessions/" + sessionRef);
+			return Response.status(200).entity(Utilities.toJson(session)).build();
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
+		}
 	}
 	
 	@GET
@@ -247,11 +251,6 @@ public class UserResource {
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("choice-user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
-					
-					if (otherUser == null)
-						continue;
-					
-						// check if potential candidate is not the signed in user
 						if (!otherUser.getRef().equals("/users/" + userRef))
 						{
 							boolean alreadyExists = false;
@@ -303,27 +302,31 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/candidates/comparison/{otherUserRef}")
 	@Timed
-	public String compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
-		//get my answers
-		List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-		List<Choice> otherUserChoices = choiceDao.findByUserRef(otherUserRef);
-		ArrayList<String> same = new ArrayList<String>();
-		for (Choice choice : myChoices)
-		{
-			for (Choice choice2 : otherUserChoices)
+	public Response compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
+		try {
+			//get my answers
+			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+			List<Choice> otherUserChoices = choiceDao.findByUserRef(otherUserRef);
+			ArrayList<String> same = new ArrayList<String>();
+			for (Choice choice : myChoices)
 			{
-				Link answerLink = choice.getLinkByName("choice-answer");
-				Link answerLink2 = choice2.getLinkByName("choice-answer");
-				if (null == answerLink || null == answerLink2)
-					continue;
-				if (answerLink.getHref().equals(answerLink2.getHref()))
+				for (Choice choice2 : otherUserChoices)
 				{
-					Answer answer = answerDao.findByRef(answerLink.getHref());
-					same.add(answer.getAnswerText());
+					Link answerLink = choice.getLinkByName("choice-answer");
+					Link answerLink2 = choice2.getLinkByName("choice-answer");
+					if (null == answerLink || null == answerLink2)
+						continue;
+					if (answerLink.getHref().equals(answerLink2.getHref()))
+					{
+						Answer answer = answerDao.findByRef(answerLink.getHref());
+						same.add(answer.getAnswerText());
+					}
 				}
 			}
+			return Response.status(200).entity(Utilities.toJson(same)).build();
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
-		return Utilities.toJson(same);
 	}
 	
 	@POST
@@ -333,7 +336,6 @@ public class UserResource {
 	{
 		// am i already connected
 		Connection preExisting = connectionDao.findByBothUserRefsIgnoreRole("/users/" + fromUserRef, "/users/" + toUserRef);
-		
 		if (preExisting == null)
 		{
 			Connection connection = new Connection(new Date(), new Date(), "pending");
@@ -371,7 +373,7 @@ public class UserResource {
 	public Response acceptConnection(@PathParam("userRef") String userRef, @PathParam("connectionRef") String connectionRef) {
 		try
 		{
-			Connection connection = connectionDao.findByRef("/connections/" + connectionRef);
+			Connection connection = connectionDao.findByRef(connectionRef);
 			connection.setStatus("active");
 			connectionDao.update(connection);
 			return Response.status(200).entity(Utilities.toJson(connection)).build();
@@ -411,10 +413,19 @@ public class UserResource {
 			for (Choice myChoice : myChoices)
 			{
 				String answerRef = myChoice.getLinkByName("choice-answer").getHref();
+				
+				// TODO: CHANGE THIS SHIT
+				// So BIO questions have no ANSWER LINK - that's just WRONG!
+				String name = "";
 				Answer answer = answerDao.findByRef(answerRef);
-				Clique thisClique = new Clique(user, new Date(), new Date(), "system", answer.getAnswerText());
+				if (null != answer) {
+					name = answer.getAnswerText();
+				} else {
+					name = myChoice.getAnswerText();
+				}
 				
 				//now get list of users who made that choice
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", name);
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
 				List<User> cliqueMembers = new ArrayList<User>();
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
@@ -459,10 +470,10 @@ public class UserResource {
 		return userDao;
 	}
 
-//	public void setUserDao(UserDao userDao) {
-//		this.userDao = userDao;
-//	}
-//
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
 //	public void setChoiceDao(ChoiceDao choiceDao) {
 //		this.choiceDao = choiceDao;
 //	}
