@@ -246,13 +246,16 @@ $(function() {
 				<div class="row content-row">
 					<div class="well content-well" id="content-window">
 						<h4 id="content-window-header">Current Selection : {{model.currentSelection}}</h4>
+						
+						<!-- VIEW CANDIDATES -->
 						<div ng-if="model.currentSelection == 'candidates'" class="panel candidates-panel">
 								<div class="member-md-panel" ng-repeat="candidate in model.currentUser.candidates" ng-click="onClickCandidate({{candidate.user}})" href="#" ng-class="{active: isUserSelected('{{candidate.user.ref}}')}" >
 									&nbsp;<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{candidate.user.firstName}}.jpg">
 									{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
 								</div>	
 						</div>
-						
+
+						<!-- VIEW CANDIDATE (X) -->						
 						<div ng-if="model.currentSelection == 'candidates.user'" class="panel candidates-panel">
 						<div class="row">
 							<div class="col-md-6">
@@ -271,7 +274,9 @@ $(function() {
 						</div>
 						</div>
 						
+						<!-- VIEW CONNECTION (X) -->
 						<div ng-if="model.currentSelection == 'connections.user'" class="panel candidates-panel">
+<<<<<<< HEAD
 						<div class="row">
 							<div class="col-md-6">
 							<img class="member-md-image" ng-src="/web/internal/home/images/members/facebook_{{model.selectedUser.firstName}}.jpg">
@@ -285,7 +290,14 @@ $(function() {
 							</div>
 							</div>
 						</div>
+						
+						<!-- VIEW CLIQUES -->
+						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
+								<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique.name}})" href="#" ng-class="{active: isCliqueSelected('{{clique.name}}')}" >
+									{{clique.name}}<br/>
+								</div>	
 						</div>
+						
 					</div>
 				</div>
 				<div class="row chat-row">

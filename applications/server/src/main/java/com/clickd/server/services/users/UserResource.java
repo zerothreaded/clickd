@@ -251,37 +251,35 @@ public class UserResource {
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("choice-user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
-						if (!otherUser.getRef().equals("/users/" + userRef))
-						{
-							boolean alreadyExists = false;
-							for (CandidateResponse responseRow : responseList) {
-								if (responseRow.getUser().getRef().equals(otherUser.getRef())) {
-									responseList.remove(responseRow);
-									responseRow.setScore(responseRow.getScore() + 1);
-									responseList.add(responseRow);
-									alreadyExists = true;
-									break;
-								}
-							}
-							boolean isAConnection = false;
-							for (Connection connection : myConnections)
-							{
-									for (Link link : connection.getLinkLists("connection-user"))
-									{
-										if (link.getHref().equals(otherUser.getRef()))
-										{
-											isAConnection = true;
-										}
-									}
-							}
-							if (!alreadyExists && !isAConnection) {
-								CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+					if (!otherUser.getRef().equals("/users/" + userRef))
+					{
+						boolean alreadyExists = false;
+						for (CandidateResponse responseRow : responseList) {
+							if (responseRow.getUser().getRef().equals(otherUser.getRef())) {
+								responseList.remove(responseRow);
+								responseRow.setScore(responseRow.getScore() + 1);
 								responseList.add(responseRow);
+								alreadyExists = true;
+								break;
 							}
 						}
+						boolean isAConnection = false;
+						for (Connection connection : myConnections)
+						{
+								for (Link link : connection.getLinkLists("connection-user"))
+								{
+									if (link.getHref().equals(otherUser.getRef()))
+									{
+										isAConnection = true;
+									}
+								}
+						}
+						if (!alreadyExists && !isAConnection) {
+							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+							responseList.add(responseRow);
+						}
+					}
 				}
-
-			
 			}
 			
 			// Sort the responses
@@ -405,7 +403,6 @@ public class UserResource {
 	@Path("/{userRef}/cliques")
 	@Timed
 	public Response getCliquesForUser(@PathParam("userRef") String userRef) {
-	
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
@@ -474,19 +471,8 @@ public class UserResource {
 		this.userDao = userDao;
 	}
 
-//	public void setChoiceDao(ChoiceDao choiceDao) {
-//		this.choiceDao = choiceDao;
-//	}
-//
-//	public void setQuestionDao(QuestionDao questionDao) {
-//		this.questionDao = questionDao;
-//	}
-
 	public void setConnectionDao(ConnectionDao connectionDao) {
 		this.connectionDao = connectionDao;
 	}
-
-//	public void setAnswerDao(AnswerDao answerDao) {
-//		this.answerDao = answerDao;
-//	}
+	
 }
