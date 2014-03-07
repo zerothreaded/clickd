@@ -24,13 +24,16 @@ public abstract class AbstractResourceTest {
 		mongoOperations = (MongoOperations) applicationContext.getBean("mongoTemplate");
 		mongoDb = mongoDbFactory.getDb();
 
+		// STEP 1 : CLEAR THE DB
 		mongoOperations.dropCollection("users");
 		mongoOperations.dropCollection("sessions");
 		mongoOperations.dropCollection("questions");
 		mongoOperations.dropCollection("answers");
 		mongoOperations.dropCollection("question_answers");
 		mongoOperations.dropCollection("choices");
+		mongoOperations.dropCollection("collections");
 		
+		// STEP 2 : SETUP INITIAL DATA
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
 		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\answers.json" , "answers");
