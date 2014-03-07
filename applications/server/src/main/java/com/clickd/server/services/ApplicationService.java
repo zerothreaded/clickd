@@ -5,18 +5,7 @@ import javax.servlet.Filter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.clickd.server.dao.AnswerDao;
-import com.clickd.server.dao.ApplicationDao;
-import com.clickd.server.dao.ChatroomDao;
-import com.clickd.server.dao.ChoiceDao;
-import com.clickd.server.dao.ConnectionDao;
-import com.clickd.server.dao.PostDao;
-import com.clickd.server.dao.QuestionDao;
-import com.clickd.server.dao.SessionDao;
-import com.clickd.server.dao.UserDao;
 import com.clickd.server.services.answers.AnswerResource;
-import com.clickd.server.services.application.ApplicationResource;
-import com.clickd.server.services.chatrooms.ChatroomResource;
 import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
