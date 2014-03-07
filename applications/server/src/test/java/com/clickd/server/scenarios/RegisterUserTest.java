@@ -31,7 +31,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 	public void registerThenSignOutAndSignIn() throws URISyntaxException {
 		
 		// STEP 1 : REGISTER
-		Response response = userResource.register( "test_ralph.masilamani@clickd.org", "Ralph", "Masilamani", "rr0101", "01-02-03", "male", "SE1 3BB");
+		// Response response = userResource.register( "test_ralph.masilamani@clickd.org", "Ralph", "Masilamani", "rr0101", "01-02-03", "male", "SE1 3BB");
 		
 		Response signinResponse = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Session session = (Session) signinResponse.getEntity();
