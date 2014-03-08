@@ -23,8 +23,6 @@ public class Choice extends Resource {
 		this.ref = ref;
 	}
 
-
-
 	public String getId() {
 		return id;
 	}

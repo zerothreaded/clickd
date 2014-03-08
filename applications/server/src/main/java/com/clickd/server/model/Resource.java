@@ -11,6 +11,9 @@ public abstract class Resource {
 	public static final String KEY_LINK_CHOICE_QUESTION = "choice-question";
 	public static final String KEY_LINK_CHOICE_ANSWER = "choice-answer";
 
+	public static final String KEY_LINK_USER = "user";
+	public static final String KEY_LINK_QUESTION = "question";
+	
 	private Map<String, Link> _links = new HashMap<String, Link>();
 	private Map<String, List<Link>> _linkLists = new HashMap<String, List<Link>>();
 	

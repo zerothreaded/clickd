@@ -56,7 +56,7 @@ public class QuestionResource {
 				System.out.println("Evaluating question " + questionRef);
 				boolean hasAnswered = false;
 				for (Choice choice : userChoices) {
-					String choiceQuestionRef = choice.getLinkByName(Resource.KEY_LINK_CHOICE_QUESTION).getHref();
+					String choiceQuestionRef = choice.getLinkByName(Resource.KEY_LINK_QUESTION).getHref();
 					if (choiceQuestionRef.equals(questionRef)) {
 						// User has answered this one so flag it
 						hasAnswered = true;

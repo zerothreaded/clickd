@@ -41,6 +41,10 @@ import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/users")
@@ -79,7 +83,62 @@ public class UserResource {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
 		}
 	}
+	
 
+
+	@POST
+	@Timed
+	@Path("/register/source/facebook")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerWithFacebook(@FormParam("facebookData") String facebookData) throws URISyntaxException {
+
+		
+		try {
+			System.out.println(facebookData);
+			
+			HashMap<String, Object> map = Utilities.fromJson(facebookData);
+			
+			User newUser = new User();
+			newUser.setFirstName((String)map.get("first_name"));
+			newUser.setLastName((String)map.get("last_name"));
+			newUser.setGender((String)map.get("gender"));
+			newUser.setEmail((String)map.get("email"));
+			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
+			newUser.setPassword("fb0101");
+			userDao.create(newUser);
+			
+			Question genderQuestion = questionDao.findByTags("gender");
+			Choice genderChoice = new Choice();
+			genderChoice.setAnswerText((String)map.get("gender"));
+			genderChoice.addLink("question", new Link(genderQuestion.getRef(), "choice-question"));
+			genderChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+			choiceDao.create(genderChoice);
+
+			Question nameQuestion = questionDao.findByTags("name");
+			Choice nameChoice = new Choice();
+			nameChoice.setAnswerText((String)map.get("first_name")+" "+(String)map.get("last_name"));
+			nameChoice.addLink("question", new Link(nameQuestion.getRef(), "choice-question"));
+			nameChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+			choiceDao.create(nameChoice);
+
+			
+			Question dateOfBirthQuestion = questionDao.findByTags("dateofbirth");
+			Choice dateOfBirthChoice = new Choice();
+			dateOfBirthChoice.setAnswerText((String)map.get("birthday"));
+			dateOfBirthChoice.addLink("question", new Link(dateOfBirthQuestion.getRef(), "choice-question"));
+			dateOfBirthChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+			choiceDao.create(dateOfBirthChoice);
+
+			
+			return Response.status(200).entity(Utilities.toJson(newUser)).build();
+		}
+		catch (Exception E)
+		{
+			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+
+		}
+	};
+	
 	@POST
 	@Timed
 	@Path("/register")
@@ -113,7 +172,7 @@ public class UserResource {
 				String userRef = newUser.getRef();
 				
 				Choice ageChoice = new Choice();
-				Question ageQuestion = questionDao.findByTags("user.bio.age");
+				Question ageQuestion = questionDao.findByTags("dateofbirth");
 				ageChoice.addLink(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
 				ageChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
 				ageChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
@@ -121,7 +180,7 @@ public class UserResource {
 				choiceDao.create(ageChoice);
 				
 				Choice genderChoice = new Choice();
-				Question genderQuestion = questionDao.findByTags("user.bio.gender");
+				Question genderQuestion = questionDao.findByTags("gender");
 				genderChoice.addLink(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
 				genderChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
 				genderChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
@@ -129,7 +188,7 @@ public class UserResource {
 				choiceDao.create(genderChoice);
 				
 				Choice postcodeChoice = new Choice();
-				Question postcodeQuestion = questionDao.findByTags("user.bio.postcode");
+				Question postcodeQuestion = questionDao.findByTags("postcode");
 				postcodeChoice.addLink(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
 				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
 				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));

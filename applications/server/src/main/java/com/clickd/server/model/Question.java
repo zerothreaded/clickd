@@ -1,5 +1,6 @@
 package com.clickd.server.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -13,7 +14,9 @@ public class Question extends Resource {
 	protected String questionText;
 	protected String source;
 	protected String type;
-	protected String tags;
+	protected String answerRule;
+
+	protected List<String> tags;
 
 	public Question() {	
 		super();
@@ -65,12 +68,19 @@ public class Question extends Resource {
 		this.type = type;
 	}
 
-	public String getTags() {
+	public List<String> getTags() {
 		return this.tags;
 	}
 
-	public void setTags(String tags) {
+	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
 
+	public String getAnswerRule() {
+		return answerRule;
+	}
+
+	public void setAnswerRule(String answerRule) {
+		this.answerRule = answerRule;
+	}
 }

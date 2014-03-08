@@ -34,8 +34,124 @@ $(function() {
   
 </script>
 <script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
+<!-- 1. Include the LinkedIn JavaScript API and define a onLoad callback function -->
+<script type="text/javascript" src="http://platform.linkedin.com/in.js">/*
+  api_key: 770xu2xqifqbs0
+  onLoad: onLinkedInLoad
+  authorize: true
+*/</script>
+
+<script type="text/javascript">
+  // 2. Runs when the JavaScript framework is loaded
+  function onLinkedInLoad() {
+    IN.Event.on(IN, "auth", onLinkedInAuth);
+  }
+
+  // 2. Runs when the viewer has authenticated
+  function onLinkedInAuth() {
+    IN.API.Profile("me").fields(["firstName","headline","industry","positions:(company)"]).result(displayProfiles);
+    IN.API.Connections("me").result(listProfiles)
+  }
+
+  // 2. Runs when the Profile() API call returns successfully
+  function displayProfiles(profiles) {
+    member = profiles.values[0];
+    alert(JSON.stringify(member));
+  }
+   function listProfiles(profiles)
+   {
+	  	alert(JSON.stringify(profiles));
+   }
+
+</script>
+
+<style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <!-- 
+    <scrip2 src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <scrip2t>
+var map;
+function initialize() {
+  var mapOptions = {
+    zoom: 8,
+    center: new google.maps.LatLng(-34.397, 150.644)
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    
+     -->
+
 </head>
 <body>
+    <div id="fb-root"></div>
+    <script>
+  function doLoginFb()
+  {
+	  FB.login(function(response){
+		  console.log(response);
+		  console.log('congrats')
+		  
+		  var userId = response.authResponse.userID;
+		  
+		  
+		  
+		  alert(userId);
+		  FB.api('/me', function(response) {
+
+		  
+			var registerWithFacebookUrl = "/users/register/source/facebook";
+			$.ajax({
+			    type: "POST",
+			    url: registerWithFacebookUrl,
+			    // The key needs to match your method's input parameter (case-sensitive).
+			    data: "facebookData="+ JSON.stringify(response),
+			    dataType: "json",
+			    success: function(data){alert(JSON.stringify(data));},
+			    failure: function(errMsg) {
+			        alert(errMsg);
+			    }
+			});
+
+	    });
+
+	}, {scope: 'user_location,friends_location,user_birthday,email,user_interests,user_likes'});
+  }
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '585166461570415',
+          status     : true,
+          xfbml      : true
+        });
+        
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+    	    if (response.status === 'connected') {
+    	      console.log('Logged in');
+    	    } else {
+    	    }
+    	  });
+      };
+      
+     
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+    
 <div ng-app="clickdApplication" ng-controller="AppController" >
 	<!-- SINGLE SCREEN -->
 	<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
@@ -50,16 +166,26 @@ $(function() {
 			<div class="navbar-right">
 				<form ng-submit="signInFormSubmit()" class="form-group login-form">
 					<div class="form-group-navbar">
-						<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-email-group">
+						<div class="col-md-4 col-sm-5 form-group navbar-form-group" id="login-email-group">
 							<input ng-model="signInFormData.email" type="email" class="form-control col-md-3 col-sm-3" placeholder="Email" name="email" id="login-email-input">
 						</div>
-						<div class="col-md-5 col-sm-5 form-group navbar-form-group" id="login-password-group">
+						<div class="col-md-4 col-sm-5 form-group navbar-form-group" id="login-password-group">
 							<input ng-model="signInFormData.password" type="password" class="form-control" placeholder="Password" name="password" id="login-password-input">
 						</div>
 	
 						<div class="col-md-1 col-sm-1 form-group navbar-form-group">
 							<button class="btn btn-default" type="submit">Sign In</button>
 						</div>
+						
+							<div class="col-md-1 col-sm-1 form-group navbar-form-group">
+							<div class="btn btn-default" id="facebook-login" onClick="doLoginFb()">FB</div>
+						</div>
+						
+						<div class="col-md-1 col-sm-1 form-group navbar-form-group">
+						
+						<script type="IN/Login"></script>
+						</div>
+						
 					</div>
 				</form>
 			</div>
@@ -67,7 +193,11 @@ $(function() {
 		</div>
 	
 		<div id="main-container-home">
-			<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
+		<!-- <div class="col-md-7 signup-group">
+		    <div id="map-canvas"></div>
+		
+		</div> -->
+			<div class="col-xs-12 col-md-4 col-md-offset-0 col-sm-6 col-sm-offset-6 signup-group">
 				<form ng-submit="processRegisterForm()">
 					<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
 						<h2>
