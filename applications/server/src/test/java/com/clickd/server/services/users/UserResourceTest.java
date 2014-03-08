@@ -55,15 +55,8 @@ public class UserResourceTest extends AbstractResourceTest {
 		Response response = userResource.getUser("1");
 		Assert.assertEquals(200, response.getStatus());
 		User user = (User)response.getEntity();
-		
-		// TODO: Verify REMAINING expected session state
 		Assert.assertEquals("/users/1", user.getRef());
-		
-		// Verify 1 and ONLY 1 USER in DB
-		Assert.assertEquals(2, userResource.getUserDao().findAll().size());
-
 	}
-	
 
 	@Test
 	public void getUserByRefFailsForNull() throws Exception {
@@ -185,7 +178,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals("test_ralph.masilamani@clickd.org", user.getEmail());
 		
 		// Verify 1 and ONLY 1 USER created in DB
-		Assert.assertEquals(3, userResource.getUserDao().findAll().size());
+		Assert.assertEquals(5, userResource.getUserDao().findAll().size());
 	}
 	
 	@Test
