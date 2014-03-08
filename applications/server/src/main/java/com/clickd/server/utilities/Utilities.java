@@ -7,9 +7,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -40,6 +46,23 @@ public class Utilities {
 		return parsed;
 	}
 	
+	public static HashMap<String, Object> fromJson(String json) {
+		JsonObject object = (JsonObject) new com.google.gson.JsonParser().parse(json);
+		Set<Map.Entry<String, JsonElement>> set = object.entrySet();
+		Iterator<Map.Entry<String, JsonElement>> iterator = set.iterator();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		while (iterator.hasNext()) {
+			Map.Entry<String, JsonElement> entry = iterator.next();
+			String key = entry.getKey();
+			JsonElement value = entry.getValue();
+			if (!value.isJsonPrimitive()) {
+				map.put(key, fromJson(value.toString()));
+			} else {
+				map.put(key, value.getAsString());
+			}
+		}
+		return map;
+	}
 
 	public static void importFixtureFromFile(DB mongoDb, String pathToFile, String collectionName) {
 	    FileInputStream fileInputStream = null;
