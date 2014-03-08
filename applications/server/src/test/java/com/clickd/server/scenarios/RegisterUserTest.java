@@ -35,6 +35,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 			 throws URISyntaxException 
 	{
 		// STEP 1 : REGISTER
+
 		Response response = userResource.register( email, firstName, lastName, password, dateOfBirth, gender, postcode);
 		
 		Response signinResponse = userResource.signIn(email, password);
@@ -55,19 +56,19 @@ public class RegisterUserTest extends AbstractResourceTest {
 		return userRef;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void registerSignOutSignInCheckCCCForTwoUsers() throws URISyntaxException {
 		String userRef1 = registerThenSignOutAndSignIn("ralph.masilamani@gmail.com", "Ralph", "Masilamani", "rr0101", "01-01-01", "male", "NW1");
 	
-		//make the get candidates call
+		// GET CANDIDATES
 		Response getCandidatesResponse = userResource.getCandidates(userRef1);
-		
-		// TODO: Verify REMAINING expected session state
 		Assert.assertEquals(200, getCandidatesResponse.getStatus());
 		
 		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
 		Assert.assertEquals(0,  responseList.size());
 		
+		// GET CONNECTIONS
 		Response responseConnections = userResource.getConnections(userRef1);
 		Assert.assertEquals(200, responseConnections.getStatus());
 		
@@ -75,11 +76,10 @@ public class RegisterUserTest extends AbstractResourceTest {
 		List<Connection> connections = ((List<Connection>)new Gson().fromJson(json, List.class));
 		Assert.assertEquals(0, connections.size());
 		
-		// Get Cliques for Ralph
+		// GET CLIQUES
 		Response getCliquesResponse = userResource.getCliquesForUser(userRef1);
 		Assert.assertEquals(200, getCliquesResponse.getStatus());
 		
-		// Verify Cliques match choices
 		String json2 = ((String)getCliquesResponse.getEntity());
 		List<Clique> cliques = ((List<Clique>)new Gson().fromJson(json2, List.class));
 		Assert.assertEquals(3, cliques.size());
@@ -113,6 +113,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 		List<Clique> cliques2 = ((List<Clique>)new Gson().fromJson(json4, List.class));
 		Assert.assertEquals(3, cliques2.size());
 
+		Response signInEd = userResource.signIn("edward.dodds@clickd.org", "ee01010");
 	}
 	
 }
