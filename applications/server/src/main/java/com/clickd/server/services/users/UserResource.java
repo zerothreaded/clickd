@@ -199,6 +199,33 @@ public class UserResource {
 							Map<String, Object> location = (Map<String, Object>)place.get("location");
 							String locationCity = (String)location.get("city");
 							System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+							
+							
+							Question checkinQuestions = questionDao.findByTags(placeName);
+							if (checkinQuestions == null) {
+								// N0 question - make it
+								checkinQuestions = new Question();
+								checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
+								checkinQuestions.setAnswerRule("yes|no");
+								checkinQuestions.setType("text");
+								checkinQuestions.setSource("system");
+								checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
+								List<String> tagList = new ArrayList<String>();
+								tagList.add(placeName);
+								tagList.add(locationCity);
+								checkinQuestions.setTags(tagList);
+								questionDao.create(checkinQuestions);
+							}
+							
+							Choice checkinChoice = new Choice();
+							checkinChoice.setAnswerText("yes");
+							checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
+							checkinChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+							checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
+	
+							choiceDao.create(checkinChoice);
+							
+							
 						}
 					}					
 					
