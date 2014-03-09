@@ -119,9 +119,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		})
 		.success(function(msg) {
 			if (typeof(msg["status"]) == 'undefined') {
-				answers = msg["_embedded"]["question-answer-list"];
+				var answerRule = msg["answerRule"];
 				questionRef = msg["ref"];
 				questionRef = questionRef.split("/")[2];
+				var answers = answerRule.split("|");
 				var questionText = msg.questionText;
 				$scope.model.currentUser.currentQuestion = msg;
 				$scope.model.currentUser.currentAnswers = answers;
@@ -137,8 +138,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.onSelectAnswer = function(question, answer) {
 		var userRef = $scope.model.currentUser.userRef;
 		var questionRef = question.ref.split("/")[2];
-		var answerRef = answer.ref.split("/")[2];
-		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/" + answerRef;
+		var answer = answer
+		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/answerText/" + answer;
 		$http({
 			url : createChoiceUrl,
 			method : "POST",
