@@ -98,6 +98,12 @@ public class UserResource {
 			
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
 			
+			User existingUser = userDao.findByEmail((String)map.get("email"));
+				if (null != existingUser)
+				{
+					return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+				}
+			
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
@@ -176,6 +182,7 @@ public class UserResource {
 							likeQuestion.setAnswerRule("yes|no");
 							likeQuestion.setType("text");
 							likeQuestion.setSource("system");
+							likeQuestion.addLink("self", new Link(likeQuestion.getRef(), "self"));
 							List<String> tagList = new ArrayList<String>();
 							tagList.add((String)likeDetails.get("name"));
 							tagList.add((String)likeDetails.get("category"));
@@ -186,7 +193,9 @@ public class UserResource {
 						Choice likeChoice = new Choice();
 						likeChoice.setAnswerText("yes");
 						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
-						likeChoice.addLink("user", new Link(userRef, "choice-user"));
+						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
+
 						choiceDao.create(likeChoice);
 						
 					}
@@ -442,10 +451,9 @@ public class UserResource {
 			{
 				for (Choice choice2 : otherUserChoices)
 				{
-					Link answerLink = choice.getLinkByName("choice-answer");
-					Link answerLink2 = choice2.getLinkByName("choice-answer");
-						if (choice.getAnswerText().equals(choice2.getAnswerText()))
-							same.add(choice.getAnswerText());
+					Question question  = questionDao.findByRef(choice.getLinkByName("question").getHref());
+						if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
+							same.add(question.getTags().toString()+" - "+choice.getAnswerText());
 				}
 			}
 			return Response.status(200).entity(Utilities.toJson(same)).build();
@@ -575,7 +583,8 @@ public class UserResource {
 //				}
 				
 				//now get list of users who made that choice
-				Clique thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
+				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
 				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
 				List<User> cliqueMembers = new ArrayList<User>();
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
