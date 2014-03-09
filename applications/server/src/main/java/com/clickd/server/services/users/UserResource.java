@@ -1,6 +1,11 @@
 package com.clickd.server.services.users;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,7 +116,24 @@ public class UserResource {
 			newUser.setEmail((String)map.get("email"));
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
 			newUser.setPassword("fb0101");
+			newUser.setRef("/users/"+(String)map.get("id"));
 			userDao.create(newUser);
+			
+			 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=160&height=160");
+			 InputStream in = new BufferedInputStream(url.openStream());
+			 ByteArrayOutputStream out = new ByteArrayOutputStream();
+			 byte[] buf = new byte[1024];
+			 int n = 0;
+			 while (-1!=(n=in.read(buf)))
+			 {
+			    out.write(buf, 0, n);
+			 }
+			 out.close();
+			 in.close();
+			 byte[] response = out.toByteArray();
+			 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\"+(String)map.get("id").toString()+".jpg");
+			 fos.write(response);
+			 fos.close();
 			
 			Question genderQuestion = questionDao.findByTags("gender");
 			Choice genderChoice = new Choice();
@@ -446,6 +468,7 @@ public class UserResource {
 	@Timed
 	public Response getCandidates(@PathParam("userRef") String userRef) {
 		try {
+			User user = userDao.findByRef("/users/"+userRef);
 			// get my answers
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
@@ -460,6 +483,11 @@ public class UserResource {
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
+					
+					boolean toSkip = false;
+					/*if (otherUser.getGender().equals(user.getGender()))
+						toSkip = true;*/
+						
 					if (!otherUser.getRef().equals("/users/" + userRef))
 					{
 						boolean alreadyExists = false;
@@ -483,7 +511,7 @@ public class UserResource {
 									}
 								}
 						}
-						if (!alreadyExists && !isAConnection) {
+						if (!alreadyExists && !isAConnection && !toSkip) {
 							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
 							responseList.add(responseRow);
 						}
