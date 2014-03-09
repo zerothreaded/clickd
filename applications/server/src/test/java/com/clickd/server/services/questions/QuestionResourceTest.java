@@ -37,8 +37,8 @@ public class QuestionResourceTest extends AbstractResourceTest {
 		
 		// Make user choices
 		String questionRef = "1";
-		String answerRef = "a1";
-		Response response = choiceResource.createWithAnswerRef(ralphUserRef, questionRef, answerRef);
+		String answerText = "beer";
+		Response response = choiceResource.createWithAnswerText(ralphUserRef, questionRef, answerText);
 		Assert.assertEquals(200, response.getStatus());
 		
 		questionResource.getNextQuestion(ralphUserRef);

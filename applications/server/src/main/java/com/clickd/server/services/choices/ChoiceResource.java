@@ -70,15 +70,15 @@ public class ChoiceResource {
 	@POST
 	@Timed
 	@Path("/{userRef}/{questionRef}/answerText/{text}")
-	public String createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText ) {
+	public Response createWithAnswerText(@PathParam("userRef") String userRef, @PathParam("questionRef") String questionRef, @PathParam("answerText") String answerText ) {
 		Choice choice = new Choice();
 		choice.addLink(Resource.KEY_LINK_SELF, new Link(choice.getRef(), "self"));
-		choice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link("/users/" + userRef, "user"));
-		choice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link("/questions/" + questionRef, "question"));
+		choice.addLink("user", new Link("/users/" + userRef, "user"));
+		choice.addLink("question", new Link("/questions/" + questionRef, "question"));
 		choice.setAnswerText(answerText);
 		choiceDao.create(choice);
 		String result = Utilities.toJson(choice);
-		return result;
+		return Response.status(200).entity(Utilities.toJson(result)).build();
 	}
 
 	public ChoiceDao getChoiceDao() {
