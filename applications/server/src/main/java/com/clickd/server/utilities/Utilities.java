@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mongodb.DB;
@@ -47,20 +48,48 @@ public class Utilities {
 	}
 	
 	public static HashMap<String, Object> fromJson(String json) {
-		JsonObject object = (JsonObject) new com.google.gson.JsonParser().parse(json);
-		Set<Map.Entry<String, JsonElement>> set = object.entrySet();
-		Iterator<Map.Entry<String, JsonElement>> iterator = set.iterator();
+		JsonElement parsed = new com.google.gson.JsonParser().parse(json);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		while (iterator.hasNext()) {
-			Map.Entry<String, JsonElement> entry = iterator.next();
-			String key = entry.getKey();
-			JsonElement value = entry.getValue();
-			if (!value.isJsonPrimitive()) {
-				map.put(key, fromJson(value.toString()));
-			} else {
-				map.put(key, value.getAsString());
+
+		if (parsed instanceof JsonArray)
+		{
+			JsonArray object = (JsonArray)parsed;
+			
+
+			for (int i = 0; i < object.size(); i++)
+			{
+				JsonElement value = object.get(i);
+				
+				if (!value.isJsonPrimitive())
+				{
+					map.put(String.valueOf(i), fromJson(value.toString()));
+				}
+				else
+				{
+					map.put(String.valueOf(i), object.get(i));
+				}
 			}
 		}
+		else
+		{
+			JsonObject object =  (JsonObject)parsed;
+			
+			Set<Map.Entry<String, JsonElement>> set = object.entrySet();
+			Iterator<Map.Entry<String, JsonElement>> iterator = set.iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<String, JsonElement> entry = iterator.next();
+				String key = entry.getKey();
+				JsonElement value = entry.getValue();
+				if (!value.isJsonPrimitive()) {
+					map.put(key, fromJson(value.toString()));
+				} else {
+					map.put(key, value.getAsString());
+				}
+			}
+		}
+
+		
 		return map;
 	}
 
