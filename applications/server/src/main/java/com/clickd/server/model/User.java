@@ -1,11 +1,15 @@
 package com.clickd.server.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.clickd.server.model.fb.Like;
 
 public class User extends Resource {
 
@@ -25,6 +29,16 @@ public class User extends Resource {
 	protected String email;
 	protected String password;
 	
+	protected List<Like> likes;
+	
+	public List<Like> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Like> likes) {
+		this.likes = likes;
+	}
+
 	public User() {
 		super();
 		createRef();
@@ -47,6 +61,7 @@ public class User extends Resource {
 		this.postCode = postCode;
 		this.email = email;
 		this.password = password;
+		this.likes = new ArrayList<Like>();
 	}
 
 	public String getId() {
