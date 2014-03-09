@@ -102,5 +102,19 @@ public class ChoiceDao {
 		}
 		return answerChoices;
 	}
+	
+
+	public List<Choice> findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) {
+		List<Choice> answerChoices = new ArrayList<Choice>();
+		List<Choice> allChoices = findAll();
+		for (Choice choice : allChoices) {
+			if (null == choice.getAnswerText())
+				continue;
+			if (choice.getAnswerText().equals(answerText) && choice.getLinkByName("question").getHref().equals(questionRef)) {
+				answerChoices.add(choice);
+			}
+		}
+		return answerChoices;
+	}
 
 }

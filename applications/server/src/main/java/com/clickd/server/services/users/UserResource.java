@@ -317,7 +317,9 @@ public class UserResource {
 			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
-				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerText(choice.getAnswerText()));
+				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
+
+				
 				ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
