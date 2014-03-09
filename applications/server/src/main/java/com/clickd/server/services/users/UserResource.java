@@ -167,6 +167,26 @@ public class UserResource {
 						// System.out.println(dataKey + " = " + likeDetails);
 						System.out.println("Category" + " = " + likeDetails.get("category"));
 						System.out.println("Name" + " = " + likeDetails.get("name"));
+						
+						Question likeQuestion = questionDao.findByTags((String) likeDetails.get("name"));
+						if (likeQuestion == null) {
+							// N0 question - make it
+							likeQuestion = new Question();
+							likeQuestion.setQuestionText("Do you like " + likeDetails.get("name"));
+							likeQuestion.setAnswerRule("yes|no");
+							List<String> tagList = new ArrayList<String>();
+							tagList.add((String)likeDetails.get("name"));
+							tagList.add((String)likeDetails.get("category"));
+							likeQuestion.setTags(tagList);
+							questionDao.create(likeQuestion);
+						}
+						
+						Choice likeChoice = new Choice();
+						likeChoice.setAnswerText("yes");
+						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
+						likeChoice.addLink("user", new Link(userRef, "choice-user"));
+						choiceDao.create(likeChoice);
+						
 					}
 				}
 			}
