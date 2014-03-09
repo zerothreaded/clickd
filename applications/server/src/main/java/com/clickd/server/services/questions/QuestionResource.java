@@ -39,7 +39,7 @@ public class QuestionResource {
 	@Path("/next/{userRef}")
 	@Timed
 	public String getNextQuestion(@PathParam("userRef") String userRef) {
-		List<Question> questions = questionDao.findAllSortedBy("questionText");
+		List<Question> questions = questionDao.findAllSortedBy("ref");
 		//List<Question> questions = questionDao.findAll();
 		List<Choice> userChoices = choiceDao.findByUserRef("/users/"+userRef);
 
