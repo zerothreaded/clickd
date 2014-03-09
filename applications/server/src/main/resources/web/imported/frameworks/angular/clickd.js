@@ -118,6 +118,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			dataType : "json"
 		})
 		.success(function(msg) {
+			console.log("next q: "+JSON.stringify(msg));
 			if (typeof(msg["status"]) == 'undefined') {
 				var answerRule = msg["answerRule"];
 				questionRef = msg["ref"];
@@ -137,7 +138,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onSelectAnswer = function(question, answer) {
 		var userRef = $scope.model.currentUser.userRef;
-		var questionRef = question.ref.split("/")[2];
+		var questionRef =  $scope.model.currentUser.currentQuestion.ref.split("/")[2];
+		console.log("question: "+questionRef);
 		var answer = answer;
 		console.log("answer: "+answer);
 		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/answerText/" + answer;
