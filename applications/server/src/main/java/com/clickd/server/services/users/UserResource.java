@@ -158,6 +158,74 @@ public class UserResource {
 
 	@POST
 	@Timed
+	@Path("/register/checkins")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerCheckins(@FormParam("checkinData") String checkinData, @FormParam("userRef") String userRef) throws URISyntaxException {
+		try {
+			System.out.println(checkinData);
+			HashMap<String, Object> map = Utilities.fromJson(checkinData);
+			for (String key : map.keySet()) {
+				System.out.println(key + " = " + map.get(key));
+				if (key.equals("data")) {
+					Map<String, Object> data = (Map<String, Object>) map.get(key);
+					int keySetSize = data.keySet().size();
+					if (keySetSize != 0) {
+						String message = (String) data.get("message");
+						Map<String, Object> place = (Map<String, Object>) data.get("place");
+						if (place != null) {
+							String placeName = (String) place.get("name");
+							Map<String, Object> location = (Map<String, Object>)place.get("location");
+							String locationCity = (String)location.get("city");
+							System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+						}
+					}					
+					
+//					for (String dataKey : data.keySet()) {
+//						Map<String, Object> likeDetails = (Map<String, Object>) data.get(dataKey);
+//						// System.out.println(dataKey + " = " + likeDetails);
+//						System.out.println("Category" + " = " + likeDetails.get("category"));
+//						System.out.println("Name" + " = " + likeDetails.get("name"));
+						
+//						Question likeQuestion = questionDao.findByTags((String) likeDetails.get("name"));
+//						if (likeQuestion == null) {
+//							// N0 question - make it
+//							likeQuestion = new Question();
+//							likeQuestion.setQuestionText("Do you like " + likeDetails.get("name"));
+//							likeQuestion.setAnswerRule("yes|no");
+//							likeQuestion.setType("text");
+//							likeQuestion.setSource("system");
+//							likeQuestion.addLink("self", new Link(likeQuestion.getRef(), "self"));
+//							List<String> tagList = new ArrayList<String>();
+//							tagList.add((String)likeDetails.get("name"));
+//							tagList.add((String)likeDetails.get("category"));
+//							likeQuestion.setTags(tagList);
+//							questionDao.create(likeQuestion);
+//						}
+//						
+//						Choice likeChoice = new Choice();
+//						likeChoice.setAnswerText("yes");
+//						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
+//						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+//						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
+//
+//						choiceDao.create(likeChoice);
+						
+					}
+				}
+			int hangon = 1;
+
+			User user = userDao.findByRef("/users/" + userRef);
+			
+			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
+		}
+		catch (Exception E)
+		{
+			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+
+		}
+	};
+	@POST
+	@Timed
 	@Path("/register/likes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {

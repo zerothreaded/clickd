@@ -56,11 +56,11 @@ $(function() {
   // 2. Runs when the Profile() API call returns successfully
   function displayProfiles(profiles) {
     member = profiles.values[0];
-    alert(JSON.stringify(member));
+    // alert(JSON.stringify(member));
   }
    function listProfiles(profiles)
    {
-	  	alert(JSON.stringify(profiles));
+	  	// alert(JSON.stringify(profiles));
    }
 
 </script>
@@ -127,7 +127,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				  		  });
 				  		  
 				  		  FB.api('/me/likes', function(response) {
-				  			alert('YO MOFO UREF = ' + userRef);
+				  			// alert('YO MOFO UREF = ' + userRef);
 				  			var likeDetails = JSON.stringify(response);
 				  			// likeDetails = likeDetails.replace(/&/g, '');
 				  			// console.log('\n\n TRANSFORMED=' + likeDetails);
@@ -148,7 +148,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				  			    	console.log('ERROR=' + errMsg);
 				  			    }
 				  			});
-				  			});
+						});
+				  		
+				  		  
 				  		  
 					  		  FB.api('/me/friends', function(response) {
 					  			 // console.log("FRIENDS="+JSON.stringify(response));
@@ -192,12 +194,37 @@ google.maps.event.addDomListener(window, 'load', initialize);
 												  			    dataType: "json",
 												  				    success: function(data){
 												  			    	console.log('/users/register/likes =' + JSON.stringify(data));
+												  			    	
+												  			    	
+												  				  
+															  		  FB.api('/' + friendId + '/checkins', function(response) {
+																  			var checkinDetails = JSON.stringify(response);
+																  			console.log('CHECKINS=' + checkinDetails);
+																  			var registerCheckinUrl = "/users/register/checkins";
+																  			$.ajax({
+																  			    type: "POST",
+																  			    url: registerCheckinUrl,
+																  			    // The key needs to match your method's input parameter (case-sensitive).
+																  			    data: {"checkinData" : checkinDetails, "userRef" : friendRef.split("/")[2] },
+																  			    dataType: "json",
+																  				    success: function(data){
+																  			    	console.log('/users/register/checkins =' + JSON.stringify(data));
+																  			    },
+																  			    failure: function(errMsg) {
+																  			    	console.log('ERROR=' + errMsg);
+																  			    }
+																  			});
+															  		});
+												  			    	
 												  			    },
 												  			    failure: function(errMsg) {
 												  			    	console.log('ERROR=' + errMsg);
 												  			    }
 												  			});
-												  			});
+												  		});
+											    	 
+				
+												  			
 										    	}
 										    }
 										);
@@ -207,7 +234,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
 					  			}); //end foreach
 					  		  });
 					  		  
+					  	
 					  		  
+					  		  
+					  		  
+					  		/*
 					  		  FB.api('/me/friendlists', function(response) {
 					  			console.log('FRIENDLISTS=' + JSON.stringify(response));
 					  			});
@@ -216,15 +247,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
 					  			console.log('\nINTERESTS=' + JSON.stringify(response));
 					  			});
 	
-					  		  FB.api('/me/checkins', function(response) {
-					  			console.log('CHECKINS=' + JSON.stringify(response));
+		
+					  			
+					  			
+					  			
+					  			
 					  			});
 	
 	
 					  		  FB.api('/me/picture', function(response) {
 					  				console.log('PICTURE=' + JSON.stringify(response));
 					  			});
-
+							*/
 				  		  
 				    },
 				    failure: function(errMsg) {
