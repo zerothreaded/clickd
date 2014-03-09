@@ -181,30 +181,36 @@ public class UserResource {
 				userDao.create(newUser);
 				
 				String userRef = newUser.getRef();
-				
-				Choice ageChoice = new Choice();
-				Question ageQuestion = questionDao.findByTags("dateofbirth");
-				ageChoice.addLink(Resource.KEY_LINK_SELF, new Link(ageChoice.getRef(), "self"));
-				ageChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				ageChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(ageQuestion.getRef(), "question"));
-				ageChoice.setAnswerText(dateOfBirth);
-				choiceDao.create(ageChoice);
-				
-				Choice genderChoice = new Choice();
 				Question genderQuestion = questionDao.findByTags("gender");
-				genderChoice.addLink(Resource.KEY_LINK_SELF, new Link(genderChoice.getRef(), "self"));
-				genderChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				genderChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(genderQuestion.getRef(), "question"));
+				Choice genderChoice = new Choice();
 				genderChoice.setAnswerText(gender);
+				genderChoice.addLink("question", new Link(genderQuestion.getRef(), "choice-question"));
+				genderChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 				choiceDao.create(genderChoice);
+
+				Question nameQuestion = questionDao.findByTags("name");
+				Choice nameChoice = new Choice();
+				nameChoice.setAnswerText(firstName+" "+lastName);
+				nameChoice.addLink("question", new Link(nameQuestion.getRef(), "choice-question"));
+				nameChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+				choiceDao.create(nameChoice);
 				
-				Choice postcodeChoice = new Choice();
-				Question postcodeQuestion = questionDao.findByTags("postcode");
-				postcodeChoice.addLink(Resource.KEY_LINK_SELF, new Link(postcodeChoice.getRef(), "self"));
-				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_USER, new Link(userRef, "user"));
-				postcodeChoice.addLink(Resource.KEY_LINK_CHOICE_QUESTION, new Link(postcodeQuestion.getRef(), "question"));
-				postcodeChoice.setAnswerText(postcode);
-				choiceDao.create(postcodeChoice);
+
+				
+				Question dateOfBirthQuestion = questionDao.findByTags("dateofbirth");
+				Choice dateOfBirthChoice = new Choice();
+				dateOfBirthChoice.setAnswerText(dateOfBirth);
+				dateOfBirthChoice.addLink("question", new Link(dateOfBirthQuestion.getRef(), "choice-question"));
+				dateOfBirthChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+				choiceDao.create(dateOfBirthChoice);
+				
+
+				Question locationQuestion = questionDao.findByTags("location");
+				Choice locationChoice = new Choice();
+				locationChoice.setAnswerText(postcode);
+				locationChoice.addLink("question", new Link(locationQuestion.getRef(), "choice-question"));
+				locationChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+				choiceDao.create(locationChoice);
 	
 				return Response.status(200).entity(Utilities.toJson(newUser)).build();
 			} else {
@@ -379,19 +385,8 @@ public class UserResource {
 				{
 					Link answerLink = choice.getLinkByName("choice-answer");
 					Link answerLink2 = choice2.getLinkByName("choice-answer");
-					if(null != answerLink && null != answerLink2)
-					{
-						if (answerLink.getHref().equals(answerLink2.getHref()))
-						{
-							Answer answer = answerDao.findByRef(answerLink.getHref());
-							same.add(answer.getAnswerText());
-						}
-					}
-					else if (null != choice.getAnswerText())
-					{
 						if (choice.getAnswerText().equals(choice2.getAnswerText()))
 							same.add(choice.getAnswerText());
-					}
 				}
 			}
 			return Response.status(200).entity(Utilities.toJson(same)).build();

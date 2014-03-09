@@ -178,7 +178,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals("test_ralph.masilamani@clickd.org", user.getEmail());
 		
 		// Verify 1 and ONLY 1 USER created in DB
-		Assert.assertEquals(5, userResource.getUserDao().findAll().size());
+		Assert.assertEquals(4, userResource.getUserDao().findAll().size());
 	}
 	
 	@Test
@@ -249,7 +249,7 @@ public class UserResourceTest extends AbstractResourceTest {
 	@Test
 	public void getCandidatesWithEqualAnswerTextChoicesBetweenUsers() throws Exception {
 		
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts.json" , "choices");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
 
 		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Assert.assertEquals(200, response.getStatus());
@@ -282,46 +282,7 @@ public class UserResourceTest extends AbstractResourceTest {
 
 		// VERIFY response list is not empty
 		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
-		Assert.assertEquals(1,  responseList.size());
-	}
-	
-	@Test
-	public void getCandidatesWithEqualAnswerRefChoicesBetweenUsers() throws Exception {
-		
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_refs.json" , "choices");
-
-		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
-		Assert.assertEquals(200, response.getStatus());
-		Session session = (Session) response.getEntity();
-		
-		Response response2 = userResource.signIn("john.dodds@clickd.org", "jj0101");
-		Assert.assertEquals(200, response2.getStatus());
-		Session session2 = (Session) response2.getEntity();
-		
-		// TODO: Verify REMAINING expected session state
-		Assert.assertEquals(session.getIsLoggedIn(), true);
-
-		// TODO: Verify REMAINING expected session state
-		Assert.assertEquals(session2.getIsLoggedIn(), true);
-		
-		// Verify 2 and ONLY 2 sessions created in DB
-		Assert.assertEquals(2, userResource.getSessionDao().findAll().size());
-		
-		String userRef1 = session.getUserRef();
-		userRef1 = userRef1.split("/")[2];
-		
-		String userRef2 = session.getUserRef();
-		userRef2 = userRef2.split("/")[2];
-		
-		//make the get candidates call
-		Response getCandidatesResponse = userResource.getCandidates(userRef1);
-		
-		// TODO: Verify REMAINING expected session state
-		Assert.assertEquals(200, getCandidatesResponse.getStatus());
-
-		//VERIFY response list is not empty
-		List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidatesResponse.getEntity();
-		Assert.assertEquals(1,  responseList.size());
+		Assert.assertEquals(2,  responseList.size());
 	}
 	
 	@Test
@@ -329,10 +290,10 @@ public class UserResourceTest extends AbstractResourceTest {
 		
 		// Setup 3 user set
 		mongoOperations.dropCollection("users");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users_3.json" , "users");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
 
 		// Setup 2 questions for each 3 users - Score = 2 and 1
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts_scores.json" , "choices");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
 
 		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Assert.assertEquals(200, response.getStatus());
@@ -373,9 +334,9 @@ public class UserResourceTest extends AbstractResourceTest {
 		// and  Ed score  = 1
 		for (CandidateResponse candidateResponse : responseList) {
 			if (candidateResponse.getUser().getEmail().equals("john.dodds@clickd.org")) {
-				Assert.assertEquals(2,  candidateResponse.getScore().intValue());
+				Assert.assertEquals(1,  candidateResponse.getScore().intValue());
 			}
-			if (candidateResponse.getUser().getEmail().equals("edward.dodds@clickd.org")) {
+			if (candidateResponse.getUser().getEmail().equals("simone.wagener@clickd.org")) {
 				Assert.assertEquals(1,  candidateResponse.getScore().intValue());
 			}
 		}
@@ -388,10 +349,10 @@ public class UserResourceTest extends AbstractResourceTest {
 		mongoOperations.dropCollection("users");
 		mongoOperations.dropCollection("connections");
 			
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users_3.json" , "users");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
 
 		// Setup 2 questions for each 3 users - Score = 2 and 1
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices_answer_texts_scores.json" , "choices");
+		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
 
 		Response response = userResource.signIn("ralph.masilamani@clickd.org", "rr0101");
 		Assert.assertEquals(200, response.getStatus());
@@ -612,13 +573,11 @@ public class UserResourceTest extends AbstractResourceTest {
 
 		// Make user choices
 		String questionRef = "1";
-		String answerRef = "a1";
-		Response choiceResponse = choiceResource.createWithAnswerRef(userRefRalph, questionRef, answerRef);
+		Response choiceResponse = choiceResource.createWithAnswerText(userRefRalph, questionRef, "beer");
 		Assert.assertEquals(200, choiceResponse.getStatus());
 		
 		questionRef = "1";
-		answerRef = "a1";
-		choiceResponse = choiceResource.createWithAnswerRef(userRefJohn, questionRef, answerRef);
+		choiceResponse = choiceResource.createWithAnswerText(userRefJohn, questionRef, "beer");
 		Assert.assertEquals(200, choiceResponse.getStatus());
 		
 		Response compareResponse = userResource.compareCandidate(userRefRalph, userRefJohn);
@@ -638,14 +597,23 @@ public class UserResourceTest extends AbstractResourceTest {
 
 	@Test
 	public void getUserCliquesSucceeds() throws Exception {
+			// Setup 3 user set
+			mongoOperations.dropCollection("users");
+			mongoOperations.dropCollection("connections");
+				
+			Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
+
+			// Setup 2 questions for each 3 users - Score = 2 and 1
+			Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\choices.json" , "choices");
+
+			
 		// Setup test data
 		String userRefRalph = "1";
 		String userRefJohn = "2";
 		
 		// Make user choices
 		String questionRef = "1";
-		String answerRef = "a1";
-		Response response = choiceResource.createWithAnswerRef(userRefRalph, questionRef, answerRef);
+		Response response = choiceResource.createWithAnswerText(userRefRalph, questionRef, "beer");
 		Assert.assertEquals(200, response.getStatus());
 		
 		// Get Cliques for Ralph
@@ -655,7 +623,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		// Verify Cliques match choices
 		String json = ((String)getCliquesResponse.getEntity());
 		List<Clique> cliques = ((List<Clique>)new Gson().fromJson(json, List.class));
-		Assert.assertEquals(4, cliques.size());
+		Assert.assertEquals(5, cliques.size());
 
 	}
 	

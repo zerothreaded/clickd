@@ -82,7 +82,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 		
 		String json2 = ((String)getCliquesResponse.getEntity());
 		List<Clique> cliques = ((List<Clique>)new Gson().fromJson(json2, List.class));
-		Assert.assertEquals(3, cliques.size());
+		Assert.assertEquals(4, cliques.size());
 
 		
 		String userRef2 = registerThenSignOutAndSignIn("johndodds90@gmail.com", "John", "Dodds", "jj0101", "01-01-01", "male", "NW1");
@@ -111,7 +111,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 		// Verify Cliques match choices
 		String json4 = ((String)getCliquesResponse2.getEntity());
 		List<Clique> cliques2 = ((List<Clique>)new Gson().fromJson(json4, List.class));
-		Assert.assertEquals(3, cliques2.size());
+		Assert.assertEquals(4, cliques2.size());
 
 		Response signInEd = userResource.signIn("edward.dodds@clickd.org", "ee01010");
 	}
