@@ -56,7 +56,7 @@ public class QuestionResource {
 				System.out.println("Evaluating question " + questionRef);
 				boolean hasAnswered = false;
 				for (Choice choice : userChoices) {
-					String choiceQuestionRef = choice.getLinkByName(Resource.KEY_LINK_QUESTION).getHref();
+					String choiceQuestionRef = choice.getLinkByName("question").getHref();
 					if (choiceQuestionRef.equals(questionRef)) {
 						// User has answered this one so flag it
 						hasAnswered = true;
@@ -66,7 +66,7 @@ public class QuestionResource {
 						System.out.println("Skipping question " + choiceQuestionRef);
 					}
 				}
-				if (!hasAnswered && !question.getTags().contains("user.bio")) {
+				if (!hasAnswered && !question.getTags().contains("bio")) {
 					unansweredQuestions.add(question);
 				}
 			}
@@ -77,20 +77,7 @@ public class QuestionResource {
 		if (unansweredQuestions.size() != 0) {
 			int index = 0;
 			Question question = unansweredQuestions.get(index);
-			ArrayList<Answer> answerList = new ArrayList<Answer>();
-			List<Link> answerLinks = question.getLinkLists("question-answer-list");
-			// DUDE
-			if (answerLinks != null) {
-				for (Link answerLink : answerLinks) {
-					Answer answer = answerDao.findByRef(answerLink.getHref());
-					answerList.add(answer);
-				}
-				question.get_Embedded().put("question-answer-list", answerList);
-				return Utilities.toJson(question);
-			} else {
-				System.out.println("NO ANSWER LINKS");
-				return Utilities.toJson(question);
-			}
+			return Utilities.toJson(question);
 		} else {
 			System.out.println("NO MORE QUESTIONS TO ANSWER");
 			return "{ \"status\" : \"done\" }";
