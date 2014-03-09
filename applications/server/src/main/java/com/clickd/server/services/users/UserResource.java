@@ -190,85 +190,50 @@ public class UserResource {
 				System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
 					Map<String, Object> data = (Map<String, Object>) map.get(key);
-					int keySetSize = data.keySet().size();
-					if (keySetSize != 0) {
-						String message = (String) data.get("message");
-						Map<String, Object> place = (Map<String, Object>) data.get("place");
-						if (place != null) {
-							String placeName = (String) place.get("name");
-							Map<String, Object> location = (Map<String, Object>)place.get("location");
-							String locationCity = (String)location.get("city");
-							System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
-							
-							
-							Question checkinQuestions = questionDao.findByTags(placeName);
-							if (checkinQuestions == null) {
-								// N0 question - make it
-								checkinQuestions = new Question();
-								checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
-								checkinQuestions.setAnswerRule("yes|no");
-								checkinQuestions.setType("text");
-								checkinQuestions.setSource("system");
-								checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
-								List<String> tagList = new ArrayList<String>();
-								tagList.add(placeName);
-								tagList.add(locationCity);
-								checkinQuestions.setTags(tagList);
-								questionDao.create(checkinQuestions);
-							}
-							
-							Choice checkinChoice = new Choice();
-							checkinChoice.setAnswerText("yes");
-							checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
-							checkinChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-							checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
-	
-							choiceDao.create(checkinChoice);
-							
-							
+					for (String dataKey : data.keySet()) {
+						System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
+						Map<String, Object> checkinDetails = (Map<String, Object>) data.get(dataKey);
+						String message = (String) checkinDetails.get("message");
+						Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
+						String placeName = (String) place.get("name");
+						Map<String, Object> location = (Map<String, Object>) place.get("location");
+						String locationCity = (String) location.get("city");
+						System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+
+						Question checkinQuestions = questionDao.findByTags(placeName);
+						if (checkinQuestions == null) {
+							// N0 question - make it
+							checkinQuestions = new Question();
+							checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
+							checkinQuestions.setAnswerRule("yes|no");
+							checkinQuestions.setType("text");
+							checkinQuestions.setSource("system");
+							checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
+							List<String> tagList = new ArrayList<String>();
+							tagList.add(placeName);
+							tagList.add(locationCity);
+							checkinQuestions.setTags(tagList);
+							questionDao.create(checkinQuestions);
 						}
-					}					
-					
-//					for (String dataKey : data.keySet()) {
-//						Map<String, Object> likeDetails = (Map<String, Object>) data.get(dataKey);
-//						// System.out.println(dataKey + " = " + likeDetails);
-//						System.out.println("Category" + " = " + likeDetails.get("category"));
-//						System.out.println("Name" + " = " + likeDetails.get("name"));
-						
-//						Question likeQuestion = questionDao.findByTags((String) likeDetails.get("name"));
-//						if (likeQuestion == null) {
-//							// N0 question - make it
-//							likeQuestion = new Question();
-//							likeQuestion.setQuestionText("Do you like " + likeDetails.get("name"));
-//							likeQuestion.setAnswerRule("yes|no");
-//							likeQuestion.setType("text");
-//							likeQuestion.setSource("system");
-//							likeQuestion.addLink("self", new Link(likeQuestion.getRef(), "self"));
-//							List<String> tagList = new ArrayList<String>();
-//							tagList.add((String)likeDetails.get("name"));
-//							tagList.add((String)likeDetails.get("category"));
-//							likeQuestion.setTags(tagList);
-//							questionDao.create(likeQuestion);
-//						}
-//						
-//						Choice likeChoice = new Choice();
-//						likeChoice.setAnswerText("yes");
-//						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
-//						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-//						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-//
-//						choiceDao.create(likeChoice);
-						
+
+						Choice checkinChoice = new Choice();
+						checkinChoice.setAnswerText("yes");
+						checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
+						checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
+						checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
+
+						choiceDao.create(checkinChoice);
+
 					}
 				}
+			}
+
 			int hangon = 1;
 
 			User user = userDao.findByRef("/users/" + userRef);
-			
+
 			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
-		}
-		catch (Exception E)
-		{
+		} catch (Exception E) {
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}
