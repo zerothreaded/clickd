@@ -404,27 +404,29 @@ public class UserResource {
 			// get my answers
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
+			ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
+
+			
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
 
-				
-				ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
+
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
 					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("user");
-					User otherUser = userDao.findByRef(otherUserLink.getHref());
+					
+					if (otherUserLink.getHref().equals("/users/"+userRef))
+						continue;
 					
 					boolean toSkip = false;
 					/*if (otherUser.getGender().equals(user.getGender()))
 						toSkip = true;*/
 						
-					if (!otherUser.getRef().equals("/users/" + userRef))
-					{
 						boolean alreadyExists = false;
 						for (CandidateResponse responseRow : responseList) {
-							if (responseRow.getUser().getRef().equals(otherUser.getRef())) {
+							if (responseRow.getUser().getRef().equals(otherUserLink.getHref())) {
 								responseList.remove(responseRow);
 								responseRow.setScore(responseRow.getScore() + 1);
 								responseList.add(responseRow);
@@ -432,24 +434,27 @@ public class UserResource {
 								break;
 							}
 						}
+							
 						boolean isAConnection = false;
 						for (Connection connection : myConnections)
 						{
 								for (Link link : connection.getLinkLists("connection-user"))
 								{
-									if (link.getHref().equals(otherUser.getRef()))
+									if (link.getHref().equals(otherUserLink.getHref()))
 									{
 										isAConnection = true;
 									}
 								}
 						}
+						
 						if (!alreadyExists && !isAConnection && !toSkip) {
+							User otherUser = userDao.findByRef(otherUserLink.getHref());
 							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
 							responseList.add(responseRow);
 						}
 					}
 				}
-			}
+
 			
 			// Sort the responses
 			Collections.sort(responseList, new Comparator<CandidateResponse>() {
@@ -465,25 +470,44 @@ public class UserResource {
 		}
 	}
 	
+	private ArrayList<String> userComparison(String userRef, String otherUserRef)
+	{
+		//get my answers
+		List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+		List<Choice> otherUserChoices = choiceDao.findByUserRef("/users/"+otherUserRef);
+		ArrayList<String> same = new ArrayList<String>();
+		for (Choice choice : myChoices)
+		{
+			for (Choice choice2 : otherUserChoices)
+			{
+				if (choice.getLinkByName("question") == null || choice2.getLinkByName("question") == null)
+					continue;
+				
+				Question question  = questionDao.findByRef(choice.getLinkByName("question").getHref());
+				
+				if (null == question || question.getTags() == null || choice.getAnswerText() == null || choice2.getAnswerText() == null)
+					continue;
+				
+				String responseString = question.getTags().toString()+" - "+choice.getAnswerText();
+				
+				if (same.contains(responseString))
+					continue;
+				
+					if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
+						same.add(responseString);
+			}
+		}
+		
+		return same;
+	}
 	
 	@GET
 	@Path("/{userRef}/candidates/comparison/{otherUserRef}")
 	@Timed
 	public Response compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
 		try {
-			//get my answers
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			List<Choice> otherUserChoices = choiceDao.findByUserRef("/users/"+otherUserRef);
-			ArrayList<String> same = new ArrayList<String>();
-			for (Choice choice : myChoices)
-			{
-				for (Choice choice2 : otherUserChoices)
-				{
-					Question question  = questionDao.findByRef(choice.getLinkByName("question").getHref());
-						if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
-							same.add(question.getTags().toString()+" - "+choice.getAnswerText());
-				}
-			}
+		ArrayList<String> same = userComparison(userRef, otherUserRef);
+			
 			return Response.status(200).entity(Utilities.toJson(same)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();

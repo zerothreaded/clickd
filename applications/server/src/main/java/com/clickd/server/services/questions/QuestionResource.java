@@ -39,49 +39,39 @@ public class QuestionResource {
 	@Path("/next/{userRef}")
 	@Timed
 	public String getNextQuestion(@PathParam("userRef") String userRef) {
-		List<Question> unansweredQuestions = new ArrayList<Question>();
 		List<Question> questions = questionDao.findAllSortedBy("questionText");
 		//List<Question> questions = questionDao.findAll();
 		List<Choice> userChoices = choiceDao.findByUserRef("/users/"+userRef);
 
-		if (userChoices.size() == 0) {
-			// No choices - first time clicking
-			unansweredQuestions = questions;
-		} else {
-			// Only consider questions NOT answered by this user
-			for (Question question : questions) {
-				// Check if user has answered this - i.e. Question in the
-				// userChoices
-				String questionRef = question.getRef();
-				System.out.println("Evaluating question " + questionRef);
-				boolean hasAnswered = false;
-				for (Choice choice : userChoices) {
-					String choiceQuestionRef = choice.getLinkByName("question").getHref();
-					if (choiceQuestionRef.equals(questionRef)) {
-						// User has answered this one so flag it
-						hasAnswered = true;
-						System.out.println("Adding question " + choiceQuestionRef);
-						break;
-					} else {
-						System.out.println("Skipping question " + choiceQuestionRef);
-					}
-				}
-				if (!hasAnswered && !question.getTags().contains("bio")) {
-					unansweredQuestions.add(question);
+		ArrayList<Question> toDeleteSet = new ArrayList<Question>();
+		for (Choice choice : userChoices)
+		{
+			for (Question choiceQuestion : questions)
+			{
+				if (choiceQuestion.getRef().equals(choice.getLinkByName("question").getHref()))
+				{
+					toDeleteSet.add(choiceQuestion);
 				}
 			}
 		}
-		
-		// TODO: Ralph clear up this conditional logic
-		System.out.println("\n\n UNANSWERED QUESTION SIZE =" + unansweredQuestions.size() + "\n");
-		if (unansweredQuestions.size() != 0) {
-			int index = 0;
-			Question question = unansweredQuestions.get(index);
-			return Utilities.toJson(question);
-		} else {
-			System.out.println("NO MORE QUESTIONS TO ANSWER");
-			return "{ \"status\" : \"done\" }";
+			
+		for (Question toReturn : questions)
+		{
+			boolean skip = false;
+			for (Question toDeleteQuestion : toDeleteSet)
+				if (toReturn.getRef().equals(toDeleteQuestion.getRef()))
+					{
+						skip = true;
+					}
+			
+			if (skip)
+				continue;
+			else
+				return Utilities.toJson(toReturn);
 		}
+	
+		
+		return "";
 	}
 
 //	public QuestionDao getQuestionDao() {

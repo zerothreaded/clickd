@@ -464,7 +464,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						ng-click="onClickConnection({{connection}})" href="#"
 						ng-class="{active: isUserSelected('{{connection.ref}}')}"
 							 >
-								&nbsp;<img class="small-profile-img" ng-src="/profile-img/{{candidate.user.ref}}.jpg">
+								&nbsp;<img class="small-profile-img" ng-src="/profile-img/{{connection.ref}}.jpg">
 								{{connection.firstName}}
 							</a>
 					</div>

@@ -107,7 +107,24 @@ public class ChoiceDao {
 		
 		List<Choice> answerChoices = mongoOperations.find(Query.query(Criteria.where("_links.question.href").is(questionRef).and("answerText").is(answerText)), Choice.class, collectionName);
 		
-		return answerChoices;
+		ArrayList<Choice> toReturn = new ArrayList<Choice>();
+		
+		for (Choice choice : answerChoices)
+		{
+			boolean add = true;
+			for (Choice choice2 : toReturn)
+			{
+				if (choice2.getLinkByName("question").getHref().equals(choice.getLinkByName("question").getHref()) && choice.getAnswerText().equals(choice2.getAnswerText()))
+				{
+					add = false;
+				}
+			}
+			
+			if (add)
+				toReturn.add(choice);
+		}
+		
+		return toReturn;
 	}
 
 }
