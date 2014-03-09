@@ -417,8 +417,8 @@ public class UserResource {
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
 					
 					boolean toSkip = false;
-					if (otherUser.getGender().equals(user.getGender()))
-						toSkip = true;
+					/*if (otherUser.getGender().equals(user.getGender()))
+						toSkip = true;*/
 						
 					if (!otherUser.getRef().equals("/users/" + userRef))
 					{
