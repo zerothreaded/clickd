@@ -174,6 +174,8 @@ public class UserResource {
 							likeQuestion = new Question();
 							likeQuestion.setQuestionText("Do you like " + likeDetails.get("name"));
 							likeQuestion.setAnswerRule("yes|no");
+							likeQuestion.setType("text");
+							likeQuestion.setSource("system");
 							List<String> tagList = new ArrayList<String>();
 							tagList.add((String)likeDetails.get("name"));
 							tagList.add((String)likeDetails.get("category"));
