@@ -120,6 +120,7 @@ public class UserResource {
 			nameChoice.addLink("question", new Link(nameQuestion.getRef(), "choice-question"));
 			nameChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(nameChoice);
+			
 
 			
 			Question dateOfBirthQuestion = questionDao.findByTags("dateofbirth");
@@ -128,6 +129,16 @@ public class UserResource {
 			dateOfBirthChoice.addLink("question", new Link(dateOfBirthQuestion.getRef(), "choice-question"));
 			dateOfBirthChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(dateOfBirthChoice);
+			
+
+			HashMap<String,String> locationDetails = ((HashMap<String,String>)map.get("location"));
+
+			Question locationQuestion = questionDao.findByTags("location");
+			Choice locationChoice = new Choice();
+			locationChoice.setAnswerText(locationDetails.get("name"));
+			locationChoice.addLink("question", new Link(locationQuestion.getRef(), "choice-question"));
+			locationChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+			choiceDao.create(locationChoice);
 
 			
 			return Response.status(200).entity(Utilities.toJson(newUser)).build();
@@ -301,16 +312,11 @@ public class UserResource {
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerText(choice.getAnswerText()));
-				// This test checks if there is a LINK to an answer i.e. The answer is a reference
-				if (null != choice.getLinkByName("choice-answer")) {
-					Link answerLink = choice.getLinkByName("choice-answer");
-					sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByHref(answerLink.getHref()));
-				}
 				ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
 				for (Choice otherUsersChoice : sameAnswerChoices) {
-					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("choice-user");
+					Link otherUserLink = (Link) otherUsersChoice.getLinkByName("user");
 					User otherUser = userDao.findByRef(otherUserLink.getHref());
 					if (!otherUser.getRef().equals("/users/" + userRef))
 					{
@@ -487,49 +493,48 @@ public class UserResource {
 			List<Clique> myCliques = new ArrayList<Clique>();	
 			
 			// Add BIO wired cliques
-			Clique genderClique = new Clique(user, new Date(), new Date(), "system", user.getGender());
+			/*Clique genderClique = new Clique(user, new Date(), new Date(), "system", user.getGender());
 			Clique postcodeClique = new Clique(user, new Date(), new Date(), "system", user.getPostCode());
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			Clique dateOfBirthClique = new Clique(user, new Date(), new Date(), "system", df.format(user.getDateOfBirth()));
 			myCliques.add(genderClique);
 			myCliques.add(postcodeClique);
-			myCliques.add(dateOfBirthClique);
+			myCliques.add(dateOfBirthClique);*/
 			
 			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
 			for (Choice myChoice : myChoices)
 			{
 				// TODO: CHANGE THIS SHIT
-				Link answerRefLink = myChoice.getLinkByName("choice-answer");
-				String answerRef = "";
-				if (answerRefLink != null) {
-					answerRef = myChoice.getLinkByName("choice-answer").getHref();
-				}
-				// So BIO questions have no ANSWER LINK - that's just WRONG!
-				String name = "";
-				Answer answer = answerDao.findByRef(answerRef);
-				if (null != answer) {
-					name = answer.getAnswerText();
-				} else {
-					name = myChoice.getAnswerText();
-				}
+//				Link answerRefLink = myChoice.getLinkByName("choice-answer");
+//				String answerRef = "";
+//				if (answerRefLink != null) {
+//					answerRef = myChoice.getLinkByName("choice-answer").getHref();
+//				}
+//				// So BIO questions have no ANSWER LINK - that's just WRONG!
+//				String name = "";
+//				Answer answer = answerDao.findByRef(answerRef);
+//				if (null != answer) {
+//					name = answer.getAnswerText();
+//				} else {
+//					name = myChoice.getAnswerText();
+//				}
 				
 				//now get list of users who made that choice
-				Clique thisClique = new Clique(user, new Date(), new Date(), "system", name);
-				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByHref(answerRef);
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", myChoice.getAnswerText());
+				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
 				List<User> cliqueMembers = new ArrayList<User>();
 				for (Choice cliqueMemberChoice : cliqueMemberChoices)
 				{
-					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("choice-user");
+					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("user");
 					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
 					if (!cliqueMember.getRef().equals("/users/" + userRef))
 						cliqueMembers.add(cliqueMember);
 				}
+				
 				thisClique.get_Embedded().put("clique-members", cliqueMembers);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
-				if (myChoice.getAnswerText() == null) {
-					myCliques.add(thisClique);
-				}
+				myCliques.add(thisClique);
 			}
 
 			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
