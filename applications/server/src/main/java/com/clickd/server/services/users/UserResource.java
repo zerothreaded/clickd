@@ -149,6 +149,41 @@ public class UserResource {
 
 		}
 	};
+
+	@POST
+	@Timed
+	@Path("/register/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {
+		try {
+			System.out.println(likeData);
+			HashMap<String, Object> map = Utilities.fromJson(likeData);
+			for (String key : map.keySet()) {
+				System.out.println(key + " = " + map.get(key));
+				if (key.equals("data")) {
+					Map<String, Object> data = (Map<String, Object>) map.get(key);
+					for (String dataKey : data.keySet()) {
+						Map<String, Object> likeDetails = (Map<String, Object>) data.get(dataKey);
+						// System.out.println(dataKey + " = " + likeDetails);
+						System.out.println("Category" + " = " + likeDetails.get("category"));
+						System.out.println("Name" + " = " + likeDetails.get("name"));
+					}
+				}
+			}
+			
+			int hangon = 1;
+
+			User user = userDao.findByRef("/users/" + userRef);
+			
+			return Response.status(200).entity(Utilities.toJson("NEIN!!!!")).build();
+		}
+		catch (Exception E)
+		{
+			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+
+		}
+	};
+
 	
 	@POST
 	@Timed

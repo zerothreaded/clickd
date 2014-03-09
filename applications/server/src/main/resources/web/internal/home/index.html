@@ -105,26 +105,84 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		  
 		  
 		  
-		  alert(userId);
+		  // alert(userId);
+		  var userRef = '';
+		  <!-- GET USER STUFF -->
 		  FB.api('/me', function(response) {
+				var registerWithFacebookUrl = "/users/register/source/facebook";
+				$.ajax({
+				    type: "POST",
+				    url: registerWithFacebookUrl,
+				    // The key needs to match your method's input parameter (case-sensitive).
+				    data: "facebookData="+ JSON.stringify(response),
+				    dataType: "json",
+				    success: function(data){
+				    	var jsonResponse = JSON.stringify(data);
+				    	console.log('/users/reg response =' + jsonResponse);
+				    	userRef = data["ref"];
+				    	console.log(userRef);
+				    	
+				    	  FB.api('/me/albums', function(response) {
+				  			console.log('ALBUMS=' + JSON.stringify(response));
+				  		  });
+				  		  
+				  		  FB.api('/me/likes', function(response) {
+				  			alert('YO MOFO UREF = ' + userRef);
+				  			var likeDetails = JSON.stringify(response);
+				  			// likeDetails = likeDetails.replace(/&/g, '');
+				  			// console.log('\n\n TRANSFORMED=' + likeDetails);
+				  			
+				  			var registerLikeDataUrl = "/users/register/likes";
+				  			var likeData = new FormData();
+				  			likeData.append('likeData', likeDetails);
+				  			$.ajax({
+				  			    type: "POST",
+				  			    url: registerLikeDataUrl,
+				  			    // The key needs to match your method's input parameter (case-sensitive).
+				  			    data: {"likeData" : likeDetails, "userRef" : userRef.split("/")[2] },
+				  			    dataType: "json",
+				  				    success: function(data){
+				  			    	console.log('/users/register/likes =' + JSON.stringify(data));
+				  			    },
+				  			    failure: function(errMsg) {
+				  			    	console.log('ERROR=' + errMsg);
+				  			    }
+				  			});
+				  			});
+				  		  
+					  		  FB.api('/me/friends', function(response) {
+					  			console.log('FRIENDS=' + JSON.stringify(response));
+					  			});
+					  		  
+					  		  FB.api('/me/friendlists', function(response) {
+					  			console.log('FRIENDLISTS=' + JSON.stringify(response));
+					  			});
+	
+					  		  FB.api('/me/interests', function(response) {
+					  			console.log('\nINTERESTS=' + JSON.stringify(response));
+					  			});
+	
+					  		  FB.api('/me/checkins', function(response) {
+					  			console.log('CHECKINS=' + JSON.stringify(response));
+					  			});
+	
+	
+					  		  FB.api('/me/picture', function(response) {
+					  				console.log('PICTURE=' + JSON.stringify(response));
+					  			});
 
-		  
-			var registerWithFacebookUrl = "/users/register/source/facebook";
-			$.ajax({
-			    type: "POST",
-			    url: registerWithFacebookUrl,
-			    // The key needs to match your method's input parameter (case-sensitive).
-			    data: "facebookData="+ JSON.stringify(response),
-			    dataType: "json",
-			    success: function(data){alert(JSON.stringify(data));},
-			    failure: function(errMsg) {
-			        alert(errMsg);
-			    }
-			});
+				  		  
+				    },
+				    failure: function(errMsg) {
+				    	console.log('ERROR=' + errMsg);
+				    }
+				});
+		    });
 
-	    });
+		
 
-	}, {scope: 'user_location,friends_location,user_birthday,email,user_interests,user_likes'});
+
+	}, {scope: 'user_location, friends_location, user_about_me, user_birthday, email, user_interests, user_likes, email, user_photos, user_checkins, user_interests, read_friendlists'});
   }
       window.fbAsyncInit = function() {
         FB.init({
@@ -312,7 +370,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<!-- Overlay Div -->
 		<div id="overlay" class="transparent" style="display: none;"></div>
 		<div id="top-nav" class="navbar nav navbar-inverse navbar-fixed-top" >
-			<a href="#" class="navbar-brand"><span><img class="small-profile-img" ng-src="/web/internal/home/images/members/facebook_{{model.currentUser.user.firstName}}.jpg"> is dating @ clickd</span></a>
+			<a href="#" class="navbar-brand"><span><img class="small-profile-img"  ng-src="/web/internal/home/images/members/facebook_{{model.currentUser.user.firstName}}.jpg"> is dating @ clickd</span></a>
 			<ul class="nav-notification navbar-right nav">
 				<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>{{model.currentUser.user.firstName}}</strong></span> <span><i class="fa fa-chevron-down"></i></span>
 				</a>
