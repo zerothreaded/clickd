@@ -486,7 +486,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 							<!--  Answers for this question -->
 							<div class="row">
 								<div class="col-sm-4" ng-repeat="answer in model.currentUser.currentAnswers" >
-									<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, {{answer}})" >
+									<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, '{{answer}}')" >
 										<span class="click-answer-span">{{answer}}</span>
 									</div>
 								</div>

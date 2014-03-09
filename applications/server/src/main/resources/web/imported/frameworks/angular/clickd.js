@@ -138,8 +138,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.onSelectAnswer = function(question, answer) {
 		var userRef = $scope.model.currentUser.userRef;
 		var questionRef = question.ref.split("/")[2];
-		var answer = answer
+		var answer = answer;
+		console.log("answer: "+answer);
 		var createChoiceUrl = "/choices/" + userRef + "/" + questionRef + "/answerText/" + answer;
+		console.log(createChoiceUrl);
 		$http({
 			url : createChoiceUrl,
 			method : "POST",
