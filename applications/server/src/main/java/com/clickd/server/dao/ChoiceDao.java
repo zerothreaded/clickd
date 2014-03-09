@@ -54,14 +54,13 @@ public class ChoiceDao {
 		if (userRef == null) {
 			return null;
 		}
-		List<Choice> usersChoices = new ArrayList<Choice>();
-		List<Choice> allChoices = findAll();
-		for (Choice choice : allChoices) {
-			String choiceUserRef = choice.getLinkByName("user").getHref();
-			if (choiceUserRef.equals("/users/" + userRef)) {
-				usersChoices.add(choice);
-			}
-		}
+		List<Choice> usersChoices = mongoOperations.find(Query.query(Criteria.where("_links.user.href").is(userRef)), Choice.class, collectionName);
+//		for (Choice choice : allChoices) {
+//			String choiceUserRef = choice.getLinkByName("user").getHref();
+//			if (choiceUserRef.equals("/users/" + userRef)) {
+//				usersChoices.add(choice);
+//			}
+//		}
 		return usersChoices;
 	}
 
@@ -105,15 +104,9 @@ public class ChoiceDao {
 	
 
 	public List<Choice> findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) {
-		List<Choice> answerChoices = new ArrayList<Choice>();
-		List<Choice> allChoices = findAll();
-		for (Choice choice : allChoices) {
-			if (null == choice.getAnswerText())
-				continue;
-			if (choice.getAnswerText().equals(answerText) && choice.getLinkByName("question").getHref().equals(questionRef)) {
-				answerChoices.add(choice);
-			}
-		}
+		
+		List<Choice> answerChoices = mongoOperations.find(Query.query(Criteria.where("_links.question.href").is(questionRef).and("answerText").is(answerText)), Choice.class, collectionName);
+		
 		return answerChoices;
 	}
 

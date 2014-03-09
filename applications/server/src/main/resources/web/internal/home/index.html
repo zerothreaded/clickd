@@ -151,8 +151,62 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				  			});
 				  		  
 					  		  FB.api('/me/friends', function(response) {
-					  			console.log('FRIENDS=' + JSON.stringify(response));
-					  			});
+					  			 // console.log("FRIENDS="+JSON.stringify(response));
+					  			var friendsArray = response.data;
+					  			
+					  			friendsArray.forEach(function(entry){
+					  				var friendId = entry["id"];
+						  				//register the user
+					  				FB.api('/'+friendId, function(friendResponse) {
+										var registerWithFacebookUrl = "/users/register/source/facebook";
+										console.log("friend details = "+JSON.stringify(friendResponse));
+										
+										//hacky -- fix
+										friendResponse.email = friendResponse.first_name+"."+friendResponse.last_name+"@clickd.org";
+										
+										$.ajax({
+										    type: "POST",
+										    url: registerWithFacebookUrl,
+										    // The key needs to match your method's input parameter (case-sensitive).
+										    data: "facebookData="+ JSON.stringify(friendResponse),
+										    dataType: "json",
+										    success: function(data){
+											    	var jsonResponse = JSON.stringify(data);
+											    	console.log('registering user =' + jsonResponse);
+											    	var friendRef = data["ref"];
+											    	console.log(friendRef);
+										    		
+											    	 FB.api('/'+friendId+'/likes', function(likesResponse) {
+												  			var likeDetails = JSON.stringify(likesResponse);
+												  			// likeDetails = likeDetails.replace(/&/g, '');
+												  			// console.log('\n\n TRANSFORMED=' + likeDetails);
+												  			
+												  			var registerLikeDataUrl = "/users/register/likes";
+												  			var likeData = new FormData();
+												  			likeData.append('likeData', likeDetails);
+												  			$.ajax({
+												  			    type: "POST",
+												  			    url: registerLikeDataUrl,
+												  			    // The key needs to match your method's input parameter (case-sensitive).
+												  			    data: {"likeData" : likeDetails, "userRef" : friendRef.split("/")[2] },
+												  			    dataType: "json",
+												  				    success: function(data){
+												  			    	console.log('/users/register/likes =' + JSON.stringify(data));
+												  			    },
+												  			    failure: function(errMsg) {
+												  			    	console.log('ERROR=' + errMsg);
+												  			    }
+												  			});
+												  			});
+										    	}
+										    }
+										);
+					  				
+					  				//grab their likes		
+					  			  });		
+					  			}); //end foreach
+					  		  });
+					  		  
 					  		  
 					  		  FB.api('/me/friendlists', function(response) {
 					  			console.log('FRIENDLISTS=' + JSON.stringify(response));
@@ -182,7 +236,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		
 
 
-	}, {scope: 'user_location, friends_location, user_about_me, user_birthday, email, user_interests, user_likes, email, user_photos, user_checkins, user_interests, read_friendlists'});
+	}, {scope: 'user_location, friends_location, user_about_me, friends_about_me, user_birthday, friends_birthday, email, user_interests, friends_interests, user_likes, friends_likes,user_photos, friends_photos, user_checkins, friends_checkins, read_friendlists'});
   }
       window.fbAsyncInit = function() {
         FB.init({
@@ -255,7 +309,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		    <div id="map-canvas"></div>
 		
 		</div> -->
-			<div class="col-xs-12 col-md-4 col-md-offset-0 col-sm-6 col-sm-offset-6 signup-group">
+			<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
 				<form ng-submit="processRegisterForm()">
 					<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
 						<h2>

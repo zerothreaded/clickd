@@ -379,7 +379,7 @@ public class UserResource {
 	public Response getCandidates(@PathParam("userRef") String userRef) {
 		try {
 			// get my answers
-			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			ArrayList<CandidateResponse> responseList = new ArrayList<CandidateResponse>();
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
@@ -431,7 +431,7 @@ public class UserResource {
 				}
 			});
 			
-			return Response.status(200).entity(responseList).build();
+			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 9))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
@@ -444,8 +444,8 @@ public class UserResource {
 	public Response compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
 		try {
 			//get my answers
-			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
-			List<Choice> otherUserChoices = choiceDao.findByUserRef(otherUserRef);
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			List<Choice> otherUserChoices = choiceDao.findByUserRef("/users/"+otherUserRef);
 			ArrayList<String> same = new ArrayList<String>();
 			for (Choice choice : myChoices)
 			{
@@ -564,7 +564,7 @@ public class UserResource {
 			myCliques.add(dateOfBirthClique);*/
 			
 			// Add CHOICE based cliques
-			List<Choice> myChoices = choiceDao.findByUserRef(userRef);
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			for (Choice myChoice : myChoices)
 			{
 				// TODO: CHANGE THIS SHIT
@@ -585,22 +585,21 @@ public class UserResource {
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
-				List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
-				List<User> cliqueMembers = new ArrayList<User>();
-				for (Choice cliqueMemberChoice : cliqueMemberChoices)
-				{
-					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("user");
-					User cliqueMember = userDao.findByRef(cliqueMemberLink.getHref());
-					if (!cliqueMember.getRef().equals("/users/" + userRef))
-						cliqueMembers.add(cliqueMember);
-				}
-				
-				thisClique.get_Embedded().put("clique-members", cliqueMembers);
+//					List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
+//				List<User> cliqueMembers = new ArrayList<User>();
+//				for (Choice cliqueMemberChoice : cliqueMemberChoices)
+//				{
+//					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("user");
+//					if (!cliqueMemberLink.getRef().equals("/users/" + userRef))
+//						cliqueMembers.add(cliqueMember);
+//				}
+//				
+				//thisClique.get_Embedded().put("clique-members", cliqueMembers);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				myCliques.add(thisClique);
 			}
 
-			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
+			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 9))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
