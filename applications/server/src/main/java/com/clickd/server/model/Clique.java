@@ -18,6 +18,16 @@ public class Clique extends Resource {
 	protected String source;
 	protected String name;
 	
+	protected int cliqueSize;
+	
+	public int getCliqueSize() {
+		return cliqueSize;
+	}
+
+	public void setCliqueSize(int cliqueSize) {
+		this.cliqueSize = cliqueSize;
+	}
+
 	public Clique() {
 		super();
 

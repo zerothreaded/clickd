@@ -569,7 +569,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
 						ng-click="onClickClique({{clique}})" href="#"
 						ng-class="{active: isCliqueSelected({{'clique.ref'}})}">
-									&nbsp;{{clique.name}}
+									&nbsp;{{clique.name}}  <span class="badge small-badge">{{clique.cliqueSize-1}}</span>
 						</a>
 					</div>
 					<hr/>

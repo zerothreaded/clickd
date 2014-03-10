@@ -667,9 +667,22 @@ public class UserResource {
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
 				thisClique.get_Embedded().put("clique-choice", myChoice);
+				
+				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
+				
 				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
+				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
 			}
+			
+			// Sort the responses
+			Collections.sort(myCliques, new Comparator<Clique>() {
+				@Override
+				public int compare(Clique cl1, Clique cl2) {
+					return cl2.getCliqueSize() - cl1.getCliqueSize();
+				}
+			});
+			
 			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 15))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
