@@ -107,7 +107,7 @@ public class UserResource {
 			User existingUser = userDao.findByRef("/users/"+(String)map.get("id"));
 			if (null != existingUser)
 			{
-				return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+				return Response.status(200).entity(Utilities.toJson(existingUser)).build();
 			}
 			
 			User newUser = new User();
