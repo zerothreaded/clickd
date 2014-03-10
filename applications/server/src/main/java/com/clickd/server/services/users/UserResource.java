@@ -665,7 +665,18 @@ public class UserResource {
 			{
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
-				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
+				
+				String cliqueName = question.getTags().toString()+" "+myChoice.getAnswerText();
+				if (question.getTags().get(0).equals("fb.like"))
+					cliqueName = question.getTags().get(1)+"("+question.getTags().get(2)+")";
+				
+				if (question.getTags().get(0).equals("fb.checkin"))
+				cliqueName = "Been to "+question.getTags().get(1);
+				
+				if (question.getTags().get(0).equals("aboutme"))
+					cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
+				
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
