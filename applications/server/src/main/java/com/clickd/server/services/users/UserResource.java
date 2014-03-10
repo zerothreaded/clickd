@@ -97,19 +97,14 @@ public class UserResource {
 	@Path("/register/source/facebook")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerWithFacebook(@FormParam("facebookData") String facebookData) throws URISyntaxException {
-
-		
 		try {
-			System.out.println(facebookData);
-			
+			// System.out.println(facebookData);
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
-			
-			User existingUser = userDao.findByRef("/users/"+(String)map.get("id"));
+			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
 			if (null != existingUser)
 			{
 				return Response.status(200).entity(Utilities.toJson(existingUser)).build();
 			}
-			
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
@@ -231,6 +226,56 @@ public class UserResource {
 //			User user = userDao.findByRef("/users/" + userRef);
 			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
 		} catch (Exception E) {
+			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+
+		}
+	};
+	
+	@POST
+	@Timed
+	@Path("/register/movies")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerMovies(@FormParam("movieData") String movieData, @FormParam("userRef") String userRef) throws URISyntaxException {
+		try {
+			// System.out.println(likeData);
+			HashMap<String, Object> map = Utilities.fromJson(movieData);
+			for (String key : map.keySet()) {
+				System.out.println(key + " = " + map.get(key));
+				if (key.equals("data")) {
+					Map<String, Object> data = (Map<String, Object>) map.get(key);
+					for (String dataKey : data.keySet()) {
+						System.out.println(dataKey + " = " + data.get(dataKey));
+						Map<String, Object> movieDetails = (Map<String, Object>) data.get(dataKey);
+						Question movieQuestion = questionDao.findByTags((String) movieDetails.get("name"));
+						if (movieQuestion == null) {
+							// N0 question - make it
+							movieQuestion = new Question();
+							movieQuestion.setQuestionText("Do you like " + movieDetails.get("name"));
+							movieQuestion.setAnswerRule("yes|no");
+							movieQuestion.setType("text");
+							movieQuestion.setSource("system");
+							movieQuestion.addLink("self", new Link(movieQuestion.getRef(), "self"));
+							List<String> tagList = new ArrayList<String>();
+							tagList.add("fb.movie");
+							tagList.add("movies");
+							tagList.add((String)movieDetails.get("name"));
+							movieQuestion.setTags(tagList);
+							questionDao.create(movieQuestion);
+						}
+						
+						Choice likeChoice = new Choice();
+						likeChoice.setAnswerText("yes");
+						likeChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
+						choiceDao.create(likeChoice);
+					}
+				}
+			}
+			return Response.status(200).entity(Utilities.toJson("Facebook Movies Imported")).build();
+		}
+		catch (Exception E)
+		{
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}

@@ -191,9 +191,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				  		  });
 				    	  */
 				    	  
-				  		  FB.api('/me/movies', function(response) {
-					  			console.log('\nMOVIES=' + JSON.stringify(response));
-					  	  });
+				  	
 				  		  
 				  		  FB.api('/me/likes', function(response) {
 				  			var likeDetails = JSON.stringify(response);
@@ -283,6 +281,29 @@ google.maps.event.addDomListener(window, 'load', initialize);
 												  			    }
 												  			});
 												  		});
+											    	 
+											   	  FB.api('/' + friendId + '/movies', function(response) {
+											  			console.log('\nMOVIES=' + JSON.stringify(response));
+											  			var movieDetails = JSON.stringify(response);
+											  			var registerMoviesUrl = "/users/register/movies";
+											  			var movieData = new FormData();
+											  			movieData.append('movieData', movieDetails);
+											  			$.ajax({
+											  			    type: "POST",
+											  			    url: registerMoviesUrl,
+											  			    // The key needs to match your method's input parameter (case-sensitive).
+											  			    data: {"movieData" : movieDetails, "userRef" : userRef.split("/")[2] },
+											  			    dataType: "json",
+											  				    success: function(data){
+											  			    	console.log('/users/register/movies =' + JSON.stringify(data));
+											  			    },
+											  			    failure: function(errMsg) {
+											  			    	alert('register movies failed');
+											  			    	console.log('ERROR=' + errMsg);
+											  			    }
+											  			});
+											  			
+											  	  });
 											    	 
 				
 												  			
