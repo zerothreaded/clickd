@@ -34,12 +34,15 @@ $(function() {
   
 </script>
 <script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
+
 <!-- 1. Include the LinkedIn JavaScript API and define a onLoad callback function -->
+<!-- 
 <script type="text/javascript" src="http://platform.linkedin.com/in.js">/*
   api_key: 770xu2xqifqbs0
   onLoad: onLinkedInLoad
   authorize: true
 */</script>
+
 
 <script type="text/javascript">
   // 2. Runs when the JavaScript framework is loaded
@@ -64,9 +67,10 @@ $(function() {
    }
 
 </script>
+ -->
 
 
-
+<!--  
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
@@ -122,7 +126,7 @@ d3.select("div").style("height", diameter + "px");
 
 </script>
 
-
+-->
 
 <style>
       html, body, #map-canvas {
@@ -180,10 +184,16 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				    	console.log('/users/reg response =' + jsonResponse);
 				    	userRef = data["ref"];
 				    	console.log(userRef);
-				    	
+						
+				    	/*
 				    	  FB.api('/me/albums', function(response) {
 				  			console.log('ALBUMS=' + JSON.stringify(response));
 				  		  });
+				    	  */
+				    	  
+				  		  FB.api('/me/movies', function(response) {
+					  			console.log('\nMOVIES=' + JSON.stringify(response));
+					  	  });
 				  		  
 				  		  FB.api('/me/likes', function(response) {
 				  			var likeDetails = JSON.stringify(response);

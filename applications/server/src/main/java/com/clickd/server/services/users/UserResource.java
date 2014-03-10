@@ -279,11 +279,6 @@ public class UserResource {
 					}
 				}
 			}
-			
-			int hangon = 1;
-
-			User user = userDao.findByRef("/users/" + userRef);
-			
 			return Response.status(200).entity(Utilities.toJson("NEIN!!!!")).build();
 		}
 		catch (Exception E)
