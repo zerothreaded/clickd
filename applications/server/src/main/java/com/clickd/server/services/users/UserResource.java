@@ -99,7 +99,8 @@ public class UserResource {
 	public Response registerWithFacebook(@FormParam("facebookData") String facebookData) throws URISyntaxException {
 		try {
 			// System.out.println(facebookData);
-			HashMap<String, Object> map = Utilities.fromJson(facebookData);
+			
+			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(facebookData));
 			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
 			if (null != existingUser)
 			{
@@ -144,7 +145,7 @@ public class UserResource {
 			nameChoice.addLink("question", new Link(nameQuestion.getRef(), "choice-question"));
 			nameChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(nameChoice);
-			
+				
 			Question dateOfBirthQuestion = questionDao.findByTags("dateofbirth");
 			Choice dateOfBirthChoice = new Choice();
 			dateOfBirthChoice.setAnswerText((String)map.get("birthday"));
@@ -152,15 +153,21 @@ public class UserResource {
 			dateOfBirthChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(dateOfBirthChoice);
 			
-			HashMap<String,String> locationDetails = ((HashMap<String,String>)map.get("location"));
-
-			Question locationQuestion = questionDao.findByTags("location");
-			Choice locationChoice = new Choice();
-			locationChoice.setAnswerText(locationDetails.get("name"));
-			locationChoice.addLink("question", new Link(locationQuestion.getRef(), "choice-question"));
-			locationChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
-			choiceDao.create(locationChoice);
-
+			if (map.get("location") != null)
+			{
+			
+				HashMap<String,String> locationDetails = ((HashMap<String,String>)map.get("location"));
+	
+				if (locationDetails.get("name") != null)
+				{
+					Question locationQuestion = questionDao.findByTags("location");
+					Choice locationChoice = new Choice();
+					locationChoice.setAnswerText(locationDetails.get("name"));
+					locationChoice.addLink("question", new Link(locationQuestion.getRef(), "choice-question"));
+					locationChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
+					choiceDao.create(locationChoice);
+				}
+			}
 			
 			return Response.status(200).entity(Utilities.toJson(newUser)).build();
 		}
@@ -179,7 +186,7 @@ public class UserResource {
 	public Response registerCheckins(@FormParam("checkinData") String checkinData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(checkinData);
-			HashMap<String, Object> map = Utilities.fromJson(checkinData);
+			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(checkinData));
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -187,11 +194,25 @@ public class UserResource {
 					for (String dataKey : data.keySet()) {
 						// System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
 						Map<String, Object> checkinDetails = (Map<String, Object>) data.get(dataKey);
-						String message = (String) checkinDetails.get("message");
-						Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
-						String placeName = (String) place.get("name");
-						Map<String, Object> location = (Map<String, Object>) place.get("location");
-						String locationCity = (String) location.get("city");
+						
+						String message = "";
+						if (checkinDetails.get("message") != null)
+							 message = (String) checkinDetails.get("message");
+						
+						String placeName = "";
+						String locationCity = "";
+						if (checkinDetails.get("place") != null)
+						{
+							Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
+							placeName = (String)place.get("name");
+							
+							if (place.get("location")!=null)
+							{
+								Map<String, Object> location = (Map<String, Object>) place.get("location");
+								locationCity = (String) location.get("city");
+							}
+						}
+						
 						System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
 
 						Question checkinQuestions = questionDao.findByTags(placeName);
@@ -226,6 +247,8 @@ public class UserResource {
 //			User user = userDao.findByRef("/users/" + userRef);
 			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
 		} catch (Exception E) {
+			E.printStackTrace();
+
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}
@@ -238,7 +261,7 @@ public class UserResource {
 	public Response registerMovies(@FormParam("movieData") String movieData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(likeData);
-			HashMap<String, Object> map = Utilities.fromJson(movieData);
+			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(movieData));
 			for (String key : map.keySet()) {
 				System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -261,7 +284,7 @@ public class UserResource {
 							tagList.add((String)movieDetails.get("name"));
 							movieQuestion.setTags(tagList);
 							questionDao.create(movieQuestion);
-						}
+						
 						
 						Choice likeChoice = new Choice();
 						likeChoice.setAnswerText("yes");
@@ -269,6 +292,7 @@ public class UserResource {
 						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
 						choiceDao.create(likeChoice);
+						}
 					}
 				}
 			}
@@ -276,6 +300,7 @@ public class UserResource {
 		}
 		catch (Exception E)
 		{
+			E.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}
@@ -287,7 +312,7 @@ public class UserResource {
 	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(likeData);
-			HashMap<String, Object> map = Utilities.fromJson(likeData);
+			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(likeData));
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -297,6 +322,9 @@ public class UserResource {
 						// System.out.println(dataKey + " = " + likeDetails);
 						// System.out.println("Category" + " = " + likeDetails.get("category"));
 						// System.out.println("Name" + " = " + likeDetails.get("name"));
+						
+						if (likeDetails.get("name") == null)
+							continue;
 						
 						Question likeQuestion = questionDao.findByTags((String) likeDetails.get("name"));
 						if (likeQuestion == null) {
@@ -329,6 +357,8 @@ public class UserResource {
 		}
 		catch (Exception E)
 		{
+			E.printStackTrace();
+
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}
