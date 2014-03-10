@@ -104,11 +104,11 @@ public class UserResource {
 			
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
 			
-			User existingUser = userDao.findByEmail((String)map.get("email"));
-				if (null != existingUser)
-				{
-					return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
-				}
+			User existingUser = userDao.findByRef("/users/"+(String)map.get("id"));
+			if (null != existingUser)
+			{
+				return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+			}
 			
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
