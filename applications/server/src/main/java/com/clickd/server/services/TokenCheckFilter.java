@@ -8,6 +8,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class TokenCheckFilter implements Filter {
@@ -27,11 +28,22 @@ public class TokenCheckFilter implements Filter {
 		HttpServletResponse servletResponse = (HttpServletResponse) response;
 		// servletResponse.setHeader("Cache-Control", "public, max-age=1");
 		// servletResponse.setHeader("Expires", new Date().getTime() + 0 + "");
-		servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
-																							// 1.1.
-		servletResponse.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-		// servletResponse.setDateHeader("Expires", 0); // Proxies.
+		// servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
+		// servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 
+		
+		HttpServletRequest servletRequest = (HttpServletRequest) request;
+		String path = servletRequest.getPathTranslated();
+		if (path != null) {
+			if (!path.contains("img")) {
+				servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
+				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
+				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
+			} else {
+				int wait  = 1;
+				
+			}
+		}		
 		servletResponse.setHeader("Access-Control-Allow-Origin", "*");
 		
 		filterChain.doFilter(request, response);

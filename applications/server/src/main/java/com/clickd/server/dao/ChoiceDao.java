@@ -1,28 +1,37 @@
 package com.clickd.server.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
+import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 
-public class ChoiceDao {
+public class ChoiceDao implements InitializingBean {
 
+	private static Map<String, Choice> cache;
+	
 	private MongoOperations mongoOperations;
 	private String collectionName;
 
 	public ChoiceDao() {
 		System.out.println("ChoiceDao() called.");
+		cache = new TreeMap<String, Choice>();
 		this.collectionName = "choices";
 	}
 
 	public Choice create(Choice choice) {
 		mongoOperations.save(choice, collectionName);
+		cache.put(choice.getRef(), choice);
 		return choice;
 	}
 
@@ -34,10 +43,13 @@ public class ChoiceDao {
 
 	public void delete(Choice choice) {
 		mongoOperations.remove(choice);
+		cache.remove(choice.getRef());
 	}
 
 	public List<Choice> findAll() {
-		return mongoOperations.findAll(Choice.class, collectionName);
+		List<Choice> results = new ArrayList<Choice>();
+		results.addAll(cache.values());
+		return results;
 	}
 
 	public Choice findById(String id) {
@@ -46,21 +58,22 @@ public class ChoiceDao {
 	}
 
 	public Choice findByRef(String ref) {
-		Choice choice = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Choice.class, collectionName);
-		return choice;
+		return cache.get(ref);
 	}
 
 	public List<Choice> findByUserRef(String userRef) {
-		if (userRef == null) {
-			return null;
+		List<Choice> usersChoices = new ArrayList<Choice>();
+		for (Choice choice : cache.values()) {
+			Link choiceUser = choice.getLinkByName("user");
+			if (choiceUser != null) {
+				String choiceUserRef = choiceUser.getHref();
+				if (choiceUserRef.equals(userRef)) {
+					usersChoices.add(choice);
+		
+				}
+			}
 		}
-		List<Choice> usersChoices = mongoOperations.find(Query.query(Criteria.where("_links.user.href").is(userRef)), Choice.class, collectionName);
-//		for (Choice choice : allChoices) {
-//			String choiceUserRef = choice.getLinkByName("user").getHref();
-//			if (choiceUserRef.equals("/users/" + userRef)) {
-//				usersChoices.add(choice);
-//			}
-//		}
+		System.out.println("findByUserRef() returnd [" + usersChoices.size() + "] choices for User " + userRef);
 		return usersChoices;
 	}
 
@@ -104,27 +117,52 @@ public class ChoiceDao {
 	
 
 	public List<Choice> findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) {
-		
-		List<Choice> answerChoices = mongoOperations.find(Query.query(Criteria.where("_links.question.href").is(questionRef).and("answerText").is(answerText)), Choice.class, collectionName);
-		
-		ArrayList<Choice> toReturn = new ArrayList<Choice>();
-		
-		for (Choice choice : answerChoices)
-		{
-			boolean add = true;
-			for (Choice choice2 : toReturn)
-			{
-				if (choice2.getLinkByName("question").getHref().equals(choice.getLinkByName("question").getHref()) && choice.getAnswerText().equals(choice2.getAnswerText()))
-				{
-					add = false;
+		try {
+			List<Choice> answerChoices = new ArrayList<Choice>();
+			List<Choice> allChoices = findAll();
+			for (Choice choice : allChoices) {
+				if (choice == null) {
+					// HMMMMMMM - WTF
+					System.out.println("WTF WTF");
+					
+				} else {
+					Link choiceHrefLink = choice.getLinkByName("question");
+					if (choiceHrefLink != null) {
+						String choiceAnswerText = choice.getAnswerText();
+						if (choiceAnswerText == null) {
+							// HMMMMMMM - WTF
+							// System.out.println("WTF choiceAnswerText = null");
+							continue;
+						}
+						String choiceHref = choiceHrefLink.getHref();
+						if (choiceAnswerText.equals(answerText) && choiceHref.equals(questionRef)) {
+							answerChoices.add(choice);
+						} 
+						int here = 1;
+					} else {
+						System.out.println("No question Link in choice  [" + choice.getId());
+					}
 				}
 			}
-			
-			if (add)
-				toReturn.add(choice);
+			// System.out.println("findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef() returnd [" + answerChoices.size() + "] choices for Answer " + answerText);
+			return answerChoices;
+		} catch(Exception e) {
+			int argh = 1;
+			return null;
 		}
-		
-		return toReturn;
+
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		long now = new Date().getTime();
+		System.out.println("afterPropertiesSet() called. Loading cache..");
+		List<Choice> allChoices = mongoOperations.findAll(Choice.class, collectionName);
+		for (Choice choice : allChoices) {
+			cache.put(choice.getRef(), choice);
+		}
+		System.out.println("Choice cache has " + cache.size() + " choices. Loaded in " + (new Date().getTime() - now) + "ms");
+
 	}
 
 }

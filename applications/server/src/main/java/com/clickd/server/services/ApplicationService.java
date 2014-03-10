@@ -39,6 +39,8 @@ public class ApplicationService extends Service<UserConfiguration> {
 		
 		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
+		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/d3", "d31.html"));
+		bootstrap.addBundle(new AssetsBundle("/web/data", "/data"));
 	}
 
 	@Override

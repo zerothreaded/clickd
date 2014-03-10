@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
+import com.clickd.server.dao.CliqueDao;
 import com.clickd.server.dao.ConnectionDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
@@ -115,7 +116,7 @@ public class UserResource {
 			newUser.setGender((String)map.get("gender"));
 			newUser.setEmail((String)map.get("email"));
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
-			newUser.setPassword("fb0101");
+			newUser.setPassword("fb999");
 			newUser.setRef("/users/"+(String)map.get("id"));
 			userDao.create(newUser);
 			
@@ -149,8 +150,6 @@ public class UserResource {
 			nameChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(nameChoice);
 			
-
-			
 			Question dateOfBirthQuestion = questionDao.findByTags("dateofbirth");
 			Choice dateOfBirthChoice = new Choice();
 			dateOfBirthChoice.setAnswerText((String)map.get("birthday"));
@@ -158,7 +157,6 @@ public class UserResource {
 			dateOfBirthChoice.addLink("user", new Link(newUser.getRef(), "choice-user"));
 			choiceDao.create(dateOfBirthChoice);
 			
-
 			HashMap<String,String> locationDetails = ((HashMap<String,String>)map.get("location"));
 
 			Question locationQuestion = questionDao.findByTags("location");
@@ -184,14 +182,14 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerCheckins(@FormParam("checkinData") String checkinData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
-			System.out.println(checkinData);
+			// System.out.println(checkinData);
 			HashMap<String, Object> map = Utilities.fromJson(checkinData);
 			for (String key : map.keySet()) {
-				System.out.println(key + " = " + map.get(key));
+				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
 					Map<String, Object> data = (Map<String, Object>) map.get(key);
 					for (String dataKey : data.keySet()) {
-						System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
+						// System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
 						Map<String, Object> checkinDetails = (Map<String, Object>) data.get(dataKey);
 						String message = (String) checkinDetails.get("message");
 						Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
@@ -210,6 +208,7 @@ public class UserResource {
 							checkinQuestions.setSource("system");
 							checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
 							List<String> tagList = new ArrayList<String>();
+							tagList.add("fb.checkin");
 							tagList.add(placeName);
 							tagList.add(locationCity);
 							checkinQuestions.setTags(tagList);
@@ -227,11 +226,8 @@ public class UserResource {
 					}
 				}
 			}
-
-			int hangon = 1;
-
-			User user = userDao.findByRef("/users/" + userRef);
-
+//			int hangon = 1;
+//			User user = userDao.findByRef("/users/" + userRef);
 			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
 		} catch (Exception E) {
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
@@ -244,17 +240,17 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
-			System.out.println(likeData);
+			// System.out.println(likeData);
 			HashMap<String, Object> map = Utilities.fromJson(likeData);
 			for (String key : map.keySet()) {
-				System.out.println(key + " = " + map.get(key));
+				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
 					Map<String, Object> data = (Map<String, Object>) map.get(key);
 					for (String dataKey : data.keySet()) {
 						Map<String, Object> likeDetails = (Map<String, Object>) data.get(dataKey);
 						// System.out.println(dataKey + " = " + likeDetails);
-						System.out.println("Category" + " = " + likeDetails.get("category"));
-						System.out.println("Name" + " = " + likeDetails.get("name"));
+						// System.out.println("Category" + " = " + likeDetails.get("category"));
+						// System.out.println("Name" + " = " + likeDetails.get("name"));
 						
 						Question likeQuestion = questionDao.findByTags((String) likeDetails.get("name"));
 						if (likeQuestion == null) {
@@ -266,6 +262,7 @@ public class UserResource {
 							likeQuestion.setSource("system");
 							likeQuestion.addLink("self", new Link(likeQuestion.getRef(), "self"));
 							List<String> tagList = new ArrayList<String>();
+							tagList.add("fb.like");
 							tagList.add((String)likeDetails.get("name"));
 							tagList.add((String)likeDetails.get("category"));
 							likeQuestion.setTags(tagList);
@@ -277,7 +274,6 @@ public class UserResource {
 						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
 						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-
 						choiceDao.create(likeChoice);
 						
 					}
@@ -431,9 +427,11 @@ public class UserResource {
 				return Response.status(300).entity(new ErrorMessage("failed", "User not found")).build();
 			}
 			List<Link> sessionLinks =user.getLinkLists(Resource.KEY_LINK_USER_SESSION_LIST);
-			for (Link sessionLink : sessionLinks) {
-				Session session = sessionDao.findByRef(sessionLink.getHref());
-				sessionDao.delete(session);
+			if (sessionLinks != null) {
+				for (Link sessionLink : sessionLinks) {
+					Session session = sessionDao.findByRef(sessionLink.getHref());
+					sessionDao.delete(session);
+				}
 			}
 			return Response.status(200).build();			
 		}
@@ -524,7 +522,7 @@ public class UserResource {
 				}
 			});
 			
-			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 9))).build();
+			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 15))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
@@ -536,6 +534,7 @@ public class UserResource {
 		List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 		List<Choice> otherUserChoices = choiceDao.findByUserRef("/users/"+otherUserRef);
 		ArrayList<String> same = new ArrayList<String>();
+		System.out.println("Starting compare with " + myChoices.size() + " myChoices and " + otherUserChoices.size() + " other user choices");
 		for (Choice choice : myChoices)
 		{
 			for (Choice choice2 : otherUserChoices)
@@ -665,57 +664,32 @@ public class UserResource {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
-			
-			// Add BIO wired cliques
-			/*Clique genderClique = new Clique(user, new Date(), new Date(), "system", user.getGender());
-			Clique postcodeClique = new Clique(user, new Date(), new Date(), "system", user.getPostCode());
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			Clique dateOfBirthClique = new Clique(user, new Date(), new Date(), "system", df.format(user.getDateOfBirth()));
-			myCliques.add(genderClique);
-			myCliques.add(postcodeClique);
-			myCliques.add(dateOfBirthClique);*/
-			
 			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			for (Choice myChoice : myChoices)
 			{
-				// TODO: CHANGE THIS SHIT
-//				Link answerRefLink = myChoice.getLinkByName("choice-answer");
-//				String answerRef = "";
-//				if (answerRefLink != null) {
-//					answerRef = myChoice.getLinkByName("choice-answer").getHref();
-//				}
-//				// So BIO questions have no ANSWER LINK - that's just WRONG!
-//				String name = "";
-//				Answer answer = answerDao.findByRef(answerRef);
-//				if (null != answer) {
-//					name = answer.getAnswerText();
-//				} else {
-//					name = myChoice.getAnswerText();
-//				}
-				
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
-//					List<Choice> cliqueMemberChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerText(myChoice.getAnswerText());
-//				List<User> cliqueMembers = new ArrayList<User>();
-//				for (Choice cliqueMemberChoice : cliqueMemberChoices)
-//				{
-//					Link cliqueMemberLink = cliqueMemberChoice.getLinkByName("user");
-//					if (!cliqueMemberLink.getRef().equals("/users/" + userRef))
-//						cliqueMembers.add(cliqueMember);
-//				}
-//				
-				//thisClique.get_Embedded().put("clique-members", cliqueMembers);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				myCliques.add(thisClique);
 			}
-
-			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 9))).build();
+			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 15))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
-
+	}
+	
+	@GET
+	@Path("/cliques/{cliqueRef}")
+	@Timed
+	public Response getClique(@PathParam("cliqueRef") String cliqueRef) {
+		try {
+		
+			return Response.status(200).entity(Utilities.toJson(cliqueRef)).build();
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
+		}
 	}
 
 	@GET
