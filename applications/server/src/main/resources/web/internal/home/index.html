@@ -590,7 +590,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
 						ng-click="onClickClique({{clique}})" href="#"
 						ng-class="{active: isCliqueSelected({{'clique.ref'}})}">
-									&nbsp;{{clique.name}}
+									&nbsp;{{clique.name}}  <span class="badge small-badge">{{clique.cliqueSize-1}}</span>
 						</a>
 					</div>
 					<hr/>
@@ -671,12 +671,21 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						
 						<!-- VIEW CLIQUES -->
 						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
-								<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique('{{clique.name}}')" href="#" ng-class="{active: isCliqueSelected('{{clique.name}}')}" >
+						<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique('{{clique.name}}')" href="#" ng-class="{active: isCliqueSelected('{{clique.name}}')}" >
 									<div ng-if="clique.name.indexOf('like') != -1">
 										<img class="image" width="20px" height="20px" ng-src="/web/internal/home/images/fb_like.jpg">
 									 </div>
 									{{clique.name}}
 									<br/>
+								</div>	
+						</div>
+						
+						<!--  VIEW CLIQUE -->
+						<div ng-if="model.currentSelection == 'cliques.clique'" class="panel clique-panel">
+						
+							<div class="member-md-panel" ng-repeat="cliqueMember in model.selectedClique.cliqueMembers"  href="#"  >
+									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{cliqueMember.ref}}.jpg" ng-click="selectCliqueMember({{cliqueMember}})">
+									{{cliqueMember.firstName}} {{cliqueMember.lastName}}</a>
 								</div>	
 						</div>
 						

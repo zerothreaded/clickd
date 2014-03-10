@@ -100,12 +100,11 @@ public class UserResource {
 		try {
 			// System.out.println(facebookData);
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
-			User existingUser = userDao.findByEmail((String)map.get("email"));
-				if (null != existingUser)
-				{
-					return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
-				}
-
+			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
+			if (null != existingUser)
+			{
+				return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+			}
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
@@ -711,10 +710,35 @@ public class UserResource {
 			{
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
-				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
+				
+				String cliqueName = question.getTags().toString()+" "+myChoice.getAnswerText();
+				if (question.getTags().get(0).equals("fb.like"))
+					cliqueName = "Likes "+question.getTags().get(1)+"("+question.getTags().get(2)+")";
+				
+				if (question.getTags().get(0).equals("fb.checkin"))
+				cliqueName = "Been to "+question.getTags().get(1);
+				
+				if (question.getTags().get(0).equals("aboutme"))
+					cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
+				
+				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
+				
+				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
+				
+				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
+				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
 			}
+			
+			// Sort the responses
+			Collections.sort(myCliques, new Comparator<Clique>() {
+				@Override
+				public int compare(Clique cl1, Clique cl2) {
+					return cl2.getCliqueSize() - cl1.getCliqueSize();
+				}
+			});
+			
 			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 15))).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
@@ -722,12 +746,34 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/cliques/{cliqueRef}")
+	@Path("/{userRef}/cliques/{cliqueRef}")
 	@Timed
-	public Response getClique(@PathParam("cliqueRef") String cliqueRef) {
+	public Response getClique(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
 		try {
-		
-			return Response.status(200).entity(Utilities.toJson(cliqueRef)).build();
+			ArrayList <User> cliqueUsers = new ArrayList();
+				Choice myChoice = choiceDao.findByRef("/choices/"+cliqueRef);
+				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
+				
+				User me = userDao.findByRef("/users/"+userRef);
+				
+				Clique thisClique = new Clique(me, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
+				thisClique.get_Embedded().put("clique-choice", myChoice);
+				
+				List<Choice> usersWithSameChoice = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), question.getRef());
+				
+				for (Choice userChoice : usersWithSameChoice)
+				{
+					if (!userChoice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					{
+						User thisUser = userDao.findByRef(userChoice.getLinkByName("user").getHref());
+						cliqueUsers.add(thisUser);
+					}
+				}
+
+				thisClique.get_Embedded().put("clique-members", cliqueUsers);
+				
+				thisClique.setRef(question.getRef());
+			return Response.status(200).entity(Utilities.toJson(thisClique)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
