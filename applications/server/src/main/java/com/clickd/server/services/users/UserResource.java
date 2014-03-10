@@ -171,6 +171,7 @@ public class UserResource {
 		}
 		catch (Exception E)
 		{
+			E.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
 
 		}
