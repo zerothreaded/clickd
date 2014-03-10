@@ -373,7 +373,20 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		
 	}
 	
-	$scope.onClickClique = function(clique) { $scope.model.currentSelection = 'Clique : ' + clique.name; $scope.model.selectedClique = clique; }
+	$scope.onClickClique = function(clique) { 
+		$scope.model.currentSelection = 'cliques.clique'; 
+		
+		var getCliqueUrl = $scope.model.currentUser.user.ref+clique.ref;
+		console.log("get clique url: "+getCliqueUrl);
+		$http({ method  : 'GET', url : getCliqueUrl })
+		.success(function(data) { 
+			 $scope.model.selectedClique = data;
+			 $scope.model.selectedClique.cliqueMembers = $scope.model.selectedClique["_embedded"]["clique-members"];
+			 
+			 console.log("clique data:");
+			 console.log(data);
+		});
+	}
 	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
 	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }

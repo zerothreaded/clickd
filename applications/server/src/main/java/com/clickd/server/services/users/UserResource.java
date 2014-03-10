@@ -672,6 +672,7 @@ public class UserResource {
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
 				thisClique.get_Embedded().put("clique-choice", myChoice);
+				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
 				myCliques.add(thisClique);
 			}
 			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 15))).build();
@@ -681,12 +682,34 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/cliques/{cliqueRef}")
+	@Path("/{userRef}/cliques/{cliqueRef}")
 	@Timed
-	public Response getClique(@PathParam("cliqueRef") String cliqueRef) {
+	public Response getClique(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
 		try {
-		
-			return Response.status(200).entity(Utilities.toJson(cliqueRef)).build();
+			ArrayList <User> cliqueUsers = new ArrayList();
+				Choice myChoice = choiceDao.findByRef("/choices/"+cliqueRef);
+				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
+				
+				User me = userDao.findByRef("/users/"+userRef);
+				
+				Clique thisClique = new Clique(me, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
+				thisClique.get_Embedded().put("clique-choice", myChoice);
+				
+				List<Choice> usersWithSameChoice = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), question.getRef());
+				
+				for (Choice userChoice : usersWithSameChoice)
+				{
+					if (!userChoice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					{
+						User thisUser = userDao.findByRef(userChoice.getLinkByName("user").getHref());
+						cliqueUsers.add(thisUser);
+					}
+				}
+
+				thisClique.get_Embedded().put("clique-members", cliqueUsers);
+				
+				thisClique.setRef(question.getRef());
+			return Response.status(200).entity(Utilities.toJson(thisClique)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
