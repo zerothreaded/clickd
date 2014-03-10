@@ -668,7 +668,7 @@ public class UserResource {
 				
 				String cliqueName = question.getTags().toString()+" "+myChoice.getAnswerText();
 				if (question.getTags().get(0).equals("fb.like"))
-					cliqueName = question.getTags().get(1)+"("+question.getTags().get(2)+")";
+					cliqueName = "Likes "+question.getTags().get(1)+"("+question.getTags().get(2)+")";
 				
 				if (question.getTags().get(0).equals("fb.checkin"))
 				cliqueName = "Been to "+question.getTags().get(1);
