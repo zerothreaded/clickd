@@ -76,8 +76,16 @@ public class QuestionDao implements InitializingBean {
 	
 	public Question findByTags(String tag)
 	{
-		Question question = mongoOperations.findOne(new Query(Criteria.where("tags").is(tag)), Question.class, collectionName);
-		return question;
+		// Question question = mongoOperations.findOne(new Query(Criteria.where("tags").is(tag)), Question.class, collectionName);
+		for (Question question : cache.values()) {
+			for (String questionTag : question.getTags()) {
+				if (questionTag.equals(tag)) {
+					return question;
+				}
+			}
+			cache.put(question.getRef(), question);
+		}
+		return null;
 	}
 
 	@Override
