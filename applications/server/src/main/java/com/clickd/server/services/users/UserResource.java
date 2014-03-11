@@ -206,10 +206,15 @@ public class UserResource {
 							Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
 							placeName = (String)place.get("name");
 							
-							if (place.get("location")!=null)
+							if (place.get("location") != null)
 							{
-								Map<String, Object> location = (Map<String, Object>) place.get("location");
-								locationCity = (String) location.get("city");
+								if (place.get("location") instanceof Map) {
+									Map<String, Object> location = (Map<String, Object>) place.get("location");
+									locationCity = (String) location.get("city");
+								} else {
+									System.out.println("\n\n" + place.get("location"));
+									locationCity = (String)place.get("location");
+								}
 							}
 						}
 						// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
@@ -590,6 +595,7 @@ public class UserResource {
 			
 			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 15))).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
 	}
