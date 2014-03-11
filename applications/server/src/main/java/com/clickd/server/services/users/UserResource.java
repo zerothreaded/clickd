@@ -212,8 +212,7 @@ public class UserResource {
 								locationCity = (String) location.get("city");
 							}
 						}
-						
-						System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+						// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
 
 						Question checkinQuestions = questionDao.findByTags(placeName);
 						if (checkinQuestions == null) {
@@ -243,14 +242,10 @@ public class UserResource {
 					}
 				}
 			}
-//			int hangon = 1;
-//			User user = userDao.findByRef("/users/" + userRef);
 			return Response.status(200).entity(Utilities.toJson("Facebook Likes Imported.")).build();
 		} catch (Exception E) {
 			E.printStackTrace();
-
 			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
-
 		}
 	};
 	
@@ -263,11 +258,11 @@ public class UserResource {
 			// System.out.println(likeData);
 			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(movieData));
 			for (String key : map.keySet()) {
-				System.out.println(key + " = " + map.get(key));
+				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
 					Map<String, Object> data = (Map<String, Object>) map.get(key);
 					for (String dataKey : data.keySet()) {
-						System.out.println(dataKey + " = " + data.get(dataKey));
+						// System.out.println(dataKey + " = " + data.get(dataKey));
 						Map<String, Object> movieDetails = (Map<String, Object>) data.get(dataKey);
 						Question movieQuestion = questionDao.findByTags((String) movieDetails.get("name"));
 						if (movieQuestion == null) {
