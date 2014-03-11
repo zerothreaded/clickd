@@ -43,6 +43,7 @@ public class ChoiceDao implements InitializingBean {
 			if (userChoicesCache.get(choiceUserRef) == null) {
 				userChoicesCache.put(choiceUserRef, new ArrayList<Choice>());
 			}
+			System.out.println("Adding choice " + choice.getAnswerText() + " for user " + choiceUserRef);
 			userChoicesCache.get(choiceUserRef).add(choice);
 		}
 		return choice;
@@ -78,6 +79,9 @@ public class ChoiceDao implements InitializingBean {
 	public List<Choice> findByUserRef(String userRef) {
 		if (userChoicesCache.get(userRef) == null) {
 			userChoicesCache.put(userRef, new ArrayList<Choice>());
+		}
+		for (String key : userChoicesCache.keySet()) {
+			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
 		}
 		return Collections.unmodifiableList(userChoicesCache.get(userRef));
 	}
