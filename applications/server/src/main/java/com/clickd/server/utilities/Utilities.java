@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +46,14 @@ public class Utilities {
 		} catch (Exception e) {
 		}
 		return parsed;
+	}
+	
+	public static String urlDecode(String data) throws UnsupportedEncodingException
+	{
+        data = data.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+        data = data.replace("+", "%2B");
+		data = java.net.URLDecoder.decode(data, "utf-8");
+		return data;
 	}
 	
 	public static HashMap<String, Object> fromJson(String json) {

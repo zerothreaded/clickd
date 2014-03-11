@@ -100,7 +100,7 @@ public class UserResource {
 		try {
 			// System.out.println(facebookData);
 			
-			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(facebookData));
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(facebookData));
 			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
 			if (null != existingUser)
 			{
@@ -186,7 +186,7 @@ public class UserResource {
 	public Response registerCheckins(@FormParam("checkinData") String checkinData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(checkinData);
-			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(checkinData));
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(checkinData));
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -261,7 +261,7 @@ public class UserResource {
 	public Response registerMovies(@FormParam("movieData") String movieData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(likeData);
-			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(movieData));
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(movieData));
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -312,7 +312,7 @@ public class UserResource {
 	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
 			// System.out.println(likeData);
-			HashMap<String, Object> map = Utilities.fromJson(java.net.URLDecoder.decode(likeData));
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(likeData));
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
