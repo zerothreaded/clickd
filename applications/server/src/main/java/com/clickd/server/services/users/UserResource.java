@@ -592,6 +592,31 @@ public class UserResource {
 	@Path("/{userRef}/candidates")
 	@Timed
 	public Response getCandidates(@PathParam("userRef") String userRef) {
+		System.out.println("getCandidates() called for userRef " + userRef);
+		try {
+			List<Choice> responseList = new ArrayList<Choice>();
+			User user = userDao.findByRef("/users/" + userRef);
+			// get my answers
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			System.out.println("getCandidates() myChoices returned " + myChoices.size() + " choices");
+			List<Choice> allChoices = choiceDao.findAll();
+			for (Choice choice : myChoices) {
+				Link questionLink = choice.getLinkByName("question");
+				Link userLink = choice.getLinkByName("user");
+				Question qqq = questionDao.findByRef(questionLink.getHref());
+				System.out.println(userLink.getHref() + questionLink.getHref() + qqq.getQuestionText());
+			}
+			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 15))).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
+		}
+	}
+	
+	@GET
+	@Path("/{userRef}/candidatesOLD")
+	@Timed
+	public Response getCandidatesOLD(@PathParam("userRef") String userRef) {
 		try {
 			User user = userDao.findByRef("/users/"+userRef);
 			// get my answers
