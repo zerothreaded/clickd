@@ -140,19 +140,78 @@ d3.select("div").style("height", diameter + "px");
     <script>
 
 	function initialize() {
-		var myLatlng = new google.maps.LatLng(51.5488374, -0.1221549);
+		/*
+        "latitude": 51.537812325599,
+        "longitude": -0.14480018556184
+        */
+		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
 		var mapOptions = {
-		  zoom: 8,
+		  zoom: 13,
 		  center: myLatlng
 		}
 		var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
+		var image1 = {
+				    url: '/profile-img/users/751545291.jpg',
+				    // This marker is 20 pixels wide by 32 pixels tall.
+				    size: new google.maps.Size(50, 50),
+				    scaledSize : new google.maps.Size(50, 50),
+				    // The origin for this image is 0,0.
+				    origin: new google.maps.Point(0,0),
+				    // The anchor for this image is the base of the flagpole at 0,32.
+				    anchor: new google.maps.Point(-40, 60)
+				  };
+		
+		var image2 = {
+			    url: '/profile-img/users/664402671.jpg',
+			    // This marker is 20 pixels wide by 32 pixels tall.
+			    size: new google.maps.Size(50, 50),
+			    scaledSize : new google.maps.Size(50, 50),
+			    // The origin for this image is 0,0.
+			    origin: new google.maps.Point(0,0),
+			    // The anchor for this image is the base of the flagpole at 0,32.
+			    anchor: new google.maps.Point(-10, -60)
+			  };
+		var myLatlng2 = new google.maps.LatLng(51.537812325000, -0.14480018556184);
+		
+		
+		
+		var image3 = {
+			    url: '/profile-img/users/690704027.jpg',
+			    // This marker is 20 pixels wide by 32 pixels tall.
+			    size: new google.maps.Size(50, 50),
+			    scaledSize : new google.maps.Size(50, 50),
+			    // The origin for this image is 0,0.
+			    origin: new google.maps.Point(0, 0),
+			    // The anchor for this image is the base of the flagpole at 0,32.
+			    anchor: new google.maps.Point(50, 100)
+			  };
+		var myLatlng3 = new google.maps.LatLng(51.537812325040, -0.14480018556184);
+		
 		// To add the marker to the map, use the 'map' property
-		var marker = new google.maps.Marker({
+		var marker1 = new google.maps.Marker({
 		    position: myLatlng,
 		    map: map,
-		    title: "Hello World!"
+		    icon : image1,
+		    title: "Nice Girl"
 		});
+		
+		var marker2 = new google.maps.Marker({
+		    position: myLatlng2,
+		    map: map,
+		    icon : image2,
+		    title: "Irksome Girl"
+		});
+		
+		
+		var marker3 = new google.maps.Marker({
+		    position: myLatlng3,
+		    map: map,
+		    icon : image3,
+		    title: "John Dodds"
+		});
+		
+		
 
 	}	
 	google.maps.event.addDomListener(window, 'load', initialize);
