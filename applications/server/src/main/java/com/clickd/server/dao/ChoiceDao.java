@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -16,22 +17,34 @@ import com.clickd.server.model.Link;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+
 public class ChoiceDao implements InitializingBean {
 
-	private static Map<String, Choice> cache;
+	private Map<String, Choice> cache;
+	private Map<String, List<Choice>> userChoicesCache;
 	
 	private MongoOperations mongoOperations;
 	private String collectionName;
 
 	public ChoiceDao() {
 		System.out.println("ChoiceDao() called.");
-		cache = new TreeMap<String, Choice>();
+		cache = new ConcurrentHashMap<String, Choice>();
+		userChoicesCache = new ConcurrentHashMap<String, List<Choice>>();
 		this.collectionName = "choices";
 	}
 
 	public Choice create(Choice choice) {
 		mongoOperations.save(choice, collectionName);
 		cache.put(choice.getRef(), choice);
+		Link choiceUser = choice.getLinkByName("user");
+		if (choiceUser != null) {
+			String choiceUserRef = choiceUser.getHref();
+			if (userChoicesCache.get(choiceUserRef) == null) {
+				userChoicesCache.put(choiceUserRef, new ArrayList<Choice>());
+			}
+			userChoicesCache.get(choiceUserRef).add(choice);
+		}
 		return choice;
 	}
 
@@ -44,6 +57,7 @@ public class ChoiceDao implements InitializingBean {
 	public void delete(Choice choice) {
 		mongoOperations.remove(choice);
 		cache.remove(choice.getRef());
+		// TODO: Remove from user choice cache
 	}
 
 	public List<Choice> findAll() {
@@ -60,8 +74,15 @@ public class ChoiceDao implements InitializingBean {
 	public Choice findByRef(String ref) {
 		return cache.get(ref);
 	}
-
+	
 	public List<Choice> findByUserRef(String userRef) {
+		if (userChoicesCache.get(userRef) == null) {
+			userChoicesCache.put(userRef, new ArrayList<Choice>());
+		}
+		return Collections.unmodifiableList(userChoicesCache.get(userRef));
+	}
+
+	public List<Choice> findByUserRefOLD(String userRef) {
 		List<Choice> usersChoices = new ArrayList<Choice>();
 		for (Choice choice : cache.values()) {
 			Link choiceUser = choice.getLinkByName("user");
@@ -69,7 +90,6 @@ public class ChoiceDao implements InitializingBean {
 				String choiceUserRef = choiceUser.getHref();
 				if (choiceUserRef.equals(userRef)) {
 					usersChoices.add(choice);
-		
 				}
 			}
 		}
@@ -160,6 +180,11 @@ public class ChoiceDao implements InitializingBean {
 		List<Choice> allChoices = mongoOperations.findAll(Choice.class, collectionName);
 		for (Choice choice : allChoices) {
 			cache.put(choice.getRef(), choice);
+			Link choiceUser = choice.getLinkByName("user");
+			if (userChoicesCache.get(choiceUser.getHref()) == null) {
+				userChoicesCache.put(choiceUser.getHref(), new ArrayList<Choice>());
+			}
+			userChoicesCache.get(choiceUser.getHref()).add(choice);
 		}
 		System.out.println("Choice cache has " + cache.size() + " choices. Loaded in " + (new Date().getTime() - now) + "ms");
 

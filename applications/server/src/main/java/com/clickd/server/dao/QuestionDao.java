@@ -1,21 +1,17 @@
 package com.clickd.server.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Question;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class QuestionDao implements InitializingBean {
 
@@ -26,7 +22,7 @@ public class QuestionDao implements InitializingBean {
 
 	public QuestionDao() {
 		System.out.println("QuestionDao() called.");
-		cache = new TreeMap<String, Question>();
+		cache = new ConcurrentHashMap<String, Question>();
 		this.collectionName = "questions";
 	}
 
@@ -79,29 +75,27 @@ public class QuestionDao implements InitializingBean {
 	
 	public Question findByTags(String tag)
 	{
-		Question question = mongoOperations.findOne(new Query(Criteria.where("tags").is(tag)), Question.class, collectionName);
+//		Question question = mongoOperations.findOne(new Query(Criteria.where("tags").is(tag)), Question.class, collectionName);
 //		Collection questionList = Collections.unmodifiableCollection(cache.values());
-//		for (Object questionObj : questionList) {
-//			Question question = (Question)questionObj;
-//			if (question.getTags() == null)
-//			{
-//				continue;
-//			}
-//			for (String questionTag : question.getTags()) {
-//				if (questionTag == null)
-//				{
-//					continue;
-//				}
-//				
-//				
-//				if (questionTag.equals(tag)) {
-//					return question;
-//				}
-//			}
-//			cache.put(question.getRef(), question);
-//		}
-		
-		return question;
+		for (Question question : cache.values()) {
+			if (question.getTags() == null)
+			{
+				System.out.println("Question Tags == null for Question " + question.getQuestionText());
+				continue;
+			}
+			List<String> questionTags = question.getTags();
+			for (String questionTag : questionTags) {
+				if (questionTag == null)
+				{
+					System.out.println("Question TAG == null for Question " + question.getQuestionText());
+					continue;
+				}
+				if (questionTag.equals(tag)) {
+					return question;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override

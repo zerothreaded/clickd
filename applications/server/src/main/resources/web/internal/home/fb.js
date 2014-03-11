@@ -2,12 +2,14 @@
   {
 	  FB.login(function(response)
 	  {
-		  console.log(response);
-		  console.log('congrats')
+		  console.log('Login Done.')
+		  console.log('Starting Import from Facebook..');
+		  var currentdate = new Date();
+		  var datetime = currentdate.getDay() + "/"+currentdate.getMonth() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+		  console.log('Starting Time: ' + datetime);
+		 
 		  
 		  var userId = response.authResponse.userID;
-		  
-		  
 		  
 		  // alert(userId);
 		  var userRef = '';
@@ -25,9 +27,9 @@
 				    success: function(data)
 				    {
 				    	var jsonResponse = JSON.stringify(data);
-				    	console.log('/users/reg response =' + jsonResponse);
+				    	// console.log('/users/reg response =' + jsonResponse);
 				    	userRef = data["ref"];
-				    	console.log(userRef);
+				    	console.log('USER REF = ' + userRef);
 						
 				    	/*
 						 * FB.api('/me/albums', function(response) {
@@ -78,7 +80,7 @@
 					  				FB.api('/'+friendId, function(friendResponse)
 					  				{
 										var registerWithFacebookUrl = "/users/register/source/facebook";
-										console.log(friendResponse);
+										// console.log(friendResponse);
 										// hacky -- fix
 										friendResponse.email = friendResponse.first_name.toLowerCase() + "." + friendResponse.last_name.toLowerCase() + "@clickd.org";
 										
@@ -93,9 +95,9 @@
 										    success: function(data)
 										    {
 											    	var jsonResponse = JSON.stringify(data);
-											    	console.log('registering user =' + jsonResponse);
+											    	// console.log('registering user =' + jsonResponse);
 											    	var friendRef = data["ref"];
-											    	console.log(friendRef);
+											    	// console.log(friendRef);
 										    		
 											    	 FB.api('/'+friendId+'/likes', function(likesResponse)
 											    	 {
@@ -116,9 +118,7 @@
 												  			    data: {"likeData" : likeDetails, "userRef" : friendRef.split("/")[2] },
 												  			    dataType: "json",
 												  				success: function(data){
-												  			    	console.log('/users/register/likes =' + JSON.stringify(data));
-												  				 
-												  			    	
+												  			    	// console.log('/users/register/likes =' + JSON.stringify(data));
 												  			    },
 												  			    failure: function(errMsg) {
 												  			    	console.log('ERROR=' + errMsg);
@@ -170,6 +170,10 @@
 											  			    }
 											  			});	
 											  	  }); //end movies
+
+												  datetime = currentdate.getDay() + "/"+currentdate.getMonth() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+												  console.log('END FB IMPORT TIME for Friend : ' + friendId + ' at ' + datetime);
+											   	 
 											   	 
 										    }, //end friend reg successs
 											failure: function(errMsg)
@@ -185,29 +189,33 @@
 					  			}); // end foreach
 					  		  
 					  	 }); //end me/friends
-					  		  
-					  		  
-					  		/*
-							 * FB.api('/me/friendlists', function(response) {
-							 * console.log('FRIENDLISTS=' +
-							 * JSON.stringify(response)); });
-							 * 
-							 * FB.api('/me/interests', function(response) {
-							 * console.log('\nINTERESTS=' +
-							 * JSON.stringify(response)); });
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 * });
-							 * 
-							 * 
-							 * FB.api('/me/picture', function(response) {
-							 * console.log('PICTURE=' +
-							 * JSON.stringify(response)); });
-							 */
+					  	 
+						  datetime = currentdate.getDay() + "/"+currentdate.getMonth() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+						  console.log('END ME REGISTER TIME : ' + datetime);
+
+														  		  
+														  		  
+														  		/*
+																 * FB.api('/me/friendlists', function(response) {
+																 * console.log('FRIENDLISTS=' +
+																 * JSON.stringify(response)); });
+																 * 
+																 * FB.api('/me/interests', function(response) {
+																 * console.log('\nINTERESTS=' +
+																 * JSON.stringify(response)); });
+																 * 
+																 * 
+																 * 
+																 * 
+																 * 
+																 * 
+																 * });
+																 * 
+																 * 
+																 * FB.api('/me/picture', function(response) {
+																 * console.log('PICTURE=' +
+																 * JSON.stringify(response)); });
+																 */
 				  		  
 				    }, //end me register success
 				    failure: function(errMsg) {

@@ -208,6 +208,7 @@ public class UserResource {
 							
 							if (place.get("location") != null)
 							{
+								// PLACE AND LOCATION NOT NULL
 								if (place.get("location") instanceof Map) {
 									Map<String, Object> location = (Map<String, Object>) place.get("location");
 									locationCity = (String) location.get("city");
@@ -215,34 +216,43 @@ public class UserResource {
 									System.out.println("\n\n" + place.get("location"));
 									locationCity = (String)place.get("location");
 								}
+
+								Question checkinQuestions = questionDao.findByTags(placeName);
+								if (checkinQuestions == null) {
+									// N0 question - make it
+									checkinQuestions = new Question();
+									checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
+									checkinQuestions.setAnswerRule("yes|no");
+									checkinQuestions.setType("text");
+									checkinQuestions.setSource("system");
+									checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
+									List<String> tagList = new ArrayList<String>();
+									tagList.add("fb.checkin");
+									if (placeName != null) {
+										tagList.add(placeName);
+									}
+									if(locationCity != null) {
+										tagList.add(locationCity);
+									}
+									checkinQuestions.setTags(tagList);
+									questionDao.create(checkinQuestions);
+								}
+
+								Choice checkinChoice = new Choice();
+								checkinChoice.setAnswerText("yes");
+								checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
+								checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
+								checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
+
+								choiceDao.create(checkinChoice);
+							} else {
+								// PLACE NOT NULL - LOCATION NULL
 							}
+						} else {
+							// PLACE IS NULL
 						}
 						// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
 
-						Question checkinQuestions = questionDao.findByTags(placeName);
-						if (checkinQuestions == null) {
-							// N0 question - make it
-							checkinQuestions = new Question();
-							checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
-							checkinQuestions.setAnswerRule("yes|no");
-							checkinQuestions.setType("text");
-							checkinQuestions.setSource("system");
-							checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
-							List<String> tagList = new ArrayList<String>();
-							tagList.add("fb.checkin");
-							tagList.add(placeName);
-							tagList.add(locationCity);
-							checkinQuestions.setTags(tagList);
-							questionDao.create(checkinQuestions);
-						}
-
-						Choice checkinChoice = new Choice();
-						checkinChoice.setAnswerText("yes");
-						checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
-						checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
-						checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
-
-						choiceDao.create(checkinChoice);
 
 					}
 				}
@@ -771,8 +781,9 @@ public class UserResource {
 				}
 			});
 			
-			return Response.status(200).entity(Utilities.toJson(myCliques.subList(0, 15))).build();
+			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
 		}
 	}
