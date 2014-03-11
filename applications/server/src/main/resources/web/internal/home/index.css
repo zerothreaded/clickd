@@ -276,14 +276,14 @@ img.connect-profile-img {
 	}
 
 .content-row {
-	height: 80%;
+	height: 60%;
 	padding: 10px;
 	padding-right: 0px;
 	padding-bottom: 0px;
 }
 
 .chat-row {
-	height: 20%;
+	height: 40%;
 	padding: 10px;
 	padding-right: 0px;
 }
