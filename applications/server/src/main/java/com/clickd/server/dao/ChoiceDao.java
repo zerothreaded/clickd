@@ -138,35 +138,40 @@ public class ChoiceDao implements InitializingBean {
 
 	public List<Choice> findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) {
 		try {
-			List<Choice> answerChoices = new ArrayList<Choice>();
-			List<Choice> allChoices = findAll();
-			for (Choice choice : allChoices) {
-				if (choice == null) {
-					// HMMMMMMM - WTF
-					System.out.println("WTF WTF");
-					
-				} else {
-					Link choiceHrefLink = choice.getLinkByName("question");
-					if (choiceHrefLink != null) {
-						String choiceAnswerText = choice.getAnswerText();
-						if (choiceAnswerText == null) {
-							// HMMMMMMM - WTF
-							// System.out.println("WTF choiceAnswerText = null");
-							continue;
-						}
-						String choiceHref = choiceHrefLink.getHref();
-						if (choiceAnswerText.equals(answerText) && choiceHref.equals(questionRef)) {
-							answerChoices.add(choice);
-						} 
-						int here = 1;
-					} else {
-						System.out.println("No question Link in choice  [" + choice.getId());
-					}
-				}
-			}
-			// System.out.println("findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef() returnd [" + answerChoices.size() + "] choices for Answer " + answerText);
-			return answerChoices;
-		} catch(Exception e) {
+			Query query = Query.query(Criteria.where("answerText").is(answerText).and("_links.question.href").is(questionRef));
+			List<Choice> toReturn = mongoOperations.find(query, Choice.class);
+			return toReturn;
+		}
+			
+//			List<Choice> answerChoices = new ArrayList<Choice>();
+//			List<Choice> allChoices = findAll();
+//			for (Choice choice : allChoices) {
+//				if (choice == null) {
+//					// HMMMMMMM - WTF
+//					System.out.println("WTF WTF");
+//					
+//				} else {
+//					Link choiceHrefLink = choice.getLinkByName("question");
+//					if (choiceHrefLink != null) {
+//						String choiceAnswerText = choice.getAnswerText();
+//						if (choiceAnswerText == null) {
+//							// HMMMMMMM - WTF
+//							// System.out.println("WTF choiceAnswerText = null");
+//							continue;
+//						}
+//						String choiceHref = choiceHrefLink.getHref();
+//						if (choiceAnswerText.equals(answerText) && choiceHref.equals(questionRef)) {
+//							answerChoices.add(choice);
+//						} 
+//						int here = 1;
+//					} else {
+//						System.out.println("No question Link in choice  [" + choice.getId());
+//					}
+//				}
+//			}
+//			// System.out.println("findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef() returnd [" + answerChoices.size() + "] choices for Answer " + answerText);
+//			return answerChoices;
+		 catch(Exception e) {
 			int argh = 1;
 			return null;
 		}

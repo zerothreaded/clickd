@@ -159,7 +159,7 @@
 															// method's input
 															// parameter
 															// (case-sensitive).
-											  			    data: {"movieData" : encodeURIComponent(movieDetails), "userRef" : userRef.split("/")[2] },
+											  			    data: {"movieData" : encodeURIComponent(movieDetails), "userRef" : friendRef.split("/")[2] },
 											  			    dataType: "json",
 											  				    success: function(data){
 											  			    	console.log('/users/register/movies =' + JSON.stringify(data));
@@ -170,6 +170,33 @@
 											  			    }
 											  			});	
 											  	  }); //end movies
+											   	 	
+											   	 FB.api('/' + friendId + '/television', function(response)
+													   	 {
+													  			console.log('\nTELEVISION=' + JSON.stringify(response));
+													  			var tvDetails = JSON.stringify(response);
+													  			var registerTvUrl = "/users/register/tv";
+													  			var tvData = new FormData();
+													  			tvData.append('tvData', tvDetails);
+													  			$.ajax({
+													  			    type: "POST",
+													  			    url: registerTvUrl,
+													  			    // The key needs to
+																	// match your
+																	// method's input
+																	// parameter
+																	// (case-sensitive).
+													  			    data: {"tvData" : encodeURIComponent(tvDetails), "userRef" : friendRef.split("/")[2] },
+													  			    dataType: "json",
+													  				    success: function(data){
+													  			    	console.log('/users/register/tv =' + JSON.stringify(data));
+													  			    },
+													  			    failure: function(errMsg) {
+													  			    	alert('register elevision  failed');
+													  			    	console.log('ERROR=' + errMsg);
+													  			    }
+													  			});	
+													  	  }); //end movies
 
 												  datetime = currentdate.getDay() + "/"+currentdate.getMonth() + "/" + currentdate.getFullYear() + " @ " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 												  console.log('END FB IMPORT TIME for Friend : ' + friendId + ' at ' + datetime);

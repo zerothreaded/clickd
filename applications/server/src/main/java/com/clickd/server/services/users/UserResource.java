@@ -266,6 +266,58 @@ public class UserResource {
 	
 	@POST
 	@Timed
+	@Path("/register/tv")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerTv(@FormParam("tvData") String tvData, @FormParam("userRef") String userRef) throws URISyntaxException {
+		try {
+			// System.out.println(likeData);
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(tvData));
+			for (String key : map.keySet()) {
+				// System.out.println(key + " = " + map.get(key));
+				if (key.equals("data")) {
+					Map<String, Object> data = (Map<String, Object>) map.get(key);
+					for (String dataKey : data.keySet()) {
+						// System.out.println(dataKey + " = " + data.get(dataKey));
+						Map<String, Object> tvDetails = (Map<String, Object>) data.get(dataKey);
+						Question tvQuestion = questionDao.findByTags((String) tvDetails.get("name"));
+						if (tvQuestion == null) {
+							// N0 question - make it
+							tvQuestion = new Question();
+							tvQuestion.setQuestionText("Do you like " + tvDetails.get("name"));
+							tvQuestion.setAnswerRule("yes|no");
+							tvQuestion.setType("text");
+							tvQuestion.setSource("system");
+							tvQuestion.addLink("self", new Link(tvQuestion.getRef(), "self"));
+							List<String> tagList = new ArrayList<String>();
+							tagList.add("fb.television");
+							tagList.add("television");
+							tagList.add((String)tvDetails.get("name"));
+							tvQuestion.setTags(tagList);
+							questionDao.create(tvQuestion);
+						
+						
+						Choice likeChoice = new Choice();
+						likeChoice.setAnswerText("yes");
+						likeChoice.addLink("question", new Link(tvQuestion.getRef(), "choice-question"));
+						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
+						choiceDao.create(likeChoice);
+						}
+					}
+				}
+			}
+			return Response.status(200).entity(Utilities.toJson("Facebook TV Shows Imported")).build();
+		}
+		catch (Exception E)
+		{
+			E.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", "Email address not available")).build();
+
+		}
+	};
+	
+	@POST
+	@Timed
 	@Path("/register/movies")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerMovies(@FormParam("movieData") String movieData, @FormParam("userRef") String userRef) throws URISyntaxException {
@@ -315,6 +367,8 @@ public class UserResource {
 
 		}
 	};
+	
+	
 	@POST
 	@Timed
 	@Path("/register/likes")
@@ -748,6 +802,8 @@ public class UserResource {
 			List<Clique> myCliques = new ArrayList<Clique>();	
 			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			List<Choice> allChoices = choiceDao.findAll();
+			
 			for (Choice myChoice : myChoices)
 			{
 				//now get list of users who made that choice
