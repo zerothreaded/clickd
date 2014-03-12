@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.choices.ChoiceResource;
+import com.clickd.server.services.integration.facebook.UserImportResource;
 import com.clickd.server.services.places.PlaceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
@@ -36,7 +37,6 @@ public class ApplicationService extends Service<UserConfiguration> {
 	//	bootstrap.addBundle(new AssetsBundle("/resources", "/web2"));
 
 		bootstrap.addBundle(new AssetsBundle("/profile-img", "/profile-img"));
-
 		
 		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
@@ -73,6 +73,10 @@ public class ApplicationService extends Service<UserConfiguration> {
 		
 		PlaceResource placeResource = context.getBean(PlaceResource.class);
 		environment.addResource(placeResource);
+		
+		UserImportResource facebookUserImportResource = context.getBean(UserImportResource.class);
+		environment.addResource(facebookUserImportResource);
+
 		
 		// TODO: Sort out healthchecks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));

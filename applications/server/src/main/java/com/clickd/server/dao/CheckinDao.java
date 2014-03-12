@@ -64,6 +64,6 @@ public class CheckinDao implements InitializingBean {
 			cache.put(user.getRef(), user);
 		}
 		System.out.println("Checkin cache has " + cache.size() + " Checkins. Loaded in " + (new Date().getTime() - now) + "ms");
-	}
+	}	
 
 }

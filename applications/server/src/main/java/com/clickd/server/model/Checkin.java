@@ -13,11 +13,9 @@ public class Checkin extends Resource {
 	protected String id;
 	protected String ref;
 	
-	// TODO: Ralph - extract this to an abstract FB resource
 	protected String fbId;
 	
 	protected String message;
-	protected Place place;
 	@DateTimeFormat(iso=ISO.DATE)
 	protected Date checkinTime;
 	
@@ -32,11 +30,10 @@ public class Checkin extends Resource {
 		createRef();
 	}
 
-	public Checkin(String fbId, String message, Place place, Date checkinTime) {
+	public Checkin(String fbId, String message, Date checkinTime) {
 		super();
 		this.fbId = fbId;
 		this.message = message;
-		this.place = place;
 		this.checkinTime = checkinTime;
 	}
 
@@ -70,14 +67,6 @@ public class Checkin extends Resource {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	public Place getPlace() {
-		return place;
-	}
-
-	public void setPlace(Place place) {
-		this.place = place;
 	}
 
 	public Date getCheckinTime() {

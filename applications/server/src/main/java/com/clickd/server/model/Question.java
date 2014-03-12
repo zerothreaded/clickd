@@ -1,5 +1,6 @@
 package com.clickd.server.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +43,7 @@ public class Question extends Resource {
 
 		createRef();
 		this.questionText = questionText;
+		this.tags = new ArrayList<String>();
 	}
 
 	public String getId() {

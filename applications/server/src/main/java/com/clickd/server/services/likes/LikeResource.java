@@ -1,4 +1,4 @@
-package com.clickd.server.services.movies;
+package com.clickd.server.services.likes;
 
 import java.util.List;
 
@@ -11,25 +11,26 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.clickd.server.dao.MovieDao;
+import com.clickd.server.dao.LikeDao;
 import com.clickd.server.model.ErrorMessage;
-import com.clickd.server.model.Movie;
+import com.clickd.server.model.Like;
+import com.clickd.server.model.Like;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/movies")
+@Path("/likes")
 @Produces(MediaType.APPLICATION_JSON)
-public class MovieResource {
+public class LikeResource {
 	
 	@Autowired
-	private MovieDao movieDao;
+	private LikeDao likeDao;
 
 	@GET
 	@Timed
 	public Response getAll() {
 		try {
-			List<Movie> allMovies = movieDao.findAll();
-			return Response.status(200).entity(Utilities.toJson(allMovies)).build();
+			List<Like> allLikes = likeDao.findAll();
+			return Response.status(200).entity(Utilities.toJson(allLikes)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
@@ -39,17 +40,16 @@ public class MovieResource {
 	
 	@GET
 	@Timed
-	@Path("/{movieRef}")
-	public Response get(@PathParam("movieRef") String movieRef) {
+	@Path("/{likeRef}")
+	public Response get(@PathParam("likeRef") String likeRef) {
 		try {
 			
-			Movie movie = movieDao.findByRef("/movies/"+movieRef);
+			Like like = likeDao.findByRef("/likes/"+likeRef);
 				
-			return Response.status(200).entity(Utilities.toJson(movie)).build();
+			return Response.status(200).entity(Utilities.toJson(like)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
 		}
 	}
-	
 }

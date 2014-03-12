@@ -35,9 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.BookDao;
+import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.CliqueDao;
 import com.clickd.server.dao.ConnectionDao;
+import com.clickd.server.dao.LikeDao;
 import com.clickd.server.dao.MovieDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
@@ -46,10 +48,12 @@ import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Answer;
 import com.clickd.server.model.Book;
+import com.clickd.server.model.Checkin;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
+import com.clickd.server.model.Like;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Movie;
 import com.clickd.server.model.Place;
@@ -88,12 +92,18 @@ public class UserImportResource {
 	@Autowired
 	TelevisionDao televisionDao;
 	
-
+	@Autowired
+	LikeDao likeDao;
+	
 	@Autowired
 	PlaceDao placeDao;
 	
 	@Autowired
 	BookDao bookDao;
+	
+	@Autowired
+	CheckinDao checkinDao;
+	
 	//	FacebookDataDao facebookTelevisionDao;
 //	FacebookDataDao facebookBooksDao;
 	
@@ -127,7 +137,44 @@ public class UserImportResource {
 			Television newTelevision = new Television();
 			newTelevision.setName((String)televisionData.get("name"));
 			newTelevision.setRef("/television/"+(String)televisionData.get("id"));
-			televisionDao.create(newTelevision);
+			
+			if (televisionDao.findByRef(newTelevision.getRef()) == null)
+			{
+				televisionDao.create(newTelevision);
+			}
+			else
+			{
+				newTelevision = televisionDao.findByRef("/television/"+(String)televisionData.get("id"));
+			}
+			
+			
+			Question televisionQuestion = questionDao.findByTags(newTelevision.getName());
+			if (televisionQuestion == null)
+			{
+				televisionQuestion = new Question("Do you like "+newTelevision.getName()+"?", "system");
+				televisionQuestion.getTags().add(newTelevision.getName());
+				televisionQuestion.getTags().add("fb.televisions");
+				televisionQuestion.addLink("television-data", new Link(newTelevision.getRef(), "television-data"));
+				questionDao.create(televisionQuestion);
+			}
+			
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+				if (choice.getLinkByName("question").getHref().equals(televisionQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(televisionQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+			}
 		}
 			
 		
@@ -148,7 +195,47 @@ public class UserImportResource {
 			Book newBook = new Book();
 			newBook.setName((String)bookData.get("name"));
 			newBook.setRef("/books/"+(String)bookData.get("id"));
-			bookDao.create(newBook);
+			
+			
+			if (bookDao.findByRef(newBook.getRef()) == null)
+			{
+				bookDao.create(newBook);
+			}
+			else
+			{
+				newBook = bookDao.findByRef("/books/"+(String)bookData.get("ref"));
+			}
+			
+			if (newBook.getName() == null)
+				continue;
+			
+			Question bookQuestion = questionDao.findByTags(newBook.getName());
+			if (bookQuestion == null)
+			{
+				bookQuestion = new Question("Do you like "+newBook.getName()+"?", "system");
+				bookQuestion.getTags().add(newBook.getName());
+				bookQuestion.getTags().add("fb.books");
+				bookQuestion.addLink("book-data", new Link(newBook.getRef(), "book-data"));
+				questionDao.create(bookQuestion);
+			}
+			
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+				if (choice.getLinkByName("question").getHref().equals(bookQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(bookQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+			}
 		}
 			
 		
@@ -161,7 +248,6 @@ public class UserImportResource {
 		
 		HashMap<String, Object> map = Utilities.fromJson(moviesData);
 		HashMap<String, Object> moviesMap = (HashMap<String, Object> )map.get("data");
-		
 
 		
 		for (String key : moviesMap.keySet()) {
@@ -169,7 +255,112 @@ public class UserImportResource {
 			Movie newMovie = new Movie();
 			newMovie.setName((String)movieData.get("name"));
 			newMovie.setRef("/movies/"+(String)movieData.get("id"));
-			movieDao.create(newMovie);
+			
+			if (movieDao.findByRef(newMovie.getRef()) == null)
+				movieDao.create(newMovie);
+			
+			if (newMovie.getName() == null)
+				continue;
+			
+			
+			if (movieDao.findByRef(newMovie.getRef()) == null)
+			{
+				movieDao.create(newMovie);
+			}
+			else
+			{
+				newMovie = movieDao.findByRef("/movies/"+(String)movieData.get("id"));
+			}
+			
+			Question movieQuestion = questionDao.findByTags(newMovie.getName());
+			if (movieQuestion == null)
+			{
+				movieQuestion = new Question("Do you like "+newMovie.getName()+"?", "system");
+				movieQuestion.getTags().add(newMovie.getName());
+				movieQuestion.getTags().add("fb.movies");
+				movieQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
+				questionDao.create(movieQuestion);
+			}
+			
+			
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+			if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+			}
+		}
+			
+		
+		return user;
+	}
+	
+	public User importUserLikes(String userRef, String likesData)
+	{
+		User user = userDao.findByRef("/users/"+userRef);
+		
+		HashMap<String, Object> map = Utilities.fromJson(likesData);
+		HashMap<String, Object> likesMap = (HashMap<String, Object> )map.get("data");
+		
+		for (String key : likesMap.keySet()) {
+			Map<String,Object> likeData = (Map<String,Object>)likesMap.get(key);
+			Like newLike = new Like();
+			
+		
+			newLike.setCategory((String)likeData.get("category"));
+			newLike.setName((String)likeData.get("name"));
+			newLike.setRef("/likes/"+(String)likeData.get("id"));
+			
+			if (newLike.getName() == null)
+				continue;
+			
+			
+			if (likeDao.findByRef(newLike.getRef()) == null)
+			{
+				likeDao.create(newLike);
+				
+				Question likeQuestion = questionDao.findByTags(newLike.getName());
+				if (likeQuestion == null)
+				{
+					likeQuestion = new Question("Do you like "+newLike.getName()+"?", "system");
+					likeQuestion.getTags().add(newLike.getName());
+					likeQuestion.getTags().add(newLike.getCategory());
+					likeQuestion.getTags().add("fb.likes");
+					likeQuestion.addLink("like-data", new Link(newLike.getRef(), "like-data"));
+					questionDao.create(likeQuestion);
+				}
+				
+				
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				boolean alreadyExists = false;
+				for (Choice choice : myChoices)
+				{
+					if (choice.getLinkByName("question").getHref().equals(likeQuestion.getRef())
+							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+						alreadyExists = true;
+				}
+				
+				if (!alreadyExists)
+				{
+					Choice myChoice = new Choice();
+					myChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
+					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+					myChoice.setAnswerText("yes");
+					choiceDao.create(myChoice);
+				}
+			}
+				
 		}
 			
 		
@@ -181,111 +372,112 @@ public class UserImportResource {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			// System.out.println(checkinData);
-			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(checkinData));
+			
+			HashMap<String, Object> map = Utilities.fromJson(checkinData);
+			HashMap<String, Object> checkinsMap = (HashMap<String, Object> )map.get("data");
+			
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			
+			for (String dataKey : checkinsMap.keySet()) {
+				// System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
+				Map<String, Object> checkinDetails = (Map<String, Object>) checkinsMap.get(dataKey);
+				
+				String message = "";
+				if (checkinDetails.get("message") != null)
+					 message = (String) checkinDetails.get("message");
+				
+				String placeName = "";
+				String locationCity = "";
+				if (checkinDetails.get("place") != null)
+				{
+					Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
+					placeName = (String)place.get("name");
+					
+					if (place.get("location") != null)
+					{
+						// PLACE AND LOCATION NOT NULL
+						
+						// NOW : Make Resource
+						// TODO: IMPLEMENTTRANSFORMER <T> PATTERN RALPH
+						String checkinId = (String) checkinDetails.get("id");
+						String placeId = (String) place.get("id");
 
-			for (String key : map.keySet()) {
-				// System.out.println(key + " = " + map.get(key));
-				if (key.equals("data")) {
-					Map<String, Object> data = (Map<String, Object>) map.get(key);
-					for (String dataKey : data.keySet()) {
-						// System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
-						Map<String, Object> checkinDetails = (Map<String, Object>) data.get(dataKey);
 						
-						String message = "";
-						if (checkinDetails.get("message") != null)
-							 message = (String) checkinDetails.get("message");
-						
-						String placeName = "";
-						String locationCity = "";
-						if (checkinDetails.get("place") != null)
-						{
-							Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
-							placeName = (String)place.get("name");
+						Place placeResource = placeDao.findByRef("/places/"+placeId);
+								
+						if (placeResource == null && place.get("location") instanceof Map) {
+							Map<String, Object> location = (Map<String, Object>) place.get("location");
+							String nameOfThePlace = (String)location.get("name");
+							String street = (String) location.get("street");
+							String city = (String) location.get("city");
+							String state = (String) location.get("state");
+							String country = (String) location.get("country");
+							String zip = (String) location.get("zip");
+							String latitude = (String) location.get("latitude");
+							String longitude = (String) location.get("longitude");
 							
-							if (place.get("location") != null)
-							{
-								// PLACE AND LOCATION NOT NULL
-								
-								// NOW : Make Resource
-								// TODO: IMPLEMENTTRANSFORMER <T> PATTERN RALPH
-								String fbId = (String) checkinDetails.get("id");
-								String name = (String) checkinDetails.get("place.name");
-								
-								
-								if (place.get("location") instanceof Map) {
-									Map<String, Object> location = (Map<String, Object>) place.get("location");
-									String nameOfThePlace = (String)location.get("name");
-									String street = (String) location.get("street");
-									String city = (String) location.get("city");
-									String state = (String) location.get("state");
-									String country = (String) location.get("country");
-									String zip = (String) location.get("zip");
-									String latitude = (String) location.get("latitude");
-									String longitude = (String) location.get("longitude");
-									
-									Place placeResource = new Place(fbId, placeName, street, city, state, country, zip, latitude, longitude);
-									placeDao.create(placeResource);
-								}
-								
-								
-								if (place.get("location") instanceof Map) {
-									Map<String, Object> location = (Map<String, Object>) place.get("location");
-									locationCity = (String) location.get("city");
-								} else {
-									System.out.println("\n\n" + place.get("location"));
-									locationCity = (String)place.get("location");
-								}
-
-								Question checkinQuestions = questionDao.findByTags(placeName);
-								if (checkinQuestions == null) {
-									// N0 question - make it
-									checkinQuestions = new Question();
-									checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
-									checkinQuestions.setAnswerRule("yes|no");
-									checkinQuestions.setType("text");
-									checkinQuestions.setSource("system");
-									checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
-									List<String> tagList = new ArrayList<String>();
-									tagList.add("fb.checkin");
-									if (placeName != null) {
-										tagList.add(placeName);
-									}
-									if(locationCity != null) {
-										tagList.add(locationCity);
-									}
-									checkinQuestions.setTags(tagList);
-									questionDao.create(checkinQuestions);
-								}
-
-								Choice checkinChoice = new Choice();
-								checkinChoice.setAnswerText("yes");
-								checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
-								checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
-								checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
-
-								boolean alreadyExists = false;
-								for (Choice otherChoice : myChoices)
-								{
-									if (otherChoice.getLinkByName("question").getHref().equals(checkinQuestions.getRef())
-											&& otherChoice.getAnswerText().equals("yes"))
-										alreadyExists = true;
-								}
-								
-								if (!alreadyExists)
-								{
-									choiceDao.create(checkinChoice);
-								}
-							} else {
-								// PLACE NOT NULL - LOCATION NULL
-							}
-						} else {
-							// PLACE IS NULL
+							placeResource = new Place(placeId, placeName, street, city, state, country, zip, latitude, longitude);
+							placeResource.setRef("/places/"+placeId);
+							placeDao.create(placeResource);
 						}
-						// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+						
+						Checkin checkin = new Checkin(checkinId, message, Utilities.dateFromString((String)checkinDetails.get("checkinTime")));
+						checkin.addLink("user", new Link("/users/"+userRef, "checkin-user"));
+						checkin.addLink("place", new Link("/places/"+placeId, "checkin-place"));
+						checkin.setRef("/checkins/"+checkinId);
+						checkinDao.create(checkin);
+						
+						if (placeName == null)
+							continue;
 
+						
+						Question checkinQuestion = questionDao.findByTags(placeName);
+						if (checkinQuestion == null) {
+							// N0 question - make it
+							checkinQuestion = new Question();
+							checkinQuestion.setQuestionText("Have you been to " + placeName + " ?");
+							checkinQuestion.setAnswerRule("yes|no");
+							checkinQuestion.setType("text");
+							checkinQuestion.setSource("system");
+							checkinQuestion.addLink("self", new Link(checkinQuestion.getRef(), "self"));
+							List<String> tagList = new ArrayList<String>();
+							tagList.add("fb.checkin");
+							if (placeName != null) {
+								tagList.add(placeName);
+							}
+							if(locationCity != null) {
+								tagList.add(locationCity);
+							}
+							checkinQuestion.setTags(tagList);
+							questionDao.create(checkinQuestion);
+						}
+
+						Choice checkinChoice = new Choice();
+						checkinChoice.setAnswerText("yes");
+						checkinChoice.addLink("question", new Link(checkinQuestion.getRef(), "choice-question"));
+						checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
+						checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
+
+						boolean alreadyExists = false;
+						for (Choice otherChoice : myChoices)
+						{
+							if (otherChoice.getLinkByName("question").getHref().equals(checkinQuestion.getRef())
+									&& otherChoice.getAnswerText().equals("yes"))
+								alreadyExists = true;
+						}
+						
+						if (!alreadyExists)
+						{
+							choiceDao.create(checkinChoice);
+						}
+					} else {
+						// PLACE NOT NULL - LOCATION NULL
 					}
+				} else {
+					// PLACE IS NULL
 				}
+				// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+
 			}
 			
 			return user;
@@ -298,11 +490,39 @@ public class UserImportResource {
 		}
 	}
 	
-//	public User importUserActivity(String userRef, String facebookData)
-//	{
-//		
-//	}
-//	
+	public User importUserData(String userRef, String facebookData, String accessToken, User newUser)
+	{
+		try
+		{
+			String myMoviesUrl = "https://graph.facebook.com/"+userRef+"/movies"+"?access_token="+accessToken;
+			String myMovies =  Utilities.getFromUrl(myMoviesUrl);
+			importUserMovies(newUser.getRef().split("/")[2], myMovies);
+	
+			String myTelevisionUrl = "https://graph.facebook.com/"+userRef+"/television"+"?access_token="+accessToken;
+			String myTelevision =  Utilities.getFromUrl(myTelevisionUrl);
+			importUserTelevision(newUser.getRef().split("/")[2], myTelevision);
+			
+			String myBooksUrl = "https://graph.facebook.com/"+userRef+"/books"+"?access_token="+accessToken;
+			String myBooks =  Utilities.getFromUrl(myBooksUrl);
+			importUserBooks(newUser.getRef().split("/")[2], myBooks);
+			
+			String myCheckinsUrl = "https://graph.facebook.com/"+userRef+"/checkins"+"?access_token="+accessToken;
+			String myCheckins =  Utilities.getFromUrl(myCheckinsUrl);
+			importUserCheckins(newUser.getRef().split("/")[2], myCheckins);
+
+			String myLikesUrl = "https://graph.facebook.com/"+userRef+"/likes"+"?access_token="+accessToken;
+			String myLikes =  Utilities.getFromUrl(myLikesUrl);
+			importUserLikes(newUser.getRef().split("/")[2], myLikes);
+			
+			return newUser;
+		}
+		catch (Exception E)
+		{
+			E.printStackTrace();
+			return null;
+		}
+	}
+	
 	public User createUserFromFacebookData(String facebookData)
 	{
 		try {
@@ -321,7 +541,11 @@ public class UserImportResource {
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
 			newUser.setGender((String)map.get("gender"));
-			newUser.setEmail((String)map.get("email"));
+			
+			if ((String)map.get("email") == null)
+				newUser.setEmail(newUser.getFirstName().toLowerCase()+"."+newUser.getLastName().toLowerCase()+"@clickd.org");
+			else
+				newUser.setEmail((String)map.get("email"));
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
 			newUser.setPassword("fb999");
 			newUser.setRef("/users/"+(String)map.get("id"));
@@ -339,7 +563,7 @@ public class UserImportResource {
 			 out.close();
 			 in.close();
 			 byte[] response = out.toByteArray();
-			 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\"+(String)map.get("id").toString()+".jpg");
+			 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg");
 			 fos.write(response);
 			 fos.close();
 			
@@ -408,17 +632,8 @@ public class UserImportResource {
 			String meData = Utilities.getFromUrl(meUrl);
 			User newUser = createUserFromFacebookData(meData);
 
-			String myMoviesUrl = "https://graph.facebook.com/me/movies"+"?access_token="+accessToken;
-			String myMovies =  Utilities.getFromUrl(myMoviesUrl);
-			importUserMovies(newUser.getRef().split("/")[2], myMovies);
-
-			String myTelevisionUrl = "https://graph.facebook.com/me/television"+"?access_token="+accessToken;
-			String myTelevision =  Utilities.getFromUrl(myTelevisionUrl);
-			importUserTelevision(newUser.getRef().split("/")[2], myTelevision);
+			importUserData("me", meData, accessToken, newUser);
 			
-			String myBooksUrl = "https://graph.facebook.com/me/books"+"?access_token="+accessToken;
-			String myBooks =  Utilities.getFromUrl(myBooksUrl);
-			importUserBooks(newUser.getRef().split("/")[2], myBooks);
 			
 			//get my friends
 			String friendsUrl = "https://graph.facebook.com/me/friends?access_token="+accessToken;
@@ -434,21 +649,8 @@ public class UserImportResource {
 				String friendDetails =  Utilities.getFromUrl(friendDetailsUrl);
 				User newFriendUser = createUserFromFacebookData(friendDetails);
 				
-				String friendMoviesUrl = "https://graph.facebook.com/"+friendId+"/movies/?access_token="+accessToken;
-				String friendMovies =  Utilities.getFromUrl(friendMoviesUrl);
-				
-				importUserMovies(newUser.getRef().split("/")[2], friendMovies);
 
-				String friendTelevisionUrl = "https://graph.facebook.com/"+friendId+"/television"+"/?access_token="+accessToken;
-				String friendTelevision =  Utilities.getFromUrl(friendTelevisionUrl);
-				
-				importUserTelevision(newUser.getRef().split("/")[2], friendTelevision);
-				
-				String friendBooksUrl = "https://graph.facebook.com/"+friendId+"/books/"+"?access_token="+accessToken;
-				String friendBooks =  Utilities.getFromUrl(friendBooksUrl);
-				
-				importUserBooks(newUser.getRef().split("/")[2], friendBooks);
-				
+				importUserData(friendId, friendDetails, accessToken, newFriendUser);
 			}
 			
 			//register my friends
