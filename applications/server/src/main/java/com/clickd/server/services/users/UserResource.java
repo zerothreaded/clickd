@@ -187,6 +187,8 @@ public class UserResource {
 		try {
 			// System.out.println(checkinData);
 			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(checkinData));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -244,7 +246,18 @@ public class UserResource {
 								checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
 								checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
 
-								choiceDao.create(checkinChoice);
+								boolean alreadyExists = false;
+								for (Choice otherChoice : myChoices)
+								{
+									if (otherChoice.getLinkByName("question").getHref().equals(checkinQuestions.getRef())
+											&& otherChoice.getAnswerText().equals("yes"))
+										alreadyExists = true;
+								}
+								
+								if (!alreadyExists)
+								{
+									choiceDao.create(checkinChoice);
+								}
 							} else {
 								// PLACE NOT NULL - LOCATION NULL
 							}
@@ -272,6 +285,9 @@ public class UserResource {
 		try {
 			// System.out.println(likeData);
 			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(tvData));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+
+			
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -294,14 +310,25 @@ public class UserResource {
 							tagList.add((String)tvDetails.get("name"));
 							tvQuestion.setTags(tagList);
 							questionDao.create(tvQuestion);
-						
+						}
 						
 						Choice likeChoice = new Choice();
 						likeChoice.setAnswerText("yes");
 						likeChoice.addLink("question", new Link(tvQuestion.getRef(), "choice-question"));
 						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-						choiceDao.create(likeChoice);
+						
+						boolean alreadyExists = false;
+						for (Choice otherChoice : myChoices)
+						{
+							if (otherChoice.getLinkByName("question").getHref().equals(tvQuestion.getRef())
+									&& otherChoice.getAnswerText().equals("yes"))
+								alreadyExists = true;
+						}
+						
+						if (!alreadyExists)
+						{
+							choiceDao.create(likeChoice);
 						}
 					}
 				}
@@ -324,6 +351,8 @@ public class UserResource {
 		try {
 			// System.out.println(likeData);
 			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(movieData));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+
 			for (String key : map.keySet()) {
 				// System.out.println(key + " = " + map.get(key));
 				if (key.equals("data")) {
@@ -347,13 +376,25 @@ public class UserResource {
 							movieQuestion.setTags(tagList);
 							questionDao.create(movieQuestion);
 						
+						}
 						
 						Choice likeChoice = new Choice();
 						likeChoice.setAnswerText("yes");
 						likeChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
 						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-						choiceDao.create(likeChoice);
+						
+						boolean alreadyExists = false;
+						for (Choice otherChoice : myChoices)
+						{
+							if (otherChoice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
+									&& otherChoice.getAnswerText().equals("yes"))
+								alreadyExists = true;
+						}
+						
+						if (!alreadyExists)
+						{
+							choiceDao.create(likeChoice);
 						}
 					}
 				}
@@ -375,6 +416,8 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registerLikes(@FormParam("likeData") String likeData, @FormParam("userRef") String userRef) throws URISyntaxException {
 		try {
+			//get my choices so we can skip duplicates
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			// System.out.println(likeData);
 			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(likeData));
 			for (String key : map.keySet()) {
@@ -412,7 +455,18 @@ public class UserResource {
 						likeChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
 						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-						choiceDao.create(likeChoice);
+						
+						boolean alreadyExists = false;
+						for (Choice otherChoice : myChoices)
+						{
+							if (otherChoice.getLinkByName("question").getHref().equals(likeQuestion.getRef())
+									&& otherChoice.getAnswerText().equals("yes"))
+								alreadyExists = true;
+						}
+						
+						if (!alreadyExists)
+							choiceDao.create(likeChoice);
+						
 						
 					}
 				}
@@ -854,7 +908,7 @@ public class UserResource {
 				myCliques.add(thisClique);
 			}
 			
-			// Sort the responses
+			// Sort the responses	
 			Collections.sort(myCliques, new Comparator<Clique>() {
 				@Override
 				public int compare(Clique cl1, Clique cl2) {
