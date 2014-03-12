@@ -33,6 +33,7 @@ import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.CliqueDao;
 import com.clickd.server.dao.ConnectionDao;
+import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
@@ -42,6 +43,7 @@ import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
+import com.clickd.server.model.Place;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
@@ -73,6 +75,9 @@ public class UserResource {
 	
 	@Autowired
 	private AnswerDao answerDao;
+	
+	@Autowired
+	private PlaceDao placeDao;
 
 	@GET
 	@Path("/{ref}")
@@ -214,6 +219,29 @@ public class UserResource {
 							if (place.get("location") != null)
 							{
 								// PLACE AND LOCATION NOT NULL
+								
+								// NOW : Make Resource
+								// TODO: IMPLEMENTTRANSFORMER <T> PATTERN RALPH
+								String fbId = (String) checkinDetails.get("id");
+								String name = (String) checkinDetails.get("place.name");
+								
+								
+								if (place.get("location") instanceof Map) {
+									Map<String, Object> location = (Map<String, Object>) place.get("location");
+									String nameOfThePlace = (String) checkinDetails.get("name");
+									String street = (String) location.get("street");
+									String city = (String) location.get("city");
+									String state = (String) location.get("state");
+									String country = (String) location.get("country");
+									String zip = (String) location.get("zip");
+									String latitude = (String) location.get("latitude");
+									String longitude = (String) location.get("longitude");
+									
+									Place placeResource = new Place(fbId, nameOfThePlace, street, city, state, country, zip, latitude, longitude);
+									placeDao.create(placeResource);
+								}
+								
+								
 								if (place.get("location") instanceof Map) {
 									Map<String, Object> location = (Map<String, Object>) place.get("location");
 									locationCity = (String) location.get("city");

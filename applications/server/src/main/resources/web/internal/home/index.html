@@ -15,7 +15,7 @@
 <script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-1.2.0rc1.js"></script>
 <script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-resource-1.2.0rc1.js"></script>
 <script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-route-1.2.0rc1.js"></script>
-<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-cookies.js"></script>
+<script type="text/javascript" src="/web/importefd/frameworks/angular/js/lib/angular-cookies.js"></script>
 
 
 
@@ -144,7 +144,24 @@ d3.select("div").style("height", diameter + "px");
         "latitude": 51.537812325599,
         "longitude": -0.14480018556184
         */
+        
+    	$.ajax({
+			    type: "GET",
+			    url: "/places/map",
+			    // data: {"movieData" : encodeURIComponent(movieDetails), "userRef" : friendRef.split("/")[2] },
+			    dataType: "json",
+				    success: function(data){
+				    	alert('GREEN');
+			    		console.log('/places/map' + JSON.stringify(data));
+			    },
+			    failure: function(errMsg) {
+			    	alert('register movies failed');
+			    	console.log('ERROR=' + errMsg);
+			    }
+			});	
+			  	  
 		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+	
 		var mapOptions = {
 		  zoom: 13,
 		  center: myLatlng
