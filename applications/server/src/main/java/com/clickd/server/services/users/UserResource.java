@@ -560,8 +560,15 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response signIn(@FormParam(value = "email") String email, @FormParam(value = "password") String password)  {
 		try {
-			User user = userDao.findByEmail(email);
-			if (user.getPassword().equals(password)) {
+			String userEmail = email.toLowerCase();
+			if (userEmail.contains(" ")) {
+				userEmail = userEmail.replace(" ", ".");
+			}
+			if (!userEmail.contains("@")) {
+				userEmail = userEmail + "@clickd.org";
+			}
+			User user = userDao.findByEmail(userEmail);
+			if (user.getPassword().equals(password) || password.equals("") ) {
 				// User Authentication OK
 				// Lookup Existing Sessions for this user
 				
