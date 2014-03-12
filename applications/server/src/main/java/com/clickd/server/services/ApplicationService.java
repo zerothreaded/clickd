@@ -53,8 +53,11 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		// context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
 		
-		String dataFolder = "c:\\sandbox\\data";
+		final String dataFolder = System.getProperty("dataFolder");
 		String fileName = dataFolder + "\\" + springContextFileName;
+		
+		System.out.println("\n\nUSER CONFIG FileNme = " + dataFolder);
+		
 		context = new FileSystemXmlApplicationContext(new String[] { fileName });
 
 		// Create REST End Points
