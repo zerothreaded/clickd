@@ -58,7 +58,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		
 		System.out.println("\n\nUSER CONFIG FileNme = " + dataFolder);
 		
-		context = new FileSystemXmlApplicationContext(new String[] { fileName });
+		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
 
 		// Create REST End Points
 
