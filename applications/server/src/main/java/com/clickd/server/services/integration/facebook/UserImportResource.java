@@ -63,8 +63,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/integration/facebook/user")
