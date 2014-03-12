@@ -31,9 +31,11 @@ public class PlaceDao implements InitializingBean {
 	}
 
 	public Place create(Place place) {
-		mongoOperations.save(place, collectionName);
-		cache.put(place.getRef(), place);
-		return place;
+		synchronized (this) {
+			mongoOperations.save(place, collectionName);
+			cache.put(place.getRef(), place);
+			return place;
+		}
 	}
 
 	public Place update(Place place) {

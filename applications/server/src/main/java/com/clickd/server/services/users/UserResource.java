@@ -225,7 +225,7 @@ public class UserResource {
 								
 								if (place.get("location") instanceof Map) {
 									Map<String, Object> location = (Map<String, Object>) place.get("location");
-									String nameOfThePlace = (String) checkinDetails.get("name");
+									String nameOfThePlace = (String)location.get("name");
 									String street = (String) location.get("street");
 									String city = (String) location.get("city");
 									String state = (String) location.get("state");
@@ -234,7 +234,7 @@ public class UserResource {
 									String latitude = (String) location.get("latitude");
 									String longitude = (String) location.get("longitude");
 									
-									Place placeResource = new Place(fbId, nameOfThePlace, street, city, state, country, zip, latitude, longitude);
+									Place placeResource = new Place(fbId, placeName, street, city, state, country, zip, latitude, longitude);
 									placeDao.create(placeResource);
 								}
 								

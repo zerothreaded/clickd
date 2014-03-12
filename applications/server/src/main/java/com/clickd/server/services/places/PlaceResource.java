@@ -70,6 +70,7 @@ public class PlaceResource {
 	@GET
 	@Timed
 	@Path("/map")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getForMap() {
 		try {
 			List<Place> allPlaces = placeDao.findAll();
@@ -99,7 +100,7 @@ public class PlaceResource {
 				
 				
 			}
-			return Response.status(200).entity(Utilities.toJson(allPlaces.subList(0, 10))).build();
+			return Response.status(200).entity(Utilities.toJson(allPlaces)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
