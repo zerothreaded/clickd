@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "category": "Interest",
+      "name": "Global Family Day",
+      "created_time": "2013-11-27T12:38:13+0000",
+      "id": "113602955356047"
+    },
+    {
+      "category": "Interest",
+      "name": "Travel",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "109592195726412"
+    },
+    {
+      "category": "Interest",
+      "name": "Computers and Technology",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "359719980963"
+    },
+    {
+      "category": "Interest",
+      "name": "Politics",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "112519432094249"
+    },
+    {
+      "category": "Interest",
+      "name": "Video Games",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "115625065118585"
+    },
+    {
+      "category": "Sport",
+      "name": "Martial arts",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "105594739473458"
+    },
+    {
+      "category": "Interest",
+      "name": "Space and Physics",
+      "created_time": "2010-05-27T15:30:00+0000",
+      "id": "403504992173"
+    },
+    {
+      "category": "Interest",
+      "name": "Life",
+      "created_time": "2010-05-27T15:29:59+0000",
+      "id": "108550515835673"
+    }
+  ],
+  "paging": {
+    "next": "https:\/\/graph.facebook.com\/690704027\/interests?access_token=CAAIUNK8TjW8BAK\u2026P0l9GT964SHWoDL2JnHhxjntsoZD&limit=25&offset=25&__after_id=108550515835673"
+  }
+}

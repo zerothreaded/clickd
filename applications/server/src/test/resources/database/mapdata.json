@@ -1,0 +1,58 @@
+{
+
+	"images" : [
+		{ 
+		    url: '/profile-img/users/751545291.jpg',
+	
+		    // This marker is 20 pixels wide by 32 pixels tall.
+		    size: new google.maps.Size(50, 50),
+		    scaledSize : new google.maps.Size(50, 50),
+	
+		    // The origin for this image is 0,0.
+		    origin: new google.maps.Point(0,0),
+	
+		    // The anchor for this image is the base of the flagpole at 0,32.
+		    anchor: new google.maps.Point(-40, 60)
+		},
+		{ 
+		    url: '/profile-img/users/751545291.jpg',
+	
+		    // This marker is 20 pixels wide by 32 pixels tall.
+		    size: new google.maps.Size(50, 50),
+		    scaledSize : new google.maps.Size(50, 50),
+	
+		    // The origin for this image is 0,0.
+		    origin: new google.maps.Point(0,0),
+	
+		    // The anchor for this image is the base of the flagpole at 0,32.
+		    anchor: new google.maps.Point(-40, 60)
+		}
+			],
+	"markers" : [
+		{
+		    position: myLatlng,
+		    map: map,
+		    icon : 		{ 
+			    url: '/profile-img/users/751545291.jpg',
+		
+			    // This marker is 20 pixels wide by 32 pixels tall.
+			    size: new google.maps.Size(50, 50),
+			    scaledSize : new google.maps.Size(50, 50),
+		
+			    // The origin for this image is 0,0.
+			    origin: new google.maps.Point(0,0),
+		
+			    // The anchor for this image is the base of the flagpole at 0,32.
+			    anchor: new google.maps.Point(-40, 60)
+			},
+		    title: "Nice Girl"
+		},
+		{
+		    position: myLatlng,
+		    map: map,
+		    icon : image1,
+		    title: "Nice Girl"
+		}
+				]
+	
+}
