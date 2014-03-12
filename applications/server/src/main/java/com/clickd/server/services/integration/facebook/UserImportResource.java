@@ -155,6 +155,7 @@ public class UserImportResource {
 				televisionQuestion.getTags().add(newTelevision.getName());
 				televisionQuestion.getTags().add("fb.televisions");
 				televisionQuestion.addLink("television-data", new Link(newTelevision.getRef(), "television-data"));
+				televisionQuestion.setAnswerRule("yes|no");
 				questionDao.create(televisionQuestion);
 			}
 			
@@ -216,6 +217,7 @@ public class UserImportResource {
 				bookQuestion.getTags().add(newBook.getName());
 				bookQuestion.getTags().add("fb.books");
 				bookQuestion.addLink("book-data", new Link(newBook.getRef(), "book-data"));
+				bookQuestion.setAnswerRule("yes|no");
 				questionDao.create(bookQuestion);
 			}
 			
@@ -279,6 +281,7 @@ public class UserImportResource {
 				movieQuestion.getTags().add(newMovie.getName());
 				movieQuestion.getTags().add("fb.movies");
 				movieQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
+				movieQuestion.setAnswerRule("yes|no");
 				questionDao.create(movieQuestion);
 			}
 			
@@ -338,6 +341,7 @@ public class UserImportResource {
 					likeQuestion.getTags().add(newLike.getCategory());
 					likeQuestion.getTags().add("fb.likes");
 					likeQuestion.addLink("like-data", new Link(newLike.getRef(), "like-data"));
+					likeQuestion.setAnswerRule("yes|no");
 					questionDao.create(likeQuestion);
 				}
 				
@@ -641,7 +645,10 @@ public class UserImportResource {
 			Map<String,Object> friendsList = Utilities.fromJson(friendsData);
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			
+			int i = 0;
 			for (String key : friendsListData.keySet()) {
+				if (i++ > 10)
+					break;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");
 				
