@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.choices.ChoiceResource;
+import com.clickd.server.services.integration.facebook.UserImportResource;
 import com.clickd.server.services.places.PlaceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
@@ -41,6 +42,8 @@ public class ApplicationService extends Service<UserConfiguration> {
 		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/d3", "d31.html"));
+		bootstrap.addBundle(new AssetsBundle("/web/internal/integration", "/int", "index.html"));
+
 		bootstrap.addBundle(new AssetsBundle("/web/data", "/data"));
 	}
 
@@ -63,6 +66,14 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		ChoiceResource choiceResource = context.getBean(ChoiceResource.class);
 		environment.addResource(choiceResource);
+		
+		UserImportResource facebookUserImportResource = context.getBean(UserImportResource.class);
+		environment.addResource(facebookUserImportResource);
+		
+//		// /chatrooms/*
+//		ChatroomResource chatroomResource = new ChatroomResource();
+//		chatroomResource.setChatroomDao(chatroomDao);
+//		environment.addResource(chatroomResource);
 		
 		PlaceResource placeResource = context.getBean(PlaceResource.class);
 		environment.addResource(placeResource);

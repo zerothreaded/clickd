@@ -35,18 +35,21 @@ public class ChoiceDao implements InitializingBean {
 	}
 
 	public Choice create(Choice choice) {
-		mongoOperations.save(choice, collectionName);
-		cache.put(choice.getRef(), choice);
-		Link choiceUser = choice.getLinkByName("user");
-		if (choiceUser != null) {
-			String choiceUserRef = choiceUser.getHref();
-			if (userChoicesCache.get(choiceUserRef) == null) {
-				userChoicesCache.put(choiceUserRef, new ArrayList<Choice>());
+		synchronized (this)
+		{
+			mongoOperations.save(choice, collectionName);
+			cache.put(choice.getRef(), choice);
+			Link choiceUser = choice.getLinkByName("user");
+			if (choiceUser != null) {
+				String choiceUserRef = choiceUser.getHref();
+				if (userChoicesCache.get(choiceUserRef) == null) {
+					userChoicesCache.put(choiceUserRef, new ArrayList<Choice>());
+				}
+				System.out.println("Adding choice " + choice.getAnswerText() + " for user " + choiceUserRef);
+				userChoicesCache.get(choiceUserRef).add(choice);
 			}
-			System.out.println("Adding choice " + choice.getAnswerText() + " for user " + choiceUserRef);
-			userChoicesCache.get(choiceUserRef).add(choice);
+			return choice;
 		}
-		return choice;
 	}
 
 	public Choice update(Choice choice) {
@@ -83,7 +86,9 @@ public class ChoiceDao implements InitializingBean {
 		for (String key : userChoicesCache.keySet()) {
 			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
 		}
-		return Collections.unmodifiableList(userChoicesCache.get(userRef));
+		
+		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
+		return result;
 	}
 
 	public List<Choice> findByUserRefOLD(String userRef) {

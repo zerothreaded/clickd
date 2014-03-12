@@ -109,8 +109,11 @@ public class UserResource {
 			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
 			if (null != existingUser)
 			{
-				return Response.status(200).entity(Utilities.toJson(existingUser)).build();
+				return Response.status(300).entity(new ErrorMessage("failed", "User already registered")).build();
 			}
+			
+			
+			
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
@@ -799,8 +802,8 @@ public class UserResource {
 				
 				String responseString = question.getTags().toString()+" - "+choice.getAnswerText();
 				
-				if (same.contains(responseString))
-					continue;
+			//	if (same.contains(responseString))
+				//	continue;
 				
 					if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
 						same.add(responseString);

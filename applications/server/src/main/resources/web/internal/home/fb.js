@@ -17,6 +17,10 @@
 		  FB.api('/me', function(response)
 		  {
 				var registerWithFacebookUrl = "/users/register/source/facebook";
+				
+				console.log("MY FACEBOOK DATA:");
+				console.log(JSON.stringify(response));
+				
 				$.ajax({
 				    type: "POST",
 				    url: registerWithFacebookUrl,
