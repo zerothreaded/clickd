@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.choices.ChoiceResource;
+import com.clickd.server.services.places.PlaceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
 import com.clickd.server.services.users.UserResource;
@@ -48,66 +49,28 @@ public class ApplicationService extends Service<UserConfiguration> {
 		final String springContextFileName = configuration.getSpringContextFileName();
 
 		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
-//		
-//		UserDao userDao = (UserDao) context.getBean("userDao");
-//		SessionDao sessionDao = (SessionDao) context.getBean("sessionDao");
-//		ApplicationDao applicationDao = (ApplicationDao) context.getBean("applicationDao");
-//		QuestionDao questionDao = (QuestionDao) context.getBean("questionDao");
-//		AnswerDao answerDao = (AnswerDao) context.getBean("answerDao");
-//		ChoiceDao choiceDao = (ChoiceDao) context.getBean("choiceDao");
-//		ConnectionDao connectionDao = (ConnectionDao) context.getBean("connectionDao");
-//		ChatroomDao chatroomDao = (ChatroomDao) context.getBean("chatroomDao");
-//		PostDao postDao = (PostDao) context.getBean("postDao");
 
 		// Create REST End Points
 
-//		// Application 	
-//		ApplicationResource applicationResource = new ApplicationResource();
-//		applicationResource.setApplicationDao(applicationDao);
-//		applicationResource.setSessionDao(sessionDao);
-//		applicationResource.setUserDao(userDao);
-
-//		ApplicationResource applicationResource = context.getBean(ApplicationResource.class);
-//		environment.addResource(applicationResource);
-//
-//		// /users/*
-//		UserResource userResource = new UserResource();
-//		userResource.setUserDao(userDao);
-//		userResource.setSessionDao(sessionDao);
-//		userResource.setChoiceDao(choiceDao);
-//		userResource.setQuestionDao(questionDao);
-//		userResource.setConnectionDao(connectionDao);
-//		userResource.setAnswerDao(answerDao);
 		UserResource userResource = context.getBean(UserResource.class);
 		environment.addResource(userResource);
-//
-//		// /questions/*
-//		QuestionResource questionResource = new QuestionResource();
-//		questionResource.setQuestionDao(questionDao);
-//		questionResource.setAnswerDao(answerDao);
-//		questionResource.setChoiceDao(choiceDao);
+
 		QuestionResource questionResource = context.getBean(QuestionResource.class);
 		environment.addResource(questionResource);
-//
-//		// /answers/*
-//		AnswerResource answerResource = new AnswerResource();
-//		answerResource.setAnswerDao(answerDao);
+
 		AnswerResource answerResource = context.getBean(AnswerResource.class);
 		environment.addResource(answerResource);
-//
-//		// /choices/*
-//		ChoiceResource choiceResource = new ChoiceResource();
-//		choiceResource.setChoiceDao(choiceDao);
+
 		ChoiceResource choiceResource = context.getBean(ChoiceResource.class);
 		environment.addResource(choiceResource);
 		
-//		// /chatrooms/*
-//		ChatroomResource chatroomResource = new ChatroomResource();
-//		chatroomResource.setChatroomDao(chatroomDao);
-//		environment.addResource(chatroomResource);
+		PlaceResource placeResource = context.getBean(PlaceResource.class);
+		environment.addResource(placeResource);
 		
-		
+		// TODO: Sort out healthchecks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
+		
+		// FILTER
 		Filter filter = new TokenCheckFilter();
 		environment.addFilter(filter, "*");
 	}

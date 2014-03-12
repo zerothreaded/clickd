@@ -58,6 +58,10 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
+	<bean id="placeDao" class="com.clickd.server.dao.PlaceDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
 	<bean id="userResource" class="com.clickd.server.services.users.UserResource" />
 
 	<bean id="questionResource" class="com.clickd.server.services.questions.QuestionResource" />
@@ -65,6 +69,7 @@
 	<bean id="answerResource" class="com.clickd.server.services.answers.AnswerResource" />
 
 	<bean id="choiceResource" class="com.clickd.server.services.choices.ChoiceResource" />
-	
-	
+
+	<bean id="placeResource" class="com.clickd.server.services.places.PlaceResource" />
+		
 </beans>
