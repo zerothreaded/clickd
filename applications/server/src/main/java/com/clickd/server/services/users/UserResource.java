@@ -589,9 +589,9 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/{userRef}/candidates")
+	@Path("/{userRef}/candidatesTEST")
 	@Timed
-	public Response getCandidates(@PathParam("userRef") String userRef) {
+	public Response getCandidatesTEST(@PathParam("userRef") String userRef) {
 		System.out.println("getCandidates() called for userRef " + userRef);
 		try {
 			List<Choice> responseList = new ArrayList<Choice>();
@@ -614,9 +614,9 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/{userRef}/candidatesOLD")
+	@Path("/{userRef}/candidates")
 	@Timed
-	public Response getCandidatesOLD(@PathParam("userRef") String userRef) {
+	public Response getCandidates(@PathParam("userRef") String userRef) {
 		try {
 			User user = userDao.findByRef("/users/"+userRef);
 			// get my answers
@@ -628,7 +628,7 @@ public class UserResource {
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
-
+				System.out.println("Same Answer Choices Count = [" + sameAnswerChoices.size() + "]");
 
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
