@@ -4,6 +4,7 @@ import javax.servlet.Filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.choices.ChoiceResource;
@@ -50,7 +51,14 @@ public class ApplicationService extends Service<UserConfiguration> {
 	public void run(UserConfiguration configuration, Environment environment) {
 		final String springContextFileName = configuration.getSpringContextFileName();
 
-		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
+		// context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
+		
+		final String dataFolder = System.getProperty("dataFolder");
+		String fileName = dataFolder + "/" + springContextFileName;
+		
+		System.out.println("\n\nUSER CONFIG FileNme = " + dataFolder);
+		
+		context = new FileSystemXmlApplicationContext(new String[] { fileName });
 
 		// Create REST End Points
 

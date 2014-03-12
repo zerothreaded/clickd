@@ -373,7 +373,7 @@ d3.select("div").style("height", diameter + "px");
 		<!-- Overlay Div -->
 		<div id="overlay" class="transparent" style="display: none;"></div>
 		<div id="top-nav" class="navbar nav navbar-inverse navbar-fixed-top" >
-			<a href="#" class="navbar-brand"><span><img class="small-profile-img"  ng-src="/profile-img/{{model.currentUser.user.ref}}.jpg"> is dating @ clickd</span></a>
+			<a href="#" class="navbar-brand"><span><img class="small-profile-img"  ng-src="/profile-img{{model.currentUser.user.ref}}.jpg"> is dating @ clickd</span></a>
 			<ul class="nav-notification navbar-right nav">
 				<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>{{model.currentUser.user.firstName}}</strong></span> <span><i class="fa fa-chevron-down"></i></span>
 				</a>
@@ -403,7 +403,7 @@ d3.select("div").style("height", diameter + "px");
 							ng-click="onClickCandidate({{candidate.user}})" href="#"
 							ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
 							 >
-								&nbsp;<img class="small-profile-img" ng-src="/profile-img/{{candidate.user.ref}}.jpg">
+								&nbsp;<img class="small-profile-img" ng-src="/profile-img{{candidate.user.ref}}.jpg">
 								{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
 					</div>	
 					<hr/>
@@ -441,7 +441,7 @@ d3.select("div").style("height", diameter + "px");
 						<!-- VIEW CANDIDATES -->
 						<div ng-if="model.currentSelection == 'candidates'" class="panel candidates-panel">
 								<div class="member-md-panel" ng-repeat="candidate in model.currentUser.candidates" ng-click="onClickCandidate({{candidate.user}})" href="#" ng-class="{active: isUserSelected('{{candidate.user.ref}}')}" >
-									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{candidate.user.ref}}.jpg">
+									&nbsp;<img class="member-md-image" ng-src="/profile-img{{candidate.user.ref}}.jpg">
 									{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
 								</div>	
 						</div>

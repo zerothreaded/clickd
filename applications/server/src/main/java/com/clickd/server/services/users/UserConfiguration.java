@@ -18,6 +18,14 @@ public class UserConfiguration extends Configuration {
 	@JsonProperty
 	private String defaultName = "Stranger";
 
+	@NotEmpty
+	@JsonProperty
+	private String dataFolder = "\\sandbox\\data";
+	
+	public String getDataFolder() {
+		return dataFolder;
+	}
+
 	public String getTemplate() {
 		return template;
 	}
