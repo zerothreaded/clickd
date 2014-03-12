@@ -645,10 +645,7 @@ public class UserImportResource {
 			Map<String,Object> friendsList = Utilities.fromJson(friendsData);
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			
-			int i = 0;
 			for (String key : friendsListData.keySet()) {
-				if (i++ > 10)
-					break;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");
 				
