@@ -42,6 +42,7 @@ import com.clickd.server.dao.MovieDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.TelevisionDao;
+import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Answer;
 import com.clickd.server.model.Book;
@@ -51,6 +52,7 @@ import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Movie;
+import com.clickd.server.model.Place;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
@@ -85,6 +87,10 @@ public class UserImportResource {
 	
 	@Autowired
 	TelevisionDao televisionDao;
+	
+
+	@Autowired
+	PlaceDao placeDao;
 	
 	@Autowired
 	BookDao bookDao;
@@ -168,6 +174,128 @@ public class UserImportResource {
 			
 		
 		return user;
+	}
+	
+	public User importUserCheckins (String userRef, String checkinData)
+	{
+		try {
+			User user = userDao.findByRef("/users/" + userRef);
+			// System.out.println(checkinData);
+			HashMap<String, Object> map = Utilities.fromJson(Utilities.urlDecode(checkinData));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+
+			for (String key : map.keySet()) {
+				// System.out.println(key + " = " + map.get(key));
+				if (key.equals("data")) {
+					Map<String, Object> data = (Map<String, Object>) map.get(key);
+					for (String dataKey : data.keySet()) {
+						// System.out.println("DATA KEY  = " + dataKey + " val = " + data.get(dataKey));
+						Map<String, Object> checkinDetails = (Map<String, Object>) data.get(dataKey);
+						
+						String message = "";
+						if (checkinDetails.get("message") != null)
+							 message = (String) checkinDetails.get("message");
+						
+						String placeName = "";
+						String locationCity = "";
+						if (checkinDetails.get("place") != null)
+						{
+							Map<String, Object> place = (Map<String, Object>) checkinDetails.get("place");
+							placeName = (String)place.get("name");
+							
+							if (place.get("location") != null)
+							{
+								// PLACE AND LOCATION NOT NULL
+								
+								// NOW : Make Resource
+								// TODO: IMPLEMENTTRANSFORMER <T> PATTERN RALPH
+								String fbId = (String) checkinDetails.get("id");
+								String name = (String) checkinDetails.get("place.name");
+								
+								
+								if (place.get("location") instanceof Map) {
+									Map<String, Object> location = (Map<String, Object>) place.get("location");
+									String nameOfThePlace = (String)location.get("name");
+									String street = (String) location.get("street");
+									String city = (String) location.get("city");
+									String state = (String) location.get("state");
+									String country = (String) location.get("country");
+									String zip = (String) location.get("zip");
+									String latitude = (String) location.get("latitude");
+									String longitude = (String) location.get("longitude");
+									
+									Place placeResource = new Place(fbId, placeName, street, city, state, country, zip, latitude, longitude);
+									placeDao.create(placeResource);
+								}
+								
+								
+								if (place.get("location") instanceof Map) {
+									Map<String, Object> location = (Map<String, Object>) place.get("location");
+									locationCity = (String) location.get("city");
+								} else {
+									System.out.println("\n\n" + place.get("location"));
+									locationCity = (String)place.get("location");
+								}
+
+								Question checkinQuestions = questionDao.findByTags(placeName);
+								if (checkinQuestions == null) {
+									// N0 question - make it
+									checkinQuestions = new Question();
+									checkinQuestions.setQuestionText("Have you been to " + placeName + " ?");
+									checkinQuestions.setAnswerRule("yes|no");
+									checkinQuestions.setType("text");
+									checkinQuestions.setSource("system");
+									checkinQuestions.addLink("self", new Link(checkinQuestions.getRef(), "self"));
+									List<String> tagList = new ArrayList<String>();
+									tagList.add("fb.checkin");
+									if (placeName != null) {
+										tagList.add(placeName);
+									}
+									if(locationCity != null) {
+										tagList.add(locationCity);
+									}
+									checkinQuestions.setTags(tagList);
+									questionDao.create(checkinQuestions);
+								}
+
+								Choice checkinChoice = new Choice();
+								checkinChoice.setAnswerText("yes");
+								checkinChoice.addLink("question", new Link(checkinQuestions.getRef(), "choice-question"));
+								checkinChoice.addLink("user", new Link("/users/" + userRef, "choice-user"));
+								checkinChoice.addLink("self", new Link(checkinChoice.getRef(), "self"));
+
+								boolean alreadyExists = false;
+								for (Choice otherChoice : myChoices)
+								{
+									if (otherChoice.getLinkByName("question").getHref().equals(checkinQuestions.getRef())
+											&& otherChoice.getAnswerText().equals("yes"))
+										alreadyExists = true;
+								}
+								
+								if (!alreadyExists)
+								{
+									choiceDao.create(checkinChoice);
+								}
+							} else {
+								// PLACE NOT NULL - LOCATION NULL
+							}
+						} else {
+							// PLACE IS NULL
+						}
+						// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
+
+					}
+				}
+			}
+			
+			return user;
+
+		}
+		catch (Exception E)
+		{
+			E.printStackTrace();
+			return null;
+		}
 	}
 	
 //	public User importUserActivity(String userRef, String facebookData)
