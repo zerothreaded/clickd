@@ -69,8 +69,19 @@
 		<property name="collectionName" value="facebookMovies" />
 	</bean>
 	
-	
 	<bean id="placeDao" class="com.clickd.server.dao.PlaceDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="movieDao" class="com.clickd.server.dao.MovieDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+		<bean id="televisionDao" class="com.clickd.server.dao.TelevisionDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+		<bean id="bookDao" class="com.clickd.server.dao.BookDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
@@ -83,8 +94,13 @@
 	<bean id="choiceResource" class="com.clickd.server.services.choices.ChoiceResource" />
 	
 	<bean id="userImportResource" class="com.clickd.server.services.integration.facebook.UserImportResource" />
-	
 
 	<bean id="placeResource" class="com.clickd.server.services.places.PlaceResource" />
 		
+	<bean id="movieResource" class="com.clickd.server.services.movies.MovieResource" />
+
+	<bean id="bookResource" class="com.clickd.server.services.books.BookResource" />
+
+	<bean id="televisionResource" class="com.clickd.server.services.television.TelevisionResource" />
+
 </beans>

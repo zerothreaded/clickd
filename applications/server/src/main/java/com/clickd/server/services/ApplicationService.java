@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.integration.facebook.UserImportResource;
+import com.clickd.server.services.places.PlaceResource;
 import com.clickd.server.services.questions.QuestionResource;
 import com.clickd.server.services.users.UserConfiguration;
 import com.clickd.server.services.users.UserResource;
