@@ -112,8 +112,6 @@ public class UserResource {
 				return Response.status(300).entity(new ErrorMessage("failed", "User already registered")).build();
 			}
 			
-			
-			
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
@@ -413,12 +411,6 @@ public class UserResource {
 						
 						}
 						
-						Choice likeChoice = new Choice();
-						likeChoice.setAnswerText("yes");
-						likeChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
-						likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-						likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
-						
 						boolean alreadyExists = false;
 						for (Choice otherChoice : myChoices)
 						{
@@ -429,6 +421,12 @@ public class UserResource {
 						
 						if (!alreadyExists)
 						{
+							Choice likeChoice = new Choice();
+							likeChoice.setAnswerText("yes");
+							likeChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+							likeChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+							likeChoice.addLink("self", new Link(likeChoice.getRef(), "self"));
+							
 							choiceDao.create(likeChoice);
 						}
 					}

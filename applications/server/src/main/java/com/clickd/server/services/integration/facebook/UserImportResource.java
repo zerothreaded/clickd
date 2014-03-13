@@ -114,40 +114,55 @@ public class UserImportResource {
 			
 			if (televisionDao.findByRef(newTelevision.getRef()) == null)
 			{
+				// CREATE PATH
 				televisionDao.create(newTelevision);
 				
 				Question televisionQuestion = questionDao.findByTags(newTelevision.getName());	
 				if (televisionQuestion == null)
 				{
-					televisionQuestion = new Question("Do you like "+newTelevision.getName()+"?", "system");
+					televisionQuestion = new Question("Do you like " + newTelevision.getName() + "?", "system");
 					televisionQuestion.getTags().add(newTelevision.getName());
 					televisionQuestion.getTags().add("fb.televisions");
 					televisionQuestion.addLink("television-data", new Link(newTelevision.getRef(), "television-data"));
 					televisionQuestion.setAnswerRule("yes|no");
 					questionDao.create(televisionQuestion);
 				}
+//				
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(televisionQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+			
+				choiceDao.create(myChoice);
+
+			
+			} else {
+				// UPDATE PATH
 				
+				Question televisionQuestion = questionDao.findByTags(newTelevision.getName());	
+				System.out.println("\t\tUpdate Television for " + televisionQuestion.getQuestionText());
+
 				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 				boolean alreadyExists = false;
 				for (Choice choice : myChoices)
 				{
 					if (choice.getLinkByName("question").getHref().equals(televisionQuestion.getRef())
-							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					 && choice.getLinkByName("user").getHref().equals("/users/"+userRef))
 						alreadyExists = true;
 				}
-				
-				if (!alreadyExists)
-				{
+				if (alreadyExists) {
+					// DO NOTHING TO IT - NO UPDATE CHOICE YET
+				} else {
 					Choice myChoice = new Choice();
 					myChoice.addLink("question", new Link(televisionQuestion.getRef(), "choice-question"));
 					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 					myChoice.setAnswerText("yes");
+				
 					choiceDao.create(myChoice);
+					
 				}
-			}
-			else
-			{
-				System.out.println("\t\tUpdate Television for " + (String)televisionData.get("name"));
+
+				
 			}
 		}
 	}
@@ -645,12 +660,12 @@ public class UserImportResource {
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			System.out.println("gotFriendsList() with : " + friendsListData.size());
 			// Throttler
- 			int maxFriends = 50;
+ 			int maxFriends = 20;
 			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
 				if (numFriendsDone > maxFriends) {
-					//break;
+					break;
 				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
