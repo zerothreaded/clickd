@@ -202,28 +202,31 @@ public class UserImportResource {
 					questionDao.create(bookQuestion);
 				}
 				
-				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-				boolean alreadyExists = false;
-				for (Choice choice : myChoices)
-				{
-					if (choice.getLinkByName("question").getHref().equals(bookQuestion.getRef())
-							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-						alreadyExists = true;
-				}
-				
-				if (!alreadyExists)
-				{
-					Choice myChoice = new Choice();
-					myChoice.addLink("question", new Link(bookQuestion.getRef(), "choice-question"));
-					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-					myChoice.setAnswerText("yes");
-					choiceDao.create(myChoice);
-				}
 			}
 			else
 			{
 				// UPDATE PATH
 				System.out.println("\t\tSkipping UPDATE book for " + (String)bookData.get("name"));
+			}
+			
+			Question bookQuestion = questionDao.findByTags((String)bookData.get("name"));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+				if (choice.getLinkByName("question").getHref().equals(bookQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(bookQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+				myChoices.add(myChoice);
 			}
 		}
 		return user;
@@ -282,29 +285,33 @@ public class UserImportResource {
 					questionDao.create(movieQuestion);
 				}
 				
-				// Create Choice
-				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-				boolean alreadyExists = false;
-				for (Choice choice : myChoices)
-				{
-				if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
-							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-						alreadyExists = true;
-				}
-				
-				if (!alreadyExists)
-				{
-					Choice myChoice = new Choice();
-					myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
-					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-					myChoice.setAnswerText("yes");
-					choiceDao.create(myChoice);
-				}
+			
 			}
 			else
 			{
 				//update
 				System.out.println("\t\tUpdate Movie for "+ (String)facebookMovie.get("name"));
+			}
+			
+			Question movieQuestion = questionDao.findByTags((String)facebookMovie.get("name"));
+			// Create Choice
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+			if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+				myChoices.add(myChoice);
 			}
 		}
 
@@ -343,24 +350,31 @@ public class UserImportResource {
 					questionDao.create(likeQuestion);
 				}
 				
-				
-				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-				boolean alreadyExists = false;
-				for (Choice choice : myChoices)
-				{
-					if (choice.getLinkByName("question").getHref().equals(likeQuestion.getRef())
-							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-						alreadyExists = true;
-				}
-				
-				if (!alreadyExists)
-				{
-					Choice myChoice = new Choice();
-					myChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
-					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-					myChoice.setAnswerText("yes");
-					choiceDao.create(myChoice);
-				}
+		
+			}
+			else
+			{
+				//update path
+			}
+			
+			Question likeQuestion = questionDao.findByTags((String)likeData.get("name"));
+			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			boolean alreadyExists = false;
+			for (Choice choice : myChoices)
+			{
+				if (choice.getLinkByName("question").getHref().equals(likeQuestion.getRef())
+						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+					alreadyExists = true;
+			}
+			
+			if (!alreadyExists)
+			{
+				Choice myChoice = new Choice();
+				myChoice.addLink("question", new Link(likeQuestion.getRef(), "choice-question"));
+				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+				myChoice.setAnswerText("yes");
+				choiceDao.create(myChoice);
+				myChoices.add(myChoice);
 			}
 		}
 	}
@@ -467,6 +481,7 @@ public class UserImportResource {
 						if (!alreadyExists)
 						{
 							choiceDao.create(checkinChoice);
+							myChoices.add(checkinChoice);
 						}
 					} else {
 						// PLACE NOT NULL - LOCATION NULL
@@ -664,9 +679,9 @@ public class UserImportResource {
 			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
-				if (numFriendsDone > maxFriends) {
-					break;
-				}
+//				if (numFriendsDone > maxFriends) {
+//					break;
+//				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");
