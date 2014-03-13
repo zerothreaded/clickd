@@ -151,7 +151,7 @@ public class UserImportResource {
 			}
 			
 			
-			Question televisionQuestion = questionDao.findByTags(newTelevision.getName());
+			Question televisionQuestion = questionDao.findByTags(newTelevision.getName());	
 			if (televisionQuestion == null)
 			{
 				televisionQuestion = new Question("Do you like "+newTelevision.getName()+"?", "system");
@@ -207,11 +207,13 @@ public class UserImportResource {
 			}
 			else
 			{
-				newBook = bookDao.findByRef("/books/"+(String)bookData.get("ref"));
+				newBook = bookDao.findByRef("/books/"+(String)bookData.get("id"));
 			}
 			
-			if (newBook.getName() == null)
-				continue;
+			if (null == newBook.getName())
+			{
+				continue;	
+			}
 			
 			Question bookQuestion = questionDao.findByTags(newBook.getName());
 			if (bookQuestion == null)
