@@ -516,10 +516,10 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 						
 						<!--  VIEW CLIQUE -->
-						<div ng-if="model.currentSelection == 'cliques.clique'" class="panel clique-panel"  ng-click="onClickCandidate({{cliqueMember}})">
+						<div ng-if="model.currentSelection == 'cliques.clique'" class="panel clique-panel" ng-click="selectCliqueMember({{cliqueMember}})">
 						
 							<div class="member-md-panel" ng-repeat="cliqueMember in model.selectedClique.cliqueMembers"  href="#"  >
-									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{cliqueMember.ref}}.jpg">
+									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{cliqueMember.ref}}.jpg" >
 									{{cliqueMember.firstName}} {{cliqueMember.lastName}}</a>
 								</div>	
 						</div>
