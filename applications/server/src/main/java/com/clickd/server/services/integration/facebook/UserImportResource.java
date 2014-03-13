@@ -532,7 +532,7 @@ public class UserImportResource {
 	public User createUserFromFacebookData(String facebookData)
 	{
 		try {
-			System.out.println("createUserFromFacebookData() Starting for " + facebookData);
+			//System.out.println("createUserFromFacebookData() Starting for " + facebookData);
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
 
 			// Create the new user
@@ -665,7 +665,7 @@ public class UserImportResource {
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
 				if (numFriendsDone > maxFriends) {
-					break;
+					//break;
 				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
