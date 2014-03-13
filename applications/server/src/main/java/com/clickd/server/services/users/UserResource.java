@@ -802,7 +802,8 @@ public class UserResource {
 				if (null == question || question.getTags() == null || choice.getAnswerText() == null || choice2.getAnswerText() == null)
 					continue;
 				
-				String responseString = question.getTags().toString()+" - "+choice.getAnswerText();
+				String responseString = getProcessedCliqueName(question,choice);
+				responseString = responseString.replace("likes", "like");
 				
 			//	if (same.contains(responseString))
 				//	continue;
@@ -912,6 +913,33 @@ public class UserResource {
 		}
 	}
 	
+	public String getProcessedCliqueName(Question question, Choice myChoice)
+	{
+		String cliqueName = question.getQuestionText();
+		
+		if (question.getTags().get(question.getTags().size()-1).equals("fb.likes"))
+			cliqueName = "Likes "+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
+	
+
+		if (question.getTags().get(0).equals("fb.checkin"))
+		cliqueName = "Been to "+question.getTags().get(1);
+		
+		if (question.getTags().get(1).equals("fb.movies"))
+			cliqueName = "Likes movie "+question.getTags().get(0);
+
+		if (question.getTags().get(1).equals("fb.televisions"))
+			cliqueName = "Likes TV show "+question.getTags().get(0);
+
+		if (question.getTags().get(1).equals("fb.book"))
+			cliqueName = "Likes book "+question.getTags().get(0);
+		
+		if (question.getTags().get(0).equals("aboutme"))
+			cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
+		
+		
+		return cliqueName;
+	}
+	
 	@GET
 	@Path("/{userRef}/cliques")
 	@Timed
@@ -928,15 +956,7 @@ public class UserResource {
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				
-				String cliqueName = question.getTags().toString()+" "+myChoice.getAnswerText();
-				if (question.getTags().get(0).equals("fb.like"))
-					cliqueName = "Likes "+question.getTags().get(1)+"("+question.getTags().get(2)+")";
-				
-				if (question.getTags().get(0).equals("fb.checkin"))
-				cliqueName = "Been to "+question.getTags().get(1);
-				
-				if (question.getTags().get(0).equals("aboutme"))
-					cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
+				String cliqueName = getProcessedCliqueName(question, myChoice);
 				
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
