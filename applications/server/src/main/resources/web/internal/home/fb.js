@@ -1,6 +1,7 @@
 function doLoginFb2()
 {
-	var url ="http://www.facebook.com/dialog/oauth?client_id=585166461570415&response_type=code&redirect_uri=http://"+document.domain+".com:8080/integration/facebook/user/authResponse/?&scope=user_location,friends_location,user_about_me,friends_about_me,user_birthday,friends_birthday,email,user_interests,friends_interests,user_likes,friends_likes,user_photos,friends_photos,user_checkins,friends_checkins,read_friendlists";
+	var url ="http://www.facebook.com/dialog/oauth?client_id=585166461570415&response_type=code&redirect_uri=http://"+document.domain+":8080/integration/facebook/user/authResponse/?&scope=user_location,friends_location,user_about_me,friends_about_me,user_birthday,friends_birthday,email,user_interests,friends_interests,user_likes,friends_likes,user_photos,friends_photos,user_checkins,friends_checkins,read_friendlists";
+	window.location.href = url;
 }
 
 function doLoginFb()
