@@ -94,7 +94,7 @@ public class PlaceResource {
 				
 				placeMarker.icon = placeImage;
 				
-				System.out.println(Utilities.toJson(placeMarker));
+				// System.out.println(Utilities.toJson(placeMarker));
 				
 				int x  =1;
 				

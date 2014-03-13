@@ -3,9 +3,11 @@ package com.clickd.server.services.integration.facebook;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.ws.RequestWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.URLEditor;
 
 import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.BookDao;
@@ -254,9 +257,23 @@ public class UserImportResource {
 		
 		for (String key : moviesMap.keySet()) {
 			Map<String,Object> movieData = (Map<String,Object>)moviesMap.get(key);
+			
 			Movie newMovie = new Movie();
 			newMovie.setName((String)movieData.get("name"));
 			newMovie.setRef("/movies/"+(String)movieData.get("id"));
+			
+			String omdbUrl = "http://www.omdbapi.com/?t=" + URLEncoder.encode(newMovie.getName());
+			String omdbContent;
+			try {
+				omdbContent = Utilities.getFromUrl(omdbUrl);
+				Map<String, Object> omdbProperties = Utilities.fromJson(omdbContent);
+				newMovie.setPosterImageUrl((String) omdbProperties.get("Poster"));
+				newMovie.setCountry((String) omdbProperties.get("Country"));
+				newMovie.setGenres((String) omdbProperties.get("Genre"));
+			} catch (IOException e) {
+//				e.printStackTrace();
+				System.out.println("OMDB FAILED FOR "+ newMovie.getName());
+			}
 			
 			if (movieDao.findByRef(newMovie.getRef()) == null)
 				movieDao.create(newMovie);
@@ -645,7 +662,13 @@ public class UserImportResource {
 			Map<String,Object> friendsList = Utilities.fromJson(friendsData);
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			
+			int maxFriends = 50;
+			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
+				if (numFriendsDone > maxFriends) {
+					// break;
+				}
+				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");
 				

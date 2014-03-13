@@ -45,7 +45,7 @@ public class ChoiceDao implements InitializingBean {
 				if (userChoicesCache.get(choiceUserRef) == null) {
 					userChoicesCache.put(choiceUserRef, new ArrayList<Choice>());
 				}
-				System.out.println("Adding choice " + choice.getAnswerText() + " for user " + choiceUserRef);
+				// System.out.println("Adding choice " + choice.getAnswerText() + " for user " + choiceUserRef);
 				userChoicesCache.get(choiceUserRef).add(choice);
 			}
 			return choice;
@@ -83,9 +83,9 @@ public class ChoiceDao implements InitializingBean {
 		if (userChoicesCache.get(userRef) == null) {
 			userChoicesCache.put(userRef, new ArrayList<Choice>());
 		}
-		for (String key : userChoicesCache.keySet()) {
-			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
-		}
+//		for (String key : userChoicesCache.keySet()) {
+//			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
+//		}
 		
 		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
 		return result;

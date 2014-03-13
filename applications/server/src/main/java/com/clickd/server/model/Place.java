@@ -39,6 +39,7 @@ public class Place extends Resource {
 
 	public Place(String fbId, String name, String street, String city, String state, String country, String zip, String latitude, String longitude) {
 		super();
+		createRef();
 		this.fbId = fbId;
 		this.name = name;
 		this.street = street;

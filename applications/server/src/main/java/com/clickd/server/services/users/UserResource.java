@@ -238,6 +238,10 @@ public class UserResource {
 									String longitude = (String) location.get("longitude");
 									
 									Place placeResource = new Place(fbId, placeName, street, city, state, country, zip, latitude, longitude);
+									if (placeResource.getRef() == null) {
+										int x = 1;
+										
+									}
 									placeDao.create(placeResource);
 								}
 								

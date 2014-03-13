@@ -31,9 +31,19 @@ public class PlaceDao implements InitializingBean {
 	}
 
 	public Place create(Place place) {
-		synchronized (this) {
+		synchronized (this.cache) {
 			mongoOperations.save(place, collectionName);
-			cache.put(place.getRef(), place);
+			try {
+				cache.put(place.getRef(), place);
+			} catch(Exception e) {
+				System.out.println("create() failed with " + place.getCity() + " failed. Retrying...");
+				
+				try {
+					cache.put(place.getRef(), place);
+				} catch(Exception x) {
+					System.out.println("create() failed with " + place.getCity() + " failed. RETRY FAILED. OK RALPH - FIX THIS SHIT!!!");
+				}
+			}
 			return place;
 		}
 	}
