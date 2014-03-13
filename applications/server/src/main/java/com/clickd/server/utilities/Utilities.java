@@ -138,7 +138,9 @@ public class Utilities {
 		      (HttpURLConnection) url.openConnection();
 
 		  if (conn.getResponseCode() != 200) {
-		    throw new IOException(conn.getResponseMessage());
+			  //throw new IOException(conn.getResponseMessage());
+			  // TODO: WTF IS THIS SHIT
+			  return null;
 		  }
 
 		  // Buffer the result into a string

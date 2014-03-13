@@ -142,7 +142,6 @@ d3.select("div").style("height", diameter + "px");
     	$.ajax({
 			    type: "GET",
 			    url: "/places/map",
-			    // data: {"movieData" : encodeURIComponent(movieDetails), "userRef" : friendRef.split("/")[2] },
 			    dataType: "json",
 			    success: function(data) {
 					var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
@@ -152,12 +151,15 @@ d3.select("div").style("height", diameter + "px");
 					}
 					var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 					
-			    	var placesArray = data;
-		  			placesArray.forEach(function(place) {
-			  			console.log(JSON.stringify(place));
-		  				var city = place["city"];
-		    			console.log('City = ' + JSON.stringify(city));
-		    			addMarker(map, place["name"], place["latitude"], place["longitude"]);
+			    	var checkinsArray = data;
+		  			checkinsArray.forEach(function(checkin) {
+			  			console.log(JSON.stringify(checkin));
+			  			var user = checkin["_embedded"]["the-user"];
+			  			var userId = user["ref"].split("/")[2];
+			  			var place = checkin["_embedded"]["the-place"];
+		  				//var city = checkin["_embedded"]place["city"];
+		    			//console.log('City = ' + JSON.stringify(city));
+		    			addMarker(map, user["firstName"] + ' ' + user['lastName'] + ' was @ ' + place["name"], place["latitude"], place["longitude"], '/profile-img/users/' + userId + '.jpg');
 		  			});
 			    },
 			    failure: function(errMsg) {
@@ -176,12 +178,12 @@ d3.select("div").style("height", diameter + "px");
     }
 
     // Testing the addMarker function
-    function addMarker(theMap, name, latitude, longitude) {
+    function addMarker(theMap, name, latitude, longitude, imageUrl) {
 		var placeIcon = {
-			    url: '/profile-img/users/751545291.jpg',
+			    url: imageUrl,
 			    // This marker is 20 pixels wide by 32 pixels tall.
-			    size: new google.maps.Size(20, 20),
-			    scaledSize : new google.maps.Size(20, 20),
+			    size: new google.maps.Size(30, 30),
+			    scaledSize : new google.maps.Size(30, 30),
 			    // The origin for this image is 0,0.
 			    origin: new google.maps.Point(0,0),
 			    // The anchor for this image is the base of the flagpole at 0,32.

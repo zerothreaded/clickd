@@ -1,5 +1,6 @@
 package com.clickd.server.services.places;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -10,9 +11,14 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.PlaceDao;
+import com.clickd.server.dao.UserDao;
+import com.clickd.server.model.Checkin;
 import com.clickd.server.model.ErrorMessage;
+import com.clickd.server.model.Link;
 import com.clickd.server.model.Place;
+import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -23,6 +29,12 @@ public class PlaceResource {
 	@Autowired
 	private PlaceDao placeDao;
 
+	@Autowired
+	private CheckinDao checkinDao;
+	
+	@Autowired
+	private UserDao userDao;
+	
 	@GET
 	@Timed
 	public Response getAll() {
@@ -71,36 +83,24 @@ public class PlaceResource {
 	@Timed
 	@Path("/map")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getForMap() {
+	public Response getCheckinsForMap() {
 		try {
-			List<Place> allPlaces = placeDao.findAll();
-			
-			for (Place place : allPlaces) {
-				// Create marker for place
-				String latitude = place.getLatitude();
-				String longitude = place.getLongitude();
-				String name = place.getName();
-				
-				MapMarker placeMarker = new MapMarker();
-				placeMarker.title = name;
-				placeMarker.position = latitude + "," + longitude;
-				
-				MapImage placeImage = new MapImage();
-				placeImage.url = "/profile-img/users/751545291.jpg";
-				placeImage.size = "size(50,50)";
-				placeImage.scaledSize = "size(50,50)";
-				placeImage.origin = "point(0,0)";
-				placeImage.anchor = "point(0,0)";
-				
-				placeMarker.icon = placeImage;
-				
-				// System.out.println(Utilities.toJson(placeMarker));
-				
-				int x  =1;
-				
-				
+			List<Checkin> allCheckins = checkinDao.findAll();
+			List<Checkin> results = new ArrayList<Checkin>();
+			for (Checkin checkin : allCheckins) {
+				Link userLink = checkin.getLinkByName("user");
+				User user = userDao.findByRef(userLink.getHref());
+				Link placeLink = checkin.getLinkByName("place");
+				Place place = placeDao.findByRef(placeLink.getHref());
+				// DONT RETURN EMPTY PLACES
+				if (place != null) {
+					// EMBED THE USER AND PLACE - TUT TUT TUT!!!!
+					checkin.get_Embedded().put("the-user", user);
+					checkin.get_Embedded().put("the-place", place);
+					results.add(checkin);
+				}
 			}
-			return Response.status(200).entity(Utilities.toJson(allPlaces)).build();
+			return Response.status(200).entity(Utilities.toJson(results)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			

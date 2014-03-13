@@ -2,76 +2,51 @@ package com.clickd.server.services.integration.facebook;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-import javax.xml.ws.RequestWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.URLEditor;
 
-import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.BookDao;
 import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
-import com.clickd.server.dao.CliqueDao;
-import com.clickd.server.dao.ConnectionDao;
 import com.clickd.server.dao.LikeDao;
 import com.clickd.server.dao.MovieDao;
-import com.clickd.server.dao.QuestionDao;
-import com.clickd.server.dao.SessionDao;
-import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.dao.PlaceDao;
+import com.clickd.server.dao.QuestionDao;
+import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.Answer;
 import com.clickd.server.model.Book;
 import com.clickd.server.model.Checkin;
 import com.clickd.server.model.Choice;
-import com.clickd.server.model.Clique;
-import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Like;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Movie;
 import com.clickd.server.model.Place;
 import com.clickd.server.model.Question;
-import com.clickd.server.model.Resource;
-import com.clickd.server.model.Session;
 import com.clickd.server.model.Television;
 import com.clickd.server.model.User;
 import com.clickd.server.utilities.Constants;
 import com.clickd.server.utilities.Utilities;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.yammer.metrics.annotation.Timed;
 
 @Path("/integration/facebook/user")
@@ -126,14 +101,10 @@ public class UserImportResource {
 //		}
 //	}
 //	
-	public User importUserTelevision(String userRef, String televisionsData)
+	public void importUserTelevision(String userRef, String televisionsData)
 	{
-		User user = userDao.findByRef("/users/"+userRef);
-		
 		HashMap<String, Object> map = Utilities.fromJson(televisionsData);
 		HashMap<String, Object> televisionMap = (HashMap<String, Object> )map.get("data");
-		
-
 		
 		for (String key : televisionMap.keySet()) {
 			Map<String,Object> televisionData = (Map<String,Object>)televisionMap.get(key);
@@ -144,45 +115,41 @@ public class UserImportResource {
 			if (televisionDao.findByRef(newTelevision.getRef()) == null)
 			{
 				televisionDao.create(newTelevision);
+				
+				Question televisionQuestion = questionDao.findByTags(newTelevision.getName());	
+				if (televisionQuestion == null)
+				{
+					televisionQuestion = new Question("Do you like "+newTelevision.getName()+"?", "system");
+					televisionQuestion.getTags().add(newTelevision.getName());
+					televisionQuestion.getTags().add("fb.televisions");
+					televisionQuestion.addLink("television-data", new Link(newTelevision.getRef(), "television-data"));
+					televisionQuestion.setAnswerRule("yes|no");
+					questionDao.create(televisionQuestion);
+				}
+				
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				boolean alreadyExists = false;
+				for (Choice choice : myChoices)
+				{
+					if (choice.getLinkByName("question").getHref().equals(televisionQuestion.getRef())
+							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+						alreadyExists = true;
+				}
+				
+				if (!alreadyExists)
+				{
+					Choice myChoice = new Choice();
+					myChoice.addLink("question", new Link(televisionQuestion.getRef(), "choice-question"));
+					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+					myChoice.setAnswerText("yes");
+					choiceDao.create(myChoice);
+				}
 			}
 			else
 			{
-				newTelevision = televisionDao.findByRef("/television/"+(String)televisionData.get("id"));
-			}
-			
-			
-			Question televisionQuestion = questionDao.findByTags(newTelevision.getName());	
-			if (televisionQuestion == null)
-			{
-				televisionQuestion = new Question("Do you like "+newTelevision.getName()+"?", "system");
-				televisionQuestion.getTags().add(newTelevision.getName());
-				televisionQuestion.getTags().add("fb.televisions");
-				televisionQuestion.addLink("television-data", new Link(newTelevision.getRef(), "television-data"));
-				televisionQuestion.setAnswerRule("yes|no");
-				questionDao.create(televisionQuestion);
-			}
-			
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			boolean alreadyExists = false;
-			for (Choice choice : myChoices)
-			{
-				if (choice.getLinkByName("question").getHref().equals(televisionQuestion.getRef())
-						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-					alreadyExists = true;
-			}
-			
-			if (!alreadyExists)
-			{
-				Choice myChoice = new Choice();
-				myChoice.addLink("question", new Link(televisionQuestion.getRef(), "choice-question"));
-				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-				myChoice.setAnswerText("yes");
-				choiceDao.create(myChoice);
+				System.out.println("\t\tUpdate Television for " + (String)televisionData.get("name"));
 			}
 		}
-			
-		
-		return user;
 	}
 	
 	public User importUserBooks(String userRef, String booksData)
@@ -192,145 +159,144 @@ public class UserImportResource {
 		HashMap<String, Object> map = Utilities.fromJson(booksData);
 		HashMap<String, Object> booksMap = (HashMap<String, Object> )map.get("data");
 		
-
-		
 		for (String key : booksMap.keySet()) {
 			Map<String,Object> bookData = (Map<String,Object>)booksMap.get(key);
-			Book newBook = new Book();
-			newBook.setName((String)bookData.get("name"));
-			newBook.setRef("/books/"+(String)bookData.get("id"));
-			
-			
-			if (bookDao.findByRef(newBook.getRef()) == null)
-			{
-				bookDao.create(newBook);
-			}
-			else
-			{
-				newBook = bookDao.findByRef("/books/"+(String)bookData.get("id"));
-			}
-			
-			if (null == newBook.getName())
+			if (null == bookData.get("name"))
 			{
 				continue;	
 			}
 			
-			Question bookQuestion = questionDao.findByTags(newBook.getName());
-			if (bookQuestion == null)
+			String bookRef = "/books/"+(String)bookData.get("id");
+			if (bookDao.findByRef(bookRef) == null)
 			{
-				bookQuestion = new Question("Do you like "+newBook.getName()+"?", "system");
-				bookQuestion.getTags().add(newBook.getName());
-				bookQuestion.getTags().add("fb.books");
-				bookQuestion.addLink("book-data", new Link(newBook.getRef(), "book-data"));
-				bookQuestion.setAnswerRule("yes|no");
-				questionDao.create(bookQuestion);
-			}
-			
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			boolean alreadyExists = false;
-			for (Choice choice : myChoices)
-			{
-				if (choice.getLinkByName("question").getHref().equals(bookQuestion.getRef())
-						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-					alreadyExists = true;
-			}
-			
-			if (!alreadyExists)
-			{
-				Choice myChoice = new Choice();
-				myChoice.addLink("question", new Link(bookQuestion.getRef(), "choice-question"));
-				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-				myChoice.setAnswerText("yes");
-				choiceDao.create(myChoice);
-			}
-		}
-			
-		
-		return user;
-	}
-	
-	public User importUserMovies(String userRef, String moviesData)
-	{
-		User user = userDao.findByRef("/users/"+userRef);
-		
-		HashMap<String, Object> map = Utilities.fromJson(moviesData);
-		HashMap<String, Object> moviesMap = (HashMap<String, Object> )map.get("data");
-
-		
-		for (String key : moviesMap.keySet()) {
-			Map<String,Object> movieData = (Map<String,Object>)moviesMap.get(key);
-			
-			Movie newMovie = new Movie();
-			newMovie.setName((String)movieData.get("name"));
-			newMovie.setRef("/movies/"+(String)movieData.get("id"));
-			
-			String omdbUrl = "http://www.omdbapi.com/?t=" + URLEncoder.encode(newMovie.getName());
-			String omdbContent;
-			try {
-				omdbContent = Utilities.getFromUrl(omdbUrl);
-				Map<String, Object> omdbProperties = Utilities.fromJson(omdbContent);
-				newMovie.setPosterImageUrl((String) omdbProperties.get("Poster"));
-				newMovie.setCountry((String) omdbProperties.get("Country"));
-				newMovie.setGenres((String) omdbProperties.get("Genre"));
-			} catch (IOException e) {
-//				e.printStackTrace();
-				System.out.println("OMDB FAILED FOR "+ newMovie.getName());
-			}
-			
-			if (movieDao.findByRef(newMovie.getRef()) == null)
-				movieDao.create(newMovie);
-			
-			if (newMovie.getName() == null)
-				continue;
-			
-			
-			if (movieDao.findByRef(newMovie.getRef()) == null)
-			{
-				movieDao.create(newMovie);
+				// Create path
+				Book newBook = new Book();
+				newBook.setName((String)bookData.get("name"));
+				newBook.setRef(bookRef);
+				
+				bookDao.create(newBook);
+				
+				Question bookQuestion = questionDao.findByTags(newBook.getName());
+				if (bookQuestion == null)
+				{
+					bookQuestion = new Question("Do you like "+newBook.getName()+"?", "system");
+					bookQuestion.getTags().add(newBook.getName());
+					bookQuestion.getTags().add("fb.books");
+					bookQuestion.addLink("book-data", new Link(newBook.getRef(), "book-data"));
+					bookQuestion.setAnswerRule("yes|no");
+					questionDao.create(bookQuestion);
+				}
+				
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				boolean alreadyExists = false;
+				for (Choice choice : myChoices)
+				{
+					if (choice.getLinkByName("question").getHref().equals(bookQuestion.getRef())
+							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+						alreadyExists = true;
+				}
+				
+				if (!alreadyExists)
+				{
+					Choice myChoice = new Choice();
+					myChoice.addLink("question", new Link(bookQuestion.getRef(), "choice-question"));
+					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+					myChoice.setAnswerText("yes");
+					choiceDao.create(myChoice);
+				}
 			}
 			else
 			{
-				newMovie = movieDao.findByRef("/movies/"+(String)movieData.get("id"));
-			}
-			
-			Question movieQuestion = questionDao.findByTags(newMovie.getName());
-			if (movieQuestion == null)
-			{
-				movieQuestion = new Question("Do you like "+newMovie.getName()+"?", "system");
-				movieQuestion.getTags().add(newMovie.getName());
-				movieQuestion.getTags().add("fb.movies");
-				movieQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
-				movieQuestion.setAnswerRule("yes|no");
-				questionDao.create(movieQuestion);
-			}
-			
-			
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			boolean alreadyExists = false;
-			for (Choice choice : myChoices)
-			{
-			if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
-						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-					alreadyExists = true;
-			}
-			
-			if (!alreadyExists)
-			{
-				Choice myChoice = new Choice();
-				myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
-				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-				myChoice.setAnswerText("yes");
-				choiceDao.create(myChoice);
+				// UPDATE PATH
+				System.out.println("\t\tSkipping UPDATE book for " + (String)bookData.get("name"));
 			}
 		}
-			
-		
 		return user;
 	}
 	
-	public User importUserLikes(String userRef, String likesData)
+	@SuppressWarnings("unchecked")
+	public void importUserMovies(String userRef, String moviesData)
 	{
-		User user = userDao.findByRef("/users/"+userRef);
+		HashMap<String, Object> map = Utilities.fromJson(moviesData);
+		HashMap<String, Object> moviesMap = (HashMap<String, Object> )map.get("data");
+		for (String key : moviesMap.keySet()) {
+			Map<String,Object> facebookMovie = (Map<String,Object>)moviesMap.get(key);
+			
+			if (null == (String)facebookMovie.get("name"))
+			{
+				System.out.println("[NULL] Movie Name detected. Skipping movie import");
+				continue;	
+			}
+			
+			// Create or Update test
+			String movieRef = "/movies/"+(String)facebookMovie.get("id");
+			if (movieDao.findByRef(movieRef) == null)
+			{
+				// Create
+				Movie newMovie = new Movie();
+				newMovie.setName((String)facebookMovie.get("name"));
+				newMovie.setRef(movieRef);
+				
+				// Enrich with OMDB call
+				String omdbUrl = "http://www.omdbapi.com/?t=" + URLEncoder.encode(newMovie.getName());
+				String omdbContent;
+				try {
+					omdbContent = Utilities.getFromUrl(omdbUrl);
+					Map<String, Object> omdbProperties = Utilities.fromJson(omdbContent);
+					newMovie.setPosterImageUrl((String) omdbProperties.get("Poster"));
+					newMovie.setCountry((String) omdbProperties.get("Country"));
+					newMovie.setGenres((String) omdbProperties.get("Genre"));
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("OMDB FAILED FOR "+ newMovie.getName());
+				}
+				
+				// PERSIST
+				newMovie = movieDao.create(newMovie);
+				System.out.println("\t\tCreated Movie : "+ (String)facebookMovie.get("name"));
+				
+				// Create Question
+				Question movieQuestion = questionDao.findByTags(newMovie.getName());
+				if (movieQuestion == null)
+				{
+					movieQuestion = new Question("Do you like "+newMovie.getName()+"?", "system");
+					movieQuestion.getTags().add(newMovie.getName());
+					movieQuestion.getTags().add("fb.movies");
+					movieQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
+					movieQuestion.setAnswerRule("yes|no");
+					questionDao.create(movieQuestion);
+				}
+				
+				// Create Choice
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				boolean alreadyExists = false;
+				for (Choice choice : myChoices)
+				{
+				if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
+							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+						alreadyExists = true;
+				}
+				
+				if (!alreadyExists)
+				{
+					Choice myChoice = new Choice();
+					myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+					myChoice.setAnswerText("yes");
+					choiceDao.create(myChoice);
+				}
+			}
+			else
+			{
+				//update
+				System.out.println("\t\tUpdate Movie for "+ (String)facebookMovie.get("name"));
+			}
+		}
+
+	}
+	
+	public void importUserLikes(String userRef, String likesData)
+	{
 		
 		HashMap<String, Object> map = Utilities.fromJson(likesData);
 		HashMap<String, Object> likesMap = (HashMap<String, Object> )map.get("data");
@@ -338,7 +304,6 @@ public class UserImportResource {
 		for (String key : likesMap.keySet()) {
 			Map<String,Object> likeData = (Map<String,Object>)likesMap.get(key);
 			Like newLike = new Like();
-			
 		
 			newLike.setCategory((String)likeData.get("category"));
 			newLike.setName((String)likeData.get("name"));
@@ -346,7 +311,6 @@ public class UserImportResource {
 			
 			if (newLike.getName() == null)
 				continue;
-			
 			
 			if (likeDao.findByRef(newLike.getRef()) == null)
 			{
@@ -383,11 +347,7 @@ public class UserImportResource {
 					choiceDao.create(myChoice);
 				}
 			}
-				
 		}
-			
-		
-		return user;
 	}
 	
 	public User importUserCheckins (String userRef, String checkinData)
@@ -500,11 +460,8 @@ public class UserImportResource {
 					// PLACE IS NULL
 				}
 				// System.out.println("[ " + message + " ] at [" + placeName + "] in [" + locationCity + "]");
-
 			}
-			
 			return user;
-
 		}
 		catch (Exception E)
 		{
@@ -515,27 +472,38 @@ public class UserImportResource {
 	
 	public User importUserData(String userRef, String facebookData, String accessToken, User newUser)
 	{
+		System.out.println("importUserData() called for " + newUser.getEmail());
 		try
 		{
+			System.out.println("\tGetting movies for Friend Id : " + newUser.getEmail());
 			String myMoviesUrl = "https://graph.facebook.com/"+userRef+"/movies"+"?access_token="+accessToken;
 			String myMovies =  Utilities.getFromUrl(myMoviesUrl);
-			importUserMovies(newUser.getRef().split("/")[2], myMovies);
+			if (myMovies != null)
+				importUserMovies(newUser.getRef().split("/")[2], myMovies);
 	
+			System.out.println("\tGetting Television for Friend Id : " + newUser.getEmail());
 			String myTelevisionUrl = "https://graph.facebook.com/"+userRef+"/television"+"?access_token="+accessToken;
 			String myTelevision =  Utilities.getFromUrl(myTelevisionUrl);
-			importUserTelevision(newUser.getRef().split("/")[2], myTelevision);
-			
+			if (myTelevision != null)
+				importUserTelevision(newUser.getRef().split("/")[2], myTelevision);
+		
+			System.out.println("\tGetting books for Friend Id : " + newUser.getEmail());
 			String myBooksUrl = "https://graph.facebook.com/"+userRef+"/books"+"?access_token="+accessToken;
 			String myBooks =  Utilities.getFromUrl(myBooksUrl);
-			importUserBooks(newUser.getRef().split("/")[2], myBooks);
+			if (myBooks != null)
+				importUserBooks(newUser.getRef().split("/")[2], myBooks);
 			
+			System.out.println("\tGetting Checkins for Friend Id : " + newUser.getEmail());
 			String myCheckinsUrl = "https://graph.facebook.com/"+userRef+"/checkins"+"?access_token="+accessToken;
 			String myCheckins =  Utilities.getFromUrl(myCheckinsUrl);
-			importUserCheckins(newUser.getRef().split("/")[2], myCheckins);
+			if(myCheckins != null)
+				importUserCheckins(newUser.getRef().split("/")[2], myCheckins);
 
+			System.out.println("\tGetting LIKES for Friend Id : " + newUser.getEmail());
 			String myLikesUrl = "https://graph.facebook.com/"+userRef+"/likes"+"?access_token="+accessToken;
 			String myLikes =  Utilities.getFromUrl(myLikesUrl);
-			importUserLikes(newUser.getRef().split("/")[2], myLikes);
+			if(myLikes != null)
+				importUserLikes(newUser.getRef().split("/")[2], myLikes);
 			
 			return newUser;
 		}
@@ -549,46 +517,50 @@ public class UserImportResource {
 	public User createUserFromFacebookData(String facebookData)
 	{
 		try {
-			// System.out.println(facebookData);
-			
+			System.out.println("createUserFromFacebookData() Starting for " + facebookData);
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
-			User existingUser = userDao.findByRef("/users/" + (String)map.get("id"));
-			if (null != existingUser)
-			{
-				return null;
-			}
-			
-			
-			
+
+			// Create the new user
 			User newUser = new User();
 			newUser.setFirstName((String)map.get("first_name"));
 			newUser.setLastName((String)map.get("last_name"));
 			newUser.setGender((String)map.get("gender"));
 			
-			if ((String)map.get("email") == null)
+			if ((String)map.get("email") == null) {
 				newUser.setEmail(newUser.getFirstName().toLowerCase()+"."+newUser.getLastName().toLowerCase()+"@clickd.org");
-			else
+			} else {
 				newUser.setEmail((String)map.get("email"));
+			}
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
-			newUser.setPassword("fb999");
+			newUser.setPassword("fb99");
 			newUser.setRef("/users/"+(String)map.get("id"));
 			userDao.create(newUser);
 			
-			 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=160&height=160");
-			 InputStream in = new BufferedInputStream(url.openStream());
-			 ByteArrayOutputStream out = new ByteArrayOutputStream();
-			 byte[] buf = new byte[1024];
-			 int n = 0;
-			 while (-1!=(n=in.read(buf)))
-			 {
-			    out.write(buf, 0, n);
-			 }
-			 out.close();
-			 in.close();
-			 byte[] response = out.toByteArray();
-			 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg");
-			 fos.write(response);
-			 fos.close();
+			// Get the Users FB image and save it locally
+			String targetFileName = "C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg";
+			File file = new File(targetFileName);
+			if (!file.exists()) {
+				System.out.println("Getting friends Image..");
+				 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=160&height=160");
+				 InputStream in = new BufferedInputStream(url.openStream());
+				 ByteArrayOutputStream out = new ByteArrayOutputStream();
+				 byte[] buf = new byte[1024];
+				 int n = 0;
+				 while (-1!=(n=in.read(buf)))
+				 {
+				    out.write(buf, 0, n);
+				 }
+				 out.close();
+				 in.close();
+				 byte[] response = out.toByteArray();
+				 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg");
+				 fos.write(response);
+				 fos.close();
+				 System.out.println("Saved friends Image.");
+			} else {
+				 // System.out.println("Skipping Image Load");
+			}
+			
 			
 			Question genderQuestion = questionDao.findByTags("gender");
 			Choice genderChoice = new Choice();
@@ -613,9 +585,7 @@ public class UserImportResource {
 			
 			if (map.get("location") != null)
 			{
-			
 				HashMap<String,String> locationDetails = ((HashMap<String,String>)map.get("location"));
-	
 				if (locationDetails.get("name") != null)
 				{
 					Question locationQuestion = questionDao.findByTags("location");
@@ -651,24 +621,36 @@ public class UserImportResource {
 			String accessToken = dataArray[0].substring(dataArray[0].indexOf("=")+1); //access token
 			String accesssTokenExpiry = dataArray[1].substring(dataArray[1].indexOf("=")+1); //access expiry
 
+			// STEP 1 : Get $ME data
 			String meUrl = "https://graph.facebook.com/me/?access_token="+accessToken;
 			String meData = Utilities.getFromUrl(meUrl);
-			User newUser = createUserFromFacebookData(meData);
-
-			importUserData("me", meData, accessToken, newUser);
+			HashMap<String, Object> facebookUser = Utilities.fromJson(meData);
 			
+			// Check if the user exists
+			User user = userDao.findByRef("/users/" + (String)facebookUser.get("id"));
 			
+			if (user == null) {
+				// New imported user
+				user = createUserFromFacebookData(meData);
+			} else {
+				System.out.println("User " + user.getEmail() + " already exists.");
+			}
+			
+			importUserData("me", meData, accessToken, user);
+				
 			//get my friends
 			String friendsUrl = "https://graph.facebook.com/me/friends?access_token="+accessToken;
 			String friendsData = Utilities.getFromUrl(friendsUrl);
 			Map<String,Object> friendsList = Utilities.fromJson(friendsData);
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
-			
-			int maxFriends = 50;
+			System.out.println("gotFriendsList() with : " + friendsListData.size());
+			// Throttler
+ 			int maxFriends = 50;
 			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
+				long start = new Date().getTime();
 				if (numFriendsDone > maxFriends) {
-					// break;
+					//break;
 				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
@@ -676,16 +658,16 @@ public class UserImportResource {
 				
 				String friendDetailsUrl = "https://graph.facebook.com/"+friendId+"/"+"?access_token="+accessToken;
 				String friendDetails =  Utilities.getFromUrl(friendDetailsUrl);
-				User newFriendUser = createUserFromFacebookData(friendDetails);
 				
+				System.out.println("gotFriendsData() for Friend Id : " + friendId);
+				User newFriendUser = createUserFromFacebookData(friendDetails);
 
 				importUserData(friendId, friendDetails, accessToken, newFriendUser);
-			}
-			
-			//register my friends
-			
-			System.out.println(meData);
+				
+				long end = new Date().getTime();
+				System.out.println("ImportFriend " + numFriendsDone + "/" + friendsListData.keySet().size() + " and their data for Id : " + friendId + " took " + (end - start) + "ms");
 
+			}
 			return Response.status(200).entity(Utilities.toJson(null)).build();
 		}
 		catch (Exception E)
@@ -694,6 +676,6 @@ public class UserImportResource {
 			return Response.status(300).entity(new ErrorMessage("failed", "Could not import facebook user")).build();
 
 		}
-	};
+	}
 
 }
