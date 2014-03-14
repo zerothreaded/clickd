@@ -1,15 +1,5 @@
 package com.clickd.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
 
 public class UtilitiesTest {
 
