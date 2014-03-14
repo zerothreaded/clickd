@@ -785,9 +785,9 @@ public class UserResource {
 						results.add(checkin);
 					}
 				}
-				List<Checkin> clippedResults = results.subList(0, Math.min(50, results.size()));
+				List<Checkin> clippedResults = results.subList(0, Math.min(20, results.size()));
 				System.out.println("getMap() returning " + clippedResults.size() + " out of " +  results.size() + " possible checkins");
-				return Response.status(200).entity(Utilities.toJson(results)).build();
+				return Response.status(200).entity(Utilities.toJson(clippedResults)).build();
 			} catch(Exception e) {
 				e.printStackTrace();
 				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			

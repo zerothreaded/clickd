@@ -136,7 +136,7 @@ public class UserImportResource {
 				myChoice.setAnswerText("yes");
 			
 				choiceDao.create(myChoice);
-
+				
 			
 			} else {
 				// UPDATE PATH
@@ -161,7 +161,7 @@ public class UserImportResource {
 					myChoice.setAnswerText("yes");
 				
 					choiceDao.create(myChoice);
-					
+					myChoices.add(myChoice);
 				}
 
 				
@@ -311,7 +311,7 @@ public class UserImportResource {
 				if (null != genres && !genres.equals("")) {
 					StringTokenizer tokenizer = new StringTokenizer(genres, ",");
 					while (tokenizer.hasMoreTokens()) {
-						String genre = tokenizer.nextToken();
+						String genre = tokenizer.nextToken().trim();
 						Question genreQuestion = questionDao.findByTags(genre);
 						if (genreQuestion == null)
 						{
@@ -339,6 +339,7 @@ public class UserImportResource {
 							myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
 							myChoice.setAnswerText("yes");
 							choiceDao.create(myChoice);
+							myChoices.add(myChoice);
 						} else {
 							System.out.println("update asking genre question " + genreQuestion.getQuestionText() + " again");
 						}
@@ -714,7 +715,7 @@ public class UserImportResource {
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
 				if (numFriendsDone >= maxFriends) {
-					// continue;
+					 continue;
 				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
