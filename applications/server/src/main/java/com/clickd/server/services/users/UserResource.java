@@ -2,6 +2,7 @@ package com.clickd.server.services.users;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -35,6 +36,7 @@ import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.CliqueDao;
 import com.clickd.server.dao.ConnectionDao;
+import com.clickd.server.dao.MovieDao;
 import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
@@ -46,6 +48,7 @@ import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
+import com.clickd.server.model.Movie;
 import com.clickd.server.model.Place;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
@@ -83,6 +86,9 @@ public class UserResource {
 	private PlaceDao placeDao;
 
 	@Autowired
+	private MovieDao movieDao;
+
+	@Autowired
 	private CheckinDao checkinDao;
 
 	@GET
@@ -100,8 +106,6 @@ public class UserResource {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
 		}
 	}
-	
-
 
 	@POST
 	@Timed
@@ -693,24 +697,52 @@ public class UserResource {
 	}
 	
 	@GET
-	@Path("/{userRef}/candidatesTEST")
+	@Path("/movies/cache")
 	@Timed
-	public Response getCandidatesTEST(@PathParam("userRef") String userRef) {
-		System.out.println("getCandidates() called for userRef " + userRef);
+	public Response cacheMovies() {
 		try {
-			List<Choice> responseList = new ArrayList<Choice>();
-			User user = userDao.findByRef("/users/" + userRef);
-			// get my answers
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			System.out.println("getCandidates() myChoices returned " + myChoices.size() + " choices");
-			List<Choice> allChoices = choiceDao.findAll();
-			for (Choice choice : myChoices) {
-				Link questionLink = choice.getLinkByName("question");
-				Link userLink = choice.getLinkByName("user");
-				Question qqq = questionDao.findByRef(questionLink.getHref());
-				System.out.println(userLink.getHref() + questionLink.getHref() + qqq.getQuestionText());
+			List<Movie> allMovies = movieDao.findAll();
+			System.out.println("Starting load of "+ allMovies.size() + " movie images");
+			
+			for (Movie movie : allMovies) {
+				String movieImageUrl = movie.getPosterImageUrl();
+				if (movieImageUrl == null || movieImageUrl.equals("N/A")) {
+					continue;
+				}
+
+				// Get the MOVIES IMDB image and save it locally
+				 String dataDir = System.getProperty("dataDir");
+				 if (null == dataDir) {
+					 dataDir = "C:\\sandbox\\data\\profile-img";
+				 }
+
+				String[] tokens = movie.getRef().split("/");
+				String targetFileName = dataDir + "\\movies\\" + tokens[2] + ".jpg";
+				File file = new File(targetFileName);
+				if (!file.exists()) {
+					System.out.println("Getting friends Image..");
+					 URL url = new URL(movieImageUrl);
+					 InputStream in = new BufferedInputStream(url.openStream());
+					 ByteArrayOutputStream out = new ByteArrayOutputStream();
+					 byte[] buf = new byte[1024];
+					 int n = 0;
+					 while (-1!=(n=in.read(buf)))
+					 {
+					    out.write(buf, 0, n);
+					 }
+					 out.close();
+					 in.close();
+					 byte[] response = out.toByteArray();
+					 FileOutputStream fos = new FileOutputStream(targetFileName);
+					 fos.write(response);
+					 fos.close();
+					 System.out.println("Written Movie Image to " + targetFileName);
+				} else {
+					 System.out.println("Skipping Image Load");
+				}
+				
 			}
-			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 15))).build();
+			return Response.status(200).entity(allMovies).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
