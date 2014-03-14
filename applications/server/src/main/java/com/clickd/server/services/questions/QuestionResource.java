@@ -92,7 +92,11 @@ public class QuestionResource {
 						}
 						toReturn.setType(movieImageUrl);	
 						// Get the MOVIES IMDB image and save it locally
-						String targetFileName = "C:\\sandbox\\data\\profile-img\\users\\" + movieHref + ".jpg";
+						 String dataDir = System.getProperty("dataDir");
+						 if (null == dataDir) {
+							 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
+						 }
+						String targetFileName = dataDir + movieHref + ".jpg";
 						File file = new File(targetFileName);
 						if (!file.exists()) {
 							System.out.println("Getting friends Image..");
