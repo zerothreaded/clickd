@@ -38,14 +38,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			}
 	}; 
 
-	var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
 	
-	var mapOptions = {
-	  zoom: 12,
-	  center: myLatlng
+	$scope.init = function () {
+		// alert('init()');
+		
 	}
-	
-	var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 	
 	// Form Data
 	$scope.signInFormData = { signInFailed : false};
@@ -73,7 +70,18 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 	
 	$scope.loadMap = function() {
-		var mapUrl = '/places/map?' + $scope.model.currentSelection;
+		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+		
+		var mapOptions = {
+		  zoom: 12,
+		  center: myLatlng
+		}
+		
+	 	var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		// alert('loadMap');
+		
+		var mapUrl = '/places/map/' + $scope.model.currentSelection;
+		// alert(mapUrl);
     	$.ajax({
 			    type: "GET",
 			    url: mapUrl,
@@ -97,14 +105,6 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
     		});	
 	}
 	
-	 // Function for adding a marker to the page.
-    function addMarker(location) {
-        marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-    }
-
     // Testing the addMarker function
     function addMarker(theMap, name, latitude, longitude, imageUrl) {
 		var placeIcon = {
@@ -176,7 +176,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 					});
 			
 			// Load Google Maps
-			$scope.loadMaps();
+			$scope.loadMap();
 			
 		}
 	}

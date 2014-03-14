@@ -137,6 +137,8 @@ d3.select("div").style("height", diameter + "px");
 </style>
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    
+    <!-- 
     <script>
 	function initialize() {
     	$.ajax({
@@ -204,15 +206,31 @@ d3.select("div").style("height", diameter + "px");
     
     
 	google.maps.event.addDomListener(window, 'load', initialize);
+
     </script>
-    
+    	 -->
+    	 <script>
+    		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+    		
+    		var mapOptions = {
+    		  zoom: 12,
+    		  center: myLatlng
+    		}
+    		
+    	 	var map;
+			$(document).ready(function () {
+				alert('man');
+				map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+			});
+    	 </script>
+    	 
  
 </head>
 <body>
     <div id="fb-root"></div>
     <script src="/web/internal/home/fb.js"></script>
     
-<div ng-app="clickdApplication" ng-controller="AppController" >
+<div ng-app="clickdApplication" ng-controller="AppController" ng-init="init()" >
 	<!-- SINGLE SCREEN -->
 	<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
 		<div id="top-nav" class="navbar nav navbar-inverse">
@@ -527,7 +545,7 @@ d3.select("div").style("height", diameter + "px");
 					</div>
 				</div>
 				<div class="row chat-row">
-				<div id="map" style="width:100%;height:100%;"></div>
+				<div ng-init="loadMap()" id="map-canvas" style="width:100%;height:100%;"></div>
 
 					<!--
 					<div class="well chat-well">
@@ -572,7 +590,7 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 						
 						<br/>
-						<img src="{{model.currentUser.currentQuestion.type}}" width="200" height="300"/>
+						<img ng-src="{{model.currentUser.currentQuestion.type}}" width="300" height="450"/>
 						
 						<div class="panel-body click-panel-body" id="click-panel-answers">
 							<!--  Answers for this question -->
