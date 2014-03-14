@@ -38,6 +38,15 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			}
 	}; 
 
+	var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+	
+	var mapOptions = {
+	  zoom: 12,
+	  center: myLatlng
+	}
+	
+	var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+	
 	// Form Data
 	$scope.signInFormData = { signInFailed : false};
 	$scope.registerFormData = { registerFailed : false };
@@ -62,6 +71,67 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.controlFlags.moreQuestionsToAsk = true;
 		
 	}
+	
+	$scope.loadMap = function() {
+		var mapUrl = '/places/map?' + $scope.model.currentSelection;
+    	$.ajax({
+			    type: "GET",
+			    url: mapUrl,
+			    dataType: "json",
+			    success: function(data) {
+			    	var checkinsArray = data;
+		  			checkinsArray.forEach(function(checkin) {
+			  			console.log(JSON.stringify(checkin));
+			  			var user = checkin["_embedded"]["the-user"];
+			  			var userId = user["ref"].split("/")[2];
+			  			var place = checkin["_embedded"]["the-place"];
+		  				//var city = checkin["_embedded"]place["city"];
+		    			//console.log('City = ' + JSON.stringify(city));
+		    			addMarker(map, user["firstName"] + ' ' + user['lastName'] + ' was @ ' + place["name"], place["latitude"], place["longitude"], '/profile-img/users/' + userId + '.jpg');
+		  			});
+			    },
+			    failure: function(errMsg) {
+			    	alert('register movies failed');
+			    	console.log('ERROR=' + errMsg);
+			    }
+    		});	
+	}
+	
+	 // Function for adding a marker to the page.
+    function addMarker(location) {
+        marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+
+    // Testing the addMarker function
+    function addMarker(theMap, name, latitude, longitude, imageUrl) {
+		var placeIcon = {
+			    url: imageUrl,
+			    // This marker is 20 pixels wide by 32 pixels tall.
+			    size: new google.maps.Size(30, 30),
+			    scaledSize : new google.maps.Size(30, 30),
+			    // The origin for this image is 0,0.
+			    origin: new google.maps.Point(0,0),
+			    // The anchor for this image is the base of the flagpole at 0,32.
+			    anchor: new google.maps.Point(-40, 60)
+		};
+		var placePosition = new google.maps.LatLng(latitude, longitude);
+		
+		console.log('Place Position = ' + JSON.stringify(placePosition));
+		
+		var placeMarker = new google.maps.Marker({
+		    position: placePosition,
+		    map: theMap,
+		    icon : placeIcon,
+		    title: name
+		});
+		console.log('Marker = ' + placeMarker);
+    }
+    
+    
+	// google.maps.event.addDomListener(window, 'load', $scope.loadMap());
 	
 	// UPDATE CCC FROM SERVER 
 	$scope.updateCCC = function ()
@@ -101,7 +171,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// REST call to get cliques
 			var getCliquesUrl = "/users/" + userRef + "/cliques";
 			$http({ method : 'GET', url : getCliquesUrl, })
-				.success(function(data) { $scope.model.currentUser.cliques = data; });
+				.success(function(data) { 
+					$scope.model.currentUser.cliques = data; 
+					});
+			
+			// Load Google Maps
+			$scope.loadMaps();
+			
 		}
 	}
 		
@@ -158,10 +234,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	// GET USER + CCC From Server
 	$scope.loadUserByRef = function(theUserRef)
 	{	
-		
-		
 		var userResource = $resource("/users/:userRef");
-		
 		var user = userResource.get({userRef : theUserRef}, function()
 		{
 			// Set the current user and the signed in status - defaults are FALSE

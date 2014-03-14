@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -81,9 +82,10 @@ public class PlaceResource {
 	
 	@GET
 	@Timed
-	@Path("/map")
+	@Path("/map/{currentSelection}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getCheckinsForMap() {
+	public Response getCheckinsForMap(@QueryParam("currentSelection") String currentSelection) {
+		System.out.println("\n\ngetCheckinsForMap() called with [" + currentSelection + "]");
 		try {
 			List<Checkin> allCheckins = checkinDao.findAll();
 			List<Checkin> results = new ArrayList<Checkin>();
