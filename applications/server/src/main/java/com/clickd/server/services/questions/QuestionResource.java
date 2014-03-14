@@ -121,7 +121,7 @@ public class QuestionResource {
 						}
 						
 						toReturn.get_Embedded().put("movie-image-url", "/profile-img/users/" +  movieHref + ".jpg");
-						toReturn.setType("/profile-img/users/" +  movieHref + ".jpg");
+						toReturn.setType("/profile-img/users" +  movieHref + ".jpg");
 						
 						return Utilities.toJson(toReturn);
 					} else {
