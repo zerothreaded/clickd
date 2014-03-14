@@ -8,6 +8,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"sessionRef" : "",
 		"selectedUser": {},
 		"selectedClique" : {},
+		"currentCandidateRef" : {},
 		
 		// Current User view of domain
 		"currentUser" : {
@@ -80,7 +81,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	 	var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 		// alert('loadMap');
 		
-		var mapUrl = '/places/map/' + $scope.model.currentSelection;
+		var urlSelection = $scope.model.currentSelection;
+		if ($scope.model.currentSelection == 'candidates.user') {
+			urlSelection = 'candidate=' + $scope.model.currentCandidateRef;
+		}
+		var mapUrl = '/users/places/map/' + $scope.model.currentUser.userRef + "/" +  urlSelection;
 		// alert(mapUrl);
     	$.ajax({
 			    type: "GET",
@@ -363,6 +368,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		} else {
 			$scope.model.currentUser.candidatesShowMenu = true;
 		}
+		$scope.loadMap();
 	}
 	
 	$scope.onClickConnections = function()
@@ -373,6 +379,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		} else {
 			$scope.model.currentUser.connectionsShowMenu = true;
 		}
+		$scope.loadMap();
 	}
 	
 	$scope.onClickCliques = function()
@@ -383,12 +390,14 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		} else {
 			$scope.model.currentUser.cliquesShowMenu = true;
 		}
+		$scope.loadMap();
 	}
 	
 	$scope.onClickCandidate = function(candidate)
 	{
 		var userRef = $scope.model.currentUser.userRef;
 		var getComparisonUrl = "/users/" + userRef + "/candidates/comparison/"+ getRefParam(candidate.ref,2);
+		$scope.model.currentCandidateRef = getRefParam(candidate.ref,2);
 		
 		console.log(getComparisonUrl);
 		
@@ -398,6 +407,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.currentSelection = 'candidates.user';
 		$scope.model.selectedUser = candidate;
 		$scope.model.selectedUserPresentation.connectionRequestSent = false;
+		
+		$scope.loadMap();
 	}
 	
 	$scope.onAddConnection = function(connection) { 

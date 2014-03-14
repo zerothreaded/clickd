@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.rmi.server.Skeleton;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.AnswerDao;
+import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.CliqueDao;
 import com.clickd.server.dao.ConnectionDao;
@@ -38,6 +40,7 @@ import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.SessionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Answer;
+import com.clickd.server.model.Checkin;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
@@ -78,6 +81,9 @@ public class UserResource {
 	
 	@Autowired
 	private PlaceDao placeDao;
+
+	@Autowired
+	private CheckinDao checkinDao;
 
 	@GET
 	@Path("/{ref}")
@@ -708,6 +714,90 @@ public class UserResource {
 	}
 	
 	@GET
+	@Timed
+	@Path("/places/map/{userRef}/{currentSelection}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCheckinsForMap(@PathParam("userRef") String userRef, @PathParam("currentSelection") String currentSelection) {
+		System.out.println("\n\ngetCheckinsForMap() called with [" + currentSelection + "]");
+		List<Checkin> results = new ArrayList<Checkin>();
+		if (currentSelection.equals("candidates")) {
+			try {
+				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
+				List<Checkin> allCheckins = checkinDao.findAll();
+				
+				for (Checkin checkin : allCheckins) {
+					Link userLink = checkin.getLinkByName("user");
+					User user = userDao.findByRef(userLink.getHref());
+					// Only candidate(s) filter
+					boolean inCandidateCheckins = false;
+					for (CandidateResponse candidateResponse : responseList) {
+						if (candidateResponse.getUser().getRef().equals(checkin.getLinkByName("user").getHref())) {
+							inCandidateCheckins = true;
+							break;
+						}
+					}
+					if (inCandidateCheckins) {
+						continue;
+					}
+					Link placeLink = checkin.getLinkByName("place");
+					Place place = placeDao.findByRef(placeLink.getHref());
+					// DONT RETURN EMPTY PLACES
+					if (place != null) {
+						// EMBED THE USER AND PLACE - TUT TUT TUT!!!!
+						checkin.get_Embedded().put("the-user", user);
+						checkin.get_Embedded().put("the-place", place);
+						results.add(checkin);
+					}
+				}
+				List<Checkin> clippedResults = results.subList(0, Math.min(50, results.size()));
+				System.out.println("getMap() returning " + clippedResults.size() + " out of " +  results.size() + " possible checkins");
+				return Response.status(200).entity(Utilities.toJson(results)).build();
+			} catch(Exception e) {
+				e.printStackTrace();
+				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+			}
+		}
+		
+		if (currentSelection.startsWith("candidate=")) {
+			String candidateRef = currentSelection.substring(0, currentSelection.indexOf("="));
+			try {
+				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
+				List<Checkin> allCheckins = checkinDao.findAll();
+				
+				for (Checkin checkin : allCheckins) {
+					Link userLink = checkin.getLinkByName("user");
+					User user = userDao.findByRef(userLink.getHref());
+					// Only candidate(s) filter
+					boolean inCandidateCheckins = false;
+					if (candidateRef.equals(checkin.getLinkByName("user").getHref())) {
+						inCandidateCheckins = true;
+					}
+					if (inCandidateCheckins) {
+						continue;
+					}
+					Link placeLink = checkin.getLinkByName("place");
+					Place place = placeDao.findByRef(placeLink.getHref());
+					// DONT RETURN EMPTY PLACES
+					if (place != null) {
+						// EMBED THE USER AND PLACE - TUT TUT TUT!!!!
+						checkin.get_Embedded().put("the-user", user);
+						checkin.get_Embedded().put("the-place", place);
+						results.add(checkin);
+					}
+				}
+				List<Checkin> clippedResults = results.subList(0, Math.min(50, results.size()));
+				System.out.println("getMap() returning " + clippedResults.size() + " out of " +  results.size() + " possible checkins");
+				return Response.status(200).entity(Utilities.toJson(results)).build();
+			} catch(Exception e) {
+				e.printStackTrace();
+				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+			}
+		}
+		
+		return Response.status(200).entity(Utilities.toJson(results)).build();
+		
+	}
+	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
 	public Response getCandidates(@PathParam("userRef") String userRef) {
@@ -805,13 +895,17 @@ public class UserResource {
 				String responseString = getProcessedCliqueName(question,choice);
 				responseString = responseString.replace("likes", "like");
 				
-			//	if (same.contains(responseString))
-				//	continue;
-				
-					if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
-						same.add(responseString);
+				if (same.contains(responseString)) {
+					// System.out.println("Skipping Duplicate " + responseString);
+					continue;
+				}
+					
+				if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
+					same.add(responseString);
 			}
+			
 		}
+		
 		
 		return same;
 	}
