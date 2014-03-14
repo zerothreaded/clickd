@@ -759,7 +759,8 @@ public class UserResource {
 		}
 		
 		if (currentSelection.startsWith("candidate=")) {
-			String candidateRef = currentSelection.substring(0, currentSelection.indexOf("="));
+			String candidateRef = currentSelection.substring(currentSelection.indexOf("=") + 1);
+			candidateRef = "/users/" + candidateRef;
 			try {
 				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
 				List<Checkin> allCheckins = checkinDao.findAll();
@@ -772,7 +773,7 @@ public class UserResource {
 					if (candidateRef.equals(checkin.getLinkByName("user").getHref())) {
 						inCandidateCheckins = true;
 					}
-					if (inCandidateCheckins) {
+					if (!inCandidateCheckins) {
 						continue;
 					}
 					Link placeLink = checkin.getLinkByName("place");
