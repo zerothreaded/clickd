@@ -488,7 +488,7 @@ d3.select("div").style("height", diameter + "px");
 									<strong>What we have in common:</strong>
 									<hr/>
 									<span ng-repeat="choice in model.selectedUserComparison" >
-											{{choice}}<br/>
+										[ {{$index + 1}} / {{model.selectedUserComparison.length}} ] {{choice}}<br/>
 									</span>
 								</div>
 							</div>
