@@ -304,6 +304,8 @@ public class UserImportResource {
 					myChoice.setAnswerText("yes");
 					choiceDao.create(myChoice);
 					myChoices.add(myChoice);
+				} else {
+					// UPDATE PRIOR CHOICE
 				}
 				
 				// Create Genre Questions and Choices
@@ -318,7 +320,6 @@ public class UserImportResource {
 							genreQuestion = new Question("Do you like " + genre + " movies ?", "system");
 							genreQuestion.getTags().add("genre");
 							genreQuestion.getTags().add(genre);
-							// genreQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
 							genreQuestion.setAnswerRule("yes|no");
 							questionDao.create(genreQuestion);
 						}
