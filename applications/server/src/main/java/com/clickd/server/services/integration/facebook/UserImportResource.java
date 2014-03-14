@@ -715,9 +715,9 @@ public class UserImportResource {
 			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
-				if (numFriendsDone >= maxFriends) {
-					 continue;
-				}
+//				if (numFriendsDone >= maxFriends) {
+//					 continue;
+//				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");

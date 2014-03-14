@@ -4,6 +4,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.model = {
 		"currentSelection" : "candidates",
+		"currentSelectionTitle" : "Your candidates",
 		"cookie" : "",
 		"sessionRef" : "",
 		"selectedUser": {},
@@ -59,6 +60,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.currentUser.connectionsShowMenu = true;
 		$scope.model.currentUser.cliquesShowMenu = true;
         $scope.model.currentSelection = "candidates";
+        $scope.model.currentSelectionTitle = "Your candidates";
 		$scope.model.currentUser.isLoggedIn = false;
 		$scope.model.currentUser.user = "";
 		$scope.model.currentUser.userRef = "";
@@ -318,6 +320,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
         .success(function(data) {
             console.log('Signed Out ' + data);
             $scope.model.currentSelection = "candidates";
+            $scope.model.currentSelection = "Your candidates";
+
 			$scope.model.currentUser.isLoggedIn = false;
 			$scope.model.currentUser.user = "";
 			$scope.model.currentUser.userRef = "";
@@ -363,6 +367,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.onClickCandidates = function()
 	{
 		$scope.model.currentSelection = 'candidates';
+        $scope.model.currentSelectionTitle = "Your candidates";
+
 		if ($scope.model.currentUser.candidatesShowMenu == true) {
 			$scope.model.currentUser.candidatesShowMenu = true;
 		} else {
@@ -374,6 +380,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.onClickConnections = function()
 	{
 		$scope.model.currentSelection = 'connections';
+        $scope.model.currentSelectionTitle = "Your connections";
+
 		if ($scope.model.currentUser.connectionsShowMenu == true) {
 			$scope.model.currentUser.connectionsShowMenu = true;
 		} else {
@@ -385,6 +393,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.onClickCliques = function()
 	{
 		$scope.model.currentSelection = 'cliques';
+        $scope.model.currentSelectionTitle = "Your cliques";
+
 		if ($scope.model.currentUser.cliquesShowMenu == true) {
 			$scope.model.currentUser.cliquesShowMenu = true;
 		} else {
@@ -426,11 +436,14 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onClickConnection = function(connection) {
 		$scope.model.currentSelection = 'connections.user';
+
 		
 		console.log(connection);
 		
 		$scope.model.selectedUser = connection;
 		$scope.model.selectedUserPresentation.hasBeenRejectedByUser = false;
+        $scope.model.currentSelectionTitle = $scope.model.selectedUser.firstName+" "+$scope.model.selectedUser.lastName;
+
 		
 		var connectionUserList = connection.connectionData["_linkLists"]["connection-user"];
 		
@@ -442,6 +455,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			console.log ($scope.model.currentUser.user.ref);
 			if (connectionUser.href != $scope.model.currentUser.user.ref)
 				otherUserRef = connectionUser.href;
+
 			
 			if (connectionUser.rel == "from-user" && connectionUser.href == $scope.model.currentUser.user.ref)
 				$scope.model.selectedUserPresentation.isConnectionRecipient = false;
@@ -458,13 +472,14 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 	
 	$scope.onClickClique = function(clique) { 
-		$scope.model.currentSelection = 'cliques.clique'; 
+
 		
 		var getCliqueUrl = $scope.model.currentUser.user.ref+clique.ref;
 		console.log("get clique url: "+getCliqueUrl);
 		$http({ method  : 'GET', url : getCliqueUrl })
 		.success(function(data) { 
 			 $scope.model.selectedClique = data;
+			$scope.model.currentSelectionTitle =  $scope.model.selectedClique["_embedded"]["clique-name"];
 			 $scope.model.selectedClique.cliqueMembers = $scope.model.selectedClique["_embedded"]["clique-members"];
 			 
 			 console.log("clique data:");
