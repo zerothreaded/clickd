@@ -146,7 +146,7 @@ d3.select("div").style("height", diameter + "px");
 			    success: function(data) {
 					var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
 					var mapOptions = {
-					  zoom: 4,
+					  zoom: 12,
 					  center: myLatlng
 					}
 					var map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -558,7 +558,6 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 						-->
 				</div>
-
 			</div>
 			<!-- /.padding -->
 			<div class="col-sm-4 click-window menu-grid click-col">
@@ -567,8 +566,13 @@ d3.select("div").style("height", diameter + "px");
 					<!-- If there are questions -->
 					<div ng-if="moreQuestionsToAsk()" class="panel click-panel">
 						<div class="panel-heading click-panel-heading"">
-							<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}</h3>
+							<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}
+							</h3>
+							
 						</div>
+						
+						<br/>
+						<img src="{{model.currentUser.currentQuestion.type}}" width="200" height="300"/>
 						
 						<div class="panel-body click-panel-body" id="click-panel-answers">
 							<!--  Answers for this question -->

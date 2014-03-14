@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.fest.util.Strings.StringToAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.BookDao;
@@ -277,7 +279,7 @@ public class UserImportResource {
 				Question movieQuestion = questionDao.findByTags(newMovie.getName());
 				if (movieQuestion == null)
 				{
-					movieQuestion = new Question("Do you like "+newMovie.getName()+"?", "system");
+					movieQuestion = new Question("Do you like " + newMovie.getName() + "?", "system");
 					movieQuestion.getTags().add(newMovie.getName());
 					movieQuestion.getTags().add("fb.movies");
 					movieQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
@@ -285,36 +287,68 @@ public class UserImportResource {
 					questionDao.create(movieQuestion);
 				}
 				
-			
-			}
-			else
-			{
+				// Create Do you like {MOVIE} Choice
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				boolean alreadyExists = false;
+				for (Choice choice : myChoices)
+				{
+				if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
+							&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+						alreadyExists = true;
+				}
+				if (!alreadyExists)
+				{
+					Choice myChoice = new Choice();
+					myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
+					myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+					myChoice.setAnswerText("yes");
+					choiceDao.create(myChoice);
+					myChoices.add(myChoice);
+				}
+				
+				// Create Genre Questions and Choices
+				String genres = newMovie.getGenres();
+				if (null != genres && !genres.equals("")) {
+					StringTokenizer tokenizer = new StringTokenizer(genres, ",");
+					while (tokenizer.hasMoreTokens()) {
+						String genre = tokenizer.nextToken();
+						Question genreQuestion = questionDao.findByTags(genre);
+						if (genreQuestion == null)
+						{
+							genreQuestion = new Question("Do you like " + genre + " movies ?", "system");
+							genreQuestion.getTags().add("genre");
+							genreQuestion.getTags().add(genre);
+							// genreQuestion.addLink("movie-data", new Link(newMovie.getRef(), "movie-data"));
+							genreQuestion.setAnswerRule("yes|no");
+							questionDao.create(genreQuestion);
+						}
+						
+						// Create GENRE Choice
+						alreadyExists = false;
+						for (Choice choice : myChoices)
+						{
+						if (choice.getLinkByName("question").getHref().equals(genreQuestion.getRef())
+									&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
+								alreadyExists = true;
+						}
+						
+						if (!alreadyExists)
+						{
+							Choice myChoice = new Choice();
+							myChoice.addLink("question", new Link(genreQuestion.getRef(), "choice-question"));
+							myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
+							myChoice.setAnswerText("yes");
+							choiceDao.create(myChoice);
+						} else {
+							System.out.println("update asking genre question " + genreQuestion.getQuestionText() + " again");
+						}
+					} // END GENRE LOOP
+				}
+			} else {
 				//update
 				System.out.println("\t\tUpdate Movie for "+ (String)facebookMovie.get("name"));
 			}
-			
-			Question movieQuestion = questionDao.findByTags((String)facebookMovie.get("name"));
-			// Create Choice
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			boolean alreadyExists = false;
-			for (Choice choice : myChoices)
-			{
-			if (choice.getLinkByName("question").getHref().equals(movieQuestion.getRef())
-						&& choice.getLinkByName("user").getHref().equals("/users/"+userRef))
-					alreadyExists = true;
-			}
-			
-			if (!alreadyExists)
-			{
-				Choice myChoice = new Choice();
-				myChoice.addLink("question", new Link(movieQuestion.getRef(), "choice-question"));
-				myChoice.addLink("user", new Link("/users/"+userRef, "choice-user"));
-				myChoice.setAnswerText("yes");
-				choiceDao.create(myChoice);
-				myChoices.add(myChoice);
-			}
 		}
-
 	}
 	
 	public void importUserLikes(String userRef, String likesData)
@@ -675,10 +709,13 @@ public class UserImportResource {
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			System.out.println("gotFriendsList() with : " + friendsListData.size());
 			// Throttler
- 			int maxFriends = 20;
+ 			int maxFriends = 50;
 			int numFriendsDone = 0;
 			for (String key : friendsListData.keySet()) {
 				long start = new Date().getTime();
+				if (numFriendsDone >= maxFriends) {
+					// continue;
+				}
 				numFriendsDone++;
 				Map<String,Object> friendData = (Map<String,Object>)friendsListData.get(key);
 				String friendId = (String)friendData.get("id");

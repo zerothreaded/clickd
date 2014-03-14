@@ -920,9 +920,11 @@ public class UserResource {
 		if (question.getTags().get(question.getTags().size()-1).equals("fb.likes"))
 			cliqueName = "Likes "+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
 	
-
+		if (question.getTags().get(0).equals("genre"))
+			cliqueName = "Likes " + question.getTags().get(1) + " movies";
+		
 		if (question.getTags().get(0).equals("fb.checkin"))
-		cliqueName = "Been to "+question.getTags().get(1);
+			cliqueName = "Been to "+question.getTags().get(1);
 		
 		if (question.getTags().get(1).equals("fb.movies"))
 			cliqueName = "Likes movie "+question.getTags().get(0);

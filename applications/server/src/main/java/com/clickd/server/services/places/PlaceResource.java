@@ -100,6 +100,7 @@ public class PlaceResource {
 					results.add(checkin);
 				}
 			}
+			results = results.subList(0, 50);
 			return Response.status(200).entity(Utilities.toJson(results)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
