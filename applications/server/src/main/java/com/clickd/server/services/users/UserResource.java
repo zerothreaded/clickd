@@ -140,7 +140,11 @@ public class UserResource {
 			 out.close();
 			 in.close();
 			 byte[] response = out.toByteArray();
-			 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\"+(String)map.get("id").toString()+".jpg");
+			 String dataDir = System.getProperty("dataDir");
+			 if (null == dataDir) {
+				 dataDir = "C:\\sandbox\\data\\profile-img\\";
+			 }
+			 FileOutputStream fos = new FileOutputStream(dataDir + (String)map.get("id").toString() + ".jpg");
 			 fos.write(response);
 			 fos.close();
 			
@@ -770,7 +774,8 @@ public class UserResource {
 					User user = userDao.findByRef(userLink.getHref());
 					// Only candidate(s) filter
 					boolean inCandidateCheckins = false;
-					if (candidateRef.equals(checkin.getLinkByName("user").getHref())) {
+					// ONLY THE CANDIDATE AND ME
+					if (candidateRef.equals(checkin.getLinkByName("user").getHref()) || checkin.getLinkByName("user").getHref().equals("/users/" + userRef) ) {
 						inCandidateCheckins = true;
 					}
 					if (!inCandidateCheckins) {
