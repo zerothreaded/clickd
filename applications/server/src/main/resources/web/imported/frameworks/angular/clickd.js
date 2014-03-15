@@ -415,7 +415,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		.success(function(data) { $scope.model.selectedUserComparison = data; });
 		
 		$scope.model.currentSelection = 'candidates.user';
+		
 		$scope.model.selectedUser = candidate;
+		$scope.model.currentSelectionTitle = $scope.model.selectedUser.firstName+" "+$scope.model.selectedUser.lastName;
+
 		$scope.model.selectedUserPresentation.connectionRequestSent = false;
 		
 		$scope.loadMap();
@@ -473,7 +476,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.onClickClique = function(clique) { 
 
-		
+		$scope.model.currentSelection = "cliques.clique";
+
 		var getCliqueUrl = $scope.model.currentUser.user.ref+clique.ref;
 		console.log("get clique url: "+getCliqueUrl);
 		$http({ method  : 'GET', url : getCliqueUrl })
