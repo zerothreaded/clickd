@@ -1168,6 +1168,8 @@ public class UserResource {
 				Clique thisClique = new Clique(me, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				
+				
+				
 				List<Choice> usersWithSameChoice = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), question.getRef());
 				
 				for (Choice userChoice : usersWithSameChoice)
@@ -1179,7 +1181,10 @@ public class UserResource {
 					}
 				}
 
+				String cliqueName = getProcessedCliqueName(question, myChoice);
+
 				thisClique.get_Embedded().put("clique-members", cliqueUsers);
+				thisClique.get_Embedded().put("clique-name", cliqueName);
 				
 				thisClique.setRef(question.getRef());
 			return Response.status(200).entity(Utilities.toJson(thisClique)).build();
