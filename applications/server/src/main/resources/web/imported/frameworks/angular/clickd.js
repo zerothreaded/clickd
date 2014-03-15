@@ -454,6 +454,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		
 		$http({ method  : 'GET', url : getComparisonUrl })
 		.success(function(data) { $scope.model.selectedUserComparison = data; });
+		$scope.loadMap();
 		
 	}
 	
@@ -470,7 +471,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			 console.log("clique data:");
 			 console.log(data);
 		});
+		$scope.loadMap();
 	}
+	
 	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
 	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }

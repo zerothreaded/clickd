@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -756,6 +758,8 @@ public class UserResource {
 	public Response getCheckinsForMap(@PathParam("userRef") String userRef, @PathParam("currentSelection") String currentSelection) {
 		System.out.println("\n\ngetCheckinsForMap() called with [" + currentSelection + "]");
 		List<Checkin> results = new ArrayList<Checkin>();
+		
+		// Map for candidates
 		if (currentSelection.equals("candidates")) {
 			try {
 				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
@@ -798,16 +802,15 @@ public class UserResource {
 			String candidateRef = currentSelection.substring(currentSelection.indexOf("=") + 1);
 			candidateRef = "/users/" + candidateRef;
 			try {
-				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
 				List<Checkin> allCheckins = checkinDao.findAll();
-				
 				for (Checkin checkin : allCheckins) {
 					Link userLink = checkin.getLinkByName("user");
 					User user = userDao.findByRef(userLink.getHref());
 					// Only candidate(s) filter
 					boolean inCandidateCheckins = false;
 					// ONLY THE CANDIDATE AND ME
-					if (candidateRef.equals(checkin.getLinkByName("user").getHref()) || checkin.getLinkByName("user").getHref().equals("/users/" + userRef) ) {
+					if (candidateRef.equals(checkin.getLinkByName("user").getHref()) 
+						|| checkin.getLinkByName("user").getHref().equals("/users/" + userRef) ) {
 						inCandidateCheckins = true;
 					}
 					if (!inCandidateCheckins) {
@@ -831,10 +834,44 @@ public class UserResource {
 				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
 			}
 		}
+
 		
+		
+		// Map for cliques
+		if (currentSelection.equals("cliques")) {
+			try {
+				List<Checkin> cliqueCheckins = new ArrayList<Checkin>();
+				
+				List<Clique> myCliques = (List<Clique>) getCliquesForUser(userRef).getEntity();
+				Set<String> myCliqueMembers = new TreeSet<String>();
+				for (Clique clique : myCliques) {
+					// Process choices made by clique members
+					List<Choice> matchingChoices = (List<Choice>) clique.get_Embedded().get("matching-choices");
+					for (Choice choice : matchingChoices) {
+						// Extract the clique members 
+						Link userLink = choice.getLinkByName("user");
+						String choiceUserRef = userLink.getHref();
+						myCliqueMembers.add(choiceUserRef);
+					}
+				}
+				System.out.println("User " + userRef + " has " + myCliqueMembers.size() + " total clique members");
+				
+				
+				
+				List<Checkin> clippedResults = results.subList(0, Math.min(20, results.size()));
+				System.out.println("getMap() returning " + clippedResults.size() + " out of " +  results.size() + " possible checkins");
+				return Response.status(200).entity(Utilities.toJson(clippedResults)).build();
+			} catch(Exception e) {
+				e.printStackTrace();
+				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+			}
+		}
+		
+
 		return Response.status(200).entity(Utilities.toJson(results)).build();
 		
 	}
+
 	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
@@ -1094,10 +1131,10 @@ public class UserResource {
 				
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
-				
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
-				
-				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
+				thisClique.get_Embedded().put("matching-choices", matchingChoices);
+
+				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
 				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
 			}

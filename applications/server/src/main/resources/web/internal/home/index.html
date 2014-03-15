@@ -229,7 +229,23 @@ d3.select("div").style("height", diameter + "px");
 <body>
     <div id="fb-root"></div>
     <script src="/web/internal/home/fb.js"></script>
-    
+    <div align="center">
+    <!--
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+	 -->
+	 
+	 <br/><br/><br/>
+	 <!-- 
+	<iframe src="https://embed.spotify.com/?uri=spotify:track:5JunxkcjfCYcY7xJ29tLai" seamless="seamless" width="80px" height="80px" allowtransparency="true"></iframe>
+	 -->
+
+	
+	<!-- 
+		<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&theme=white" frameborder="0" allowtransparency="true"></iframe>
+	<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&theme=white&view=coverart" frameborder="0" allowtransparency="true"></iframe>
+	-->
+	</div>
+
 <div ng-app="clickdApplication" ng-controller="AppController" ng-init="init()" >
 	<!-- SINGLE SCREEN -->
 	<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
@@ -540,6 +556,7 @@ d3.select("div").style("height", diameter + "px");
 									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{cliqueMember.ref}}.jpg" >
 									{{cliqueMember.firstName}} {{cliqueMember.lastName}}</a>
 								</div>	
+								
 						</div>
 						
 					</div>
@@ -600,6 +617,7 @@ d3.select("div").style("height", diameter + "px");
 										<span class="click-answer-span">{{answer}}</span>
 									</div>
 								</div>
+									<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
 							</div>
 						</div>
 					</div>
@@ -622,6 +640,7 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 					</div>
 					<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
+					<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
 				
 				</div>
 					<!--  end click panel -->
