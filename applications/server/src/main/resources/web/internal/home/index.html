@@ -532,7 +532,7 @@ d3.select("div").style("height", diameter + "px");
 						
 						<!-- VIEW CLIQUES -->
 						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
-						<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique}})" href="#" ng-class="{active: isCliqueSelected('{{clique.name}}')}" >
+						<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique}})" href="#" ng-class="{active: isCliqueSelected('{{clique.ref}}')}" >
 									<div ng-if="clique.name.indexOf('like') != -1">
 										<img class="image" width="20px" height="20px" ng-src="/web/internal/home/images/fb_like.jpg">
 									 </div>

@@ -88,6 +88,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			urlSelection = 'candidate=' + $scope.model.currentCandidateRef;
 		}
 		var mapUrl = '/users/places/map/' + $scope.model.currentUser.userRef + "/" +  urlSelection;
+		console.log("getting "+mapUrl);
 		// alert(mapUrl);
     	$.ajax({
 			    type: "GET",

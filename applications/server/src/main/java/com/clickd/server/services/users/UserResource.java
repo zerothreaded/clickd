@@ -974,6 +974,11 @@ public class UserResource {
 					// System.out.println("Skipping Duplicate " + responseString);
 					continue;
 				}
+				
+				if (choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()))
+				{
+					
+				}
 					
 				if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
 					same.add(responseString);
