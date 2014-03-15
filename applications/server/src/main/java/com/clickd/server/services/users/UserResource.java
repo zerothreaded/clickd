@@ -1102,6 +1102,8 @@ public class UserResource {
 				
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
 				
+				
+				
 				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
 				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);

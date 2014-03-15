@@ -1689,3 +1689,21 @@ body .ui-tooltip {
 	padding-left:10px;
 	padding-top:10px;
 }
+
+.chat-messages-row
+{
+	height:calc(100% - 30px);
+	overflow:hidden;
+}
+
+.chat-input-row
+{
+	height:30px;
+}
+
+.chat-input
+{
+	width:100%;
+}
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

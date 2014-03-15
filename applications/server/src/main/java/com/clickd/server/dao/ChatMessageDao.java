@@ -6,17 +6,17 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.clickd.server.model.ChatMessage;
 import com.clickd.server.model.Choice;
-import com.clickd.server.model.Post;
 
-public class PostDao {
+public class ChatMessageDao {
 
 	private MongoOperations mongoOperations;
 	private String collectionName;
 
-	public PostDao() {
-		System.out.println("PostDao() called.");
-		this.collectionName = "posts";
+	public ChatMessageDao() {
+		System.out.println("ChatMessageDao() called.");
+		this.collectionName = "chatMessages";
 	}
 
 	public Choice create(Choice choice) {
@@ -38,14 +38,14 @@ public class PostDao {
 		return mongoOperations.findAll(Choice.class, collectionName);
 	}
 
-	public Post findById(String id) {
-		Post post = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), Post.class, collectionName);
-		return post;
+	public ChatMessage findById(String id) {
+		ChatMessage chatMessage = mongoOperations.findOne(new Query(Criteria.where("_id").is(id)), ChatMessage.class, collectionName);
+		return chatMessage;
 	}
 
-	public Post findByRef(String ref) {
-		Post post = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), Post.class, collectionName);
-		return post;
+	public ChatMessage findByRef(String ref) {
+		ChatMessage chatMessage = mongoOperations.findOne(new Query(Criteria.where("ref").is(ref)), ChatMessage.class, collectionName);
+		return chatMessage;
 	}
 
 	public MongoOperations getMongoOperations() {

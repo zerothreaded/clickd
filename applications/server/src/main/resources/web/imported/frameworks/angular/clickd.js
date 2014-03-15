@@ -1,6 +1,6 @@
 var clickdApplication = angular.module('clickdApplication', ['ngCookies', 'ngResource']);
 
-clickdApplication.controller('AppController', function($scope, $cookies, $resource, $http) {
+clickdApplication.controller('AppController', function($scope, $cookies, $resource, $http, $timeout) {
 	
 	$scope.model = {
 		"currentSelection" : "candidates",
@@ -10,6 +10,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"selectedUser": {},
 		"selectedClique" : {},
 		"currentCandidateRef" : {},
+		"selectedChatTab" : "map",
+		"selectedChatroom" : { "ref" : -1},
 		
 		// Current User view of domain
 		"currentUser" : {
@@ -42,13 +44,47 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 
 	
 	$scope.init = function () {
-		// alert('init()');
-		
+			$scope.updateChatroom();
 	}
+	
+	$scope.updateChatroom = function() {
+			console.log("chat interval");
+
+			if ($scope.model.selectedChatroom.ref != -1)
+			{
+				var getChatroomUrl = '';
+				if ($scope.model.selectedChatroom.chatroomType == 'clique')
+				{
+					getChatroomUrl = "/chatrooms/get/clique/" + $scope.model.selectedChatroom.name;
+				}
+				else
+				{
+					getChatroomUrl = "/chatrooms/get/" + getRefParam($scope.model.selectedChatroom.ref,2);
+				}
+				console.log(getChatroomUrl);
+				$http({ method  : 'POST', url : getChatroomUrl })
+				.success(function(data) { 
+					console.log("got chatroom "+data.ref);
+					data.messages = data["_embedded"]["message-list"];
+		
+					$scope.model.selectedChatroom = data; 
+		         //   var $id= $("#" + attr.scrollBottom);
+		            $("#messages-row").scrollTop(100000);
+				//	$scope.apply();
+				});
+			}
+			
+			$timeout(function(){
+				$scope.updateChatroom();
+			},1000);	
+	};
+	
 	
 	// Form Data
 	$scope.signInFormData = { signInFailed : false};
 	$scope.registerFormData = { registerFailed : false };
+	$scope.chatroomPostData = { postText : "" };
+
 	$scope.controlFlags = {
 		"requestMemberBio" : false,
 		"moreQuestionsToAsk" : true
@@ -186,7 +222,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			// Load Google Maps
 			$scope.loadMap();
 			
+			
 		}
+	}
+	
+	$scope.selectChatTab = function(tab)
+	{
+		$scope.model.selectedChatTab=tab;
 	}
 		
 	$scope.moreQuestionsToAsk = function() {
@@ -422,6 +464,17 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 
 		$scope.model.selectedUserPresentation.connectionRequestSent = false;
 		
+		var getChatroomUrl = "/chatrooms/get/user/" + userRef + "/"+ getRefParam(candidate.ref,2);
+
+		$http({ method  : 'POST', url : getChatroomUrl })
+		.success(function(data) { 
+			console.log("got chatroom "+data.ref);
+			data.messages = data["_embedded"]["message-list"];
+
+			$scope.model.selectedChatroom = data; 
+			});
+		
+	
 		$scope.loadMap();
 	}
 	
@@ -479,6 +532,16 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 
 		$scope.model.currentSelection = "cliques.clique";
 
+
+		var getChatroomUrl = "/chatrooms/get/clique/" + encodeURIComponent(clique.name);
+		console.log("getting chatroom "+getChatroomUrl);
+		$http({ method  : 'POST', url : getChatroomUrl })
+		.success(function(data) { 
+			data.messages = data["_embedded"]["message-list"];
+			$scope.model.selectedChatroom = data; 
+			});
+		
+		
 		var getCliqueUrl = $scope.model.currentUser.user.ref+clique.ref;
 		console.log("get clique url: "+getCliqueUrl);
 		$http({ method  : 'GET', url : getCliqueUrl })
@@ -491,6 +554,37 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			 console.log(data);
 		});
 	}
+	
+	$scope.getUserNameForMessage = function(message)
+	{
+		var userRef = message["_links"]["user"]["href"];
+		
+		var getUserUrl = userRef;
+		$http({ method  : 'GET', url : getUserUrl })
+			.success(function(data) { 
+				return data.firstName;
+		});
+	}
+	
+	$scope.postToChatroom = function() { 
+		
+		
+		var postToChatroomUrl = $scope.model.selectedChatroom.ref+"/"+getRefParam($scope.model.currentUser.user.ref,2)+"/posts";
+
+		$http({ 
+			method  : 'POST', 
+			url : postToChatroomUrl,
+		    data    : $.param($scope.chatroomPostData),  // pass in data as strings
+	        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }})
+		.success(function(data) { 
+			$scope.chatroomPostData.postText = '';
+			console.log("got chatroom "+data.ref);
+			//data.messages = data["_embedded"]["message-list"];
+			console.log(JSON.stringify(data));
+			// $scope.model.selectedChatroom = data;
+		});
+	}
+	
 	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
 	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
