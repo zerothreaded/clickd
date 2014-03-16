@@ -403,26 +403,31 @@ d3.select("div").style("height", diameter + "px");
 						<!-- VIEW CANDIDATE (X) -->						
 						<div ng-if="model.currentSelection == 'candidates.user'" class="panel candidates-panel">
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-4">
+								<div class="row">
 									<img class="member-md-image" ng-src="/profile-img/{{model.currentUser.user.ref}}.jpg">	
 									Me<br/>
 									{{model.currentUser.user.firstName}} {{model.currentUser.user.lastName}}<br/>
-									
-								</div>
-								<div class="col-md-6">
+									</div>
+									<div class="row" style="margin-top:10px">
 									<img class="member-md-image" ng-src="/profile-img/{{model.selectedUser.ref}}.jpg">
 									{{model.selectedUser.firstName}} {{model.selectedUser.lastName}} 
 									<div ng-if="model.selectedUserPresentation.connectionRequestSent == true"> was sent your connection request.</div>
 									<button ng-if="model.selectedUserPresentation.connectionRequestSent == false" class="btn btn-large" href="#" ng-click="onAddConnection({{model.selectedUser}})">Add connection</button>
+									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12">
-									<hr/>
-									<strong>What we have in common:</strong>
-									<hr/>
-									<span ng-repeat="choice in model.selectedUserComparison" >
-										[ {{$index + 1}} / {{model.selectedUserComparison.length}} ] {{choice}}<br/>
+								<div class="col-md-4">
+									<strong>Agree</strong>
+									<br/>
+									<span ng-repeat="choice in model.selectedUserComparison.agree" style="font-size:12px">
+										<!--  [ {{$index + 1}} / {{model.selectedUserComparison.agree.length}} ] -->{{choice}}<br/>
+									</span>
+								</div>
+								<div class="col-md-4">
+									<strong>Disagree</strong>
+									<br/>
+									<span ng-repeat="choice in model.selectedUserComparison.disagree" style="font-size:12px">
+									<!--  [ {{$index + 1}} / {{model.selectedUserComparison.disagree.length}} ] -->	 {{choice}}<br/>
 									</span>
 								</div>
 							</div>
@@ -520,6 +525,12 @@ d3.select("div").style("height", diameter + "px");
 			<div class="col-sm-4 click-window menu-grid click-col">
 				<div class="well click-well">
 				
+				<div class="row row-small">
+					<ul class="nav nav-pills nav-small">
+							<li ng-repeat="(tag,tagTitle) in model.questionTags" ng-class="{active : model.selectedQuestionTag == tag}"><a href="#" ng-click="onClickQuestionTag(tag)">{{tagTitle}}</a></li>
+						</ul>
+				</div>
+				<div class="row row-small">
 					<!-- If there are questions -->
 					<div ng-if="moreQuestionsToAsk()" class="panel click-panel">
 						<div class="panel-heading click-panel-heading"">
@@ -529,7 +540,7 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 						
 						<br/>
-						<img ng-src="{{model.currentUser.currentQuestion.type}}" class="click-question-img"/>
+						<img ng-src="{{model.currentUser.currentQuestion.img}}" class="click-question-img"/>
 						
 						<div class="panel-body click-panel-body" id="click-panel-answers">
 							<!--  Answers for this question -->
@@ -568,6 +579,7 @@ d3.select("div").style("height", diameter + "px");
 								</div>
 							</div>
 						</div>
+					</div>
 					</div>
 					<!--
 					<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>

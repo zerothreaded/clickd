@@ -14,6 +14,10 @@ public class Television extends Resource {
 	protected String fbId;
 	
 	protected String name;
+	
+	private String posterImageUrl;
+	private String country;
+	private String genres;
 
 	public Television() {
 		super();
@@ -62,6 +66,30 @@ public class Television extends Resource {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPosterImageUrl() {
+		return posterImageUrl;
+	}
+
+	public void setPosterImageUrl(String posterImageUrl) {
+		this.posterImageUrl = posterImageUrl;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getGenres() {
+		return genres;
+	}
+
+	public void setGenres(String genres) {
+		this.genres = genres;
 	}
 	
 }

@@ -997,7 +997,6 @@ public class UserResource {
 			for (Choice choice : myChoices) {
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
-				System.out.println("Same Answer Choices Count = [" + sameAnswerChoices.size() + "]");
 
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
@@ -1058,12 +1057,18 @@ public class UserResource {
 		}
 	}
 	
-	private ArrayList<String> userComparison(String userRef, String otherUserRef)
-	{
+	
+	private ComparisonResponse userComparison(String userRef, String otherUserRef)
+	{	
 		//get my answers
 		List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 		List<Choice> otherUserChoices = choiceDao.findByUserRef("/users/"+otherUserRef);
 		ArrayList<String> same = new ArrayList<String>();
+		ArrayList<String> different = new ArrayList<String>();
+		
+		User me = userDao.findByRef("/users/"+userRef);
+		User otherUser = userDao.findByRef("/users/"+otherUserRef);
+
 		System.out.println("Starting compare with " + myChoices.size() + " myChoices and " + otherUserChoices.size() + " other user choices");
 		for (Choice choice : myChoices)
 		{
@@ -1077,6 +1082,9 @@ public class UserResource {
 				if (null == question || question.getTags() == null || choice.getAnswerText() == null || choice2.getAnswerText() == null)
 					continue;
 				
+				if (choice.getAnswerText().equals("skip") || choice2.getAnswerText().equals("skip"))
+					continue;
+				
 				String responseString = getProcessedCliqueName(question,choice);
 				responseString = responseString.replace("likes", "like");
 				
@@ -1087,17 +1095,25 @@ public class UserResource {
 				
 				if (choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()))
 				{
-					
+					if (choice.getAnswerText().equals(choice2.getAnswerText()))
+						same.add(responseString);
+					else if (!question.getTags().contains("bio"))
+					{
+						String otherResponseString = otherUser.getFirstName()+" "+getProcessedCliqueName(question, choice2);
+						different.add(otherResponseString);
+					}
 				}
 					
-				if (choice.getAnswerText().equals(choice2.getAnswerText()) && choice.getLinkByName("question").getHref().equals(choice2.getLinkByName("question").getHref()) )
-					same.add(responseString);
+				
 			}
 			
 		}
 		
+		ComparisonResponse response = new ComparisonResponse();
 		
-		return same;
+		response.setAgree(same);
+		response.setDisagree(different);
+		return response;
 	}
 	
 	@GET
@@ -1105,9 +1121,9 @@ public class UserResource {
 	@Timed
 	public Response compareCandidate(@PathParam("userRef") String userRef, @PathParam("otherUserRef") String otherUserRef) {
 		try {
-		ArrayList<String> same = userComparison(userRef, otherUserRef);
+			ComparisonResponse response = userComparison(userRef, otherUserRef);
 			
-			return Response.status(200).entity(Utilities.toJson(same)).build();
+			return Response.status(200).entity(Utilities.toJson(response)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
@@ -1202,23 +1218,27 @@ public class UserResource {
 	{
 		String cliqueName = question.getQuestionText();
 		
+		String likeVerb = "Likes";
+		if (myChoice.getAnswerText().equals("no"))
+			likeVerb = "Doesn't Like";
+		
 		if (question.getTags().get(question.getTags().size()-1).equals("fb.likes"))
-			cliqueName = "Likes "+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
+			cliqueName = likeVerb+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
 	
 		if (question.getTags().get(0).equals("genre"))
-			cliqueName = "Likes " + question.getTags().get(1) + " movies";
+			cliqueName = likeVerb + " "+ question.getTags().get(1) + " movies";
 		
 		if (question.getTags().get(0).equals("fb.checkin"))
 			cliqueName = "Been to "+question.getTags().get(1);
 		
 		if (question.getTags().get(1).equals("fb.movies"))
-			cliqueName = "Likes movie "+question.getTags().get(0);
+			cliqueName = likeVerb+" movie "+question.getTags().get(0);
 
 		if (question.getTags().get(1).equals("fb.televisions"))
-			cliqueName = "Likes TV show "+question.getTags().get(0);
+			cliqueName = likeVerb+" TV show "+question.getTags().get(0);
 
 		if (question.getTags().get(1).equals("fb.book"))
-			cliqueName = "Likes book "+question.getTags().get(0);
+			cliqueName = likeVerb+" book "+question.getTags().get(0);
 		
 		if (question.getTags().get(0).equals("aboutme"))
 			cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();

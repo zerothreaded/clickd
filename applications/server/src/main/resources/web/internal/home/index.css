@@ -294,7 +294,7 @@ img.connect-profile-img {
 
 .click-question-img
 {
-	height:calc(100% - 220px);
+	height:calc(100% - 250px);
 }
 
 .click-panel {
@@ -309,6 +309,17 @@ img.connect-profile-img {
 	background-color: rgb(41, 57, 78);
 	color: white;
 	border-radius: 4px;
+}
+
+.nav>li>a
+{
+	padding:4px;
+}
+
+.row-small
+{
+	margin-left:0px;
+	margin-right:0px;
 }
 
 .click-panel-heading-h3 {

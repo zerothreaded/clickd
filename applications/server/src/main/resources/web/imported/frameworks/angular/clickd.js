@@ -5,6 +5,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.model = {
 		"currentSelection" : "candidates",
 		"currentSelectionTitle" : "Your candidates",
+		"selectedQuestionTag" : "fb.movies",
 		"cookie" : "",
 		"sessionRef" : "",
 		"selectedUser": {},
@@ -13,6 +14,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"currentCliqueRef" : {},		
 		"selectedChatTab" : "map",
 		"selectedChatroom" : { "ref" : -1},
+		"questionTags" : {"fb.movies" : "movies"},
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -46,6 +48,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.init = function () {
 			$scope.updateChatroom();
 			$scope.nextQuestionTimer();
+			
+			var getQuestionTagsUrl = "/questions/tags/all";
+			$http({ method  : 'GET', url : getQuestionTagsUrl })
+			.success(function(data) { 
+	
+				$scope.model.questionTags = data; 
+			});
 			
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
@@ -254,11 +263,18 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		return $scope.controlFlags.moreQuestionsToAsk;
 	}
 	
+	$scope.onClickQuestionTag = function(tag)
+	{
+		$scope.model.selectedQuestionTag = tag;
+		$scope.loadNextQuestion();
+		console.log($scope.model.selectedQuestionTag);
+	}
+	
 	$scope.loadNextQuestion = function() {
 		var userRef = $scope.model.currentUser.userRef;
-		var nextQuestionUrl = "/questions/next/" + userRef;
+		var nextQuestionUrl = "/questions/next/" + userRef + "/"+$scope.model.selectedQuestionTag;
 		$http({
-			url : "/questions/next/" + userRef,
+			url : nextQuestionUrl,
 			method : "GET",
 			dataType : "json"
 		})
@@ -272,11 +288,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				var questionText = msg.questionText;
 				$scope.model.currentUser.currentQuestion = msg;
 				$scope.model.currentUser.currentAnswers = answers;
-				$scope.updateCCC();
+				//$scope.updateCCC();
 			} else {
 				// No more answers
 				$scope.controlFlags.moreQuestionsToAsk = false;
-				$scope.updateCCC();
+				//$scope.updateCCC();
 			}
 		});
 	}
@@ -304,6 +320,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
 			},10000);	
+			
+			$scope.updateCCC();
 		});
 	}
 	
@@ -317,6 +335,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.user = user;
 			$scope.model.currentUser.userRef = theUserRef;
 			$scope.model.currentUser.isLoggedIn = true;
+			
+			$scope.updateCCC();
 		});
 	};
 	

@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,12 +23,14 @@ import com.clickd.server.dao.AnswerDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.MovieDao;
 import com.clickd.server.dao.QuestionDao;
+import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.model.Answer;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Movie;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
+import com.clickd.server.model.Television;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -45,11 +49,105 @@ public class QuestionResource {
 	@Autowired
 	private MovieDao movieDao;
 	
+	@Autowired
+	private TelevisionDao televisionDao;
+
+	
+	private boolean conditionalGetMovieImage(String movieHref)
+	{
+		try
+		{
+			Movie movie = movieDao.findByRef(movieHref);
+			String movieImageUrl = movie.getPosterImageUrl();
+			
+			if (movieImageUrl == null)
+				return false;
+			
+			// Get the MOVIES IMDB image and save it locally
+			 String dataDir = System.getProperty("dataDir");
+			 if (null == dataDir) {
+				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
+			 }
+			String targetFileName = dataDir + movieHref + ".jpg";
+			File file = new File(targetFileName);
+			if (!file.exists()) {
+				System.out.println("Getting friends Image..");
+				 URL url = new URL(movieImageUrl);
+				 InputStream in = new BufferedInputStream(url.openStream());
+				 ByteArrayOutputStream out = new ByteArrayOutputStream();
+				 byte[] buf = new byte[1024];
+				 int n = 0;
+				 while (-1!=(n=in.read(buf)))
+				 {
+				    out.write(buf, 0, n);
+				 }
+				 out.close();
+				 in.close();
+				 byte[] response = out.toByteArray();
+				 FileOutputStream fos = new FileOutputStream(targetFileName);
+				 fos.write(response);
+				 fos.close();
+				 System.out.println("Saved friends Image.");
+				 return true;
+			}
+			 return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	private boolean conditionalGetTelevisionImage(String televisionHref)
+	{
+		try
+		{
+			Television movie = televisionDao.findByRef(televisionHref);
+			String movieImageUrl = movie.getPosterImageUrl();
+			
+			if (movieImageUrl == null)
+				return false;
+			
+			// Get the MOVIES IMDB image and save it locally
+			 String dataDir = System.getProperty("dataDir");
+			 if (null == dataDir) {
+				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
+			 }
+			String targetFileName = dataDir + televisionHref + ".jpg";
+			File file = new File(targetFileName);
+			if (!file.exists()) {
+				System.out.println("Getting friends Image..");
+				 URL url = new URL(movieImageUrl);
+				 InputStream in = new BufferedInputStream(url.openStream());
+				 ByteArrayOutputStream out = new ByteArrayOutputStream();
+				 byte[] buf = new byte[1024];
+				 int n = 0;
+				 while (-1!=(n=in.read(buf)))
+				 {
+				    out.write(buf, 0, n);
+				 }
+				 out.close();
+				 in.close();
+				 byte[] response = out.toByteArray();
+				 FileOutputStream fos = new FileOutputStream(targetFileName);
+				 fos.write(response);
+				 fos.close();
+				 System.out.println("Saved friends Image.");
+				 return true;
+			}
+			 return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/next/{userRef}")
+	@Path("/next/{userRef}/{tags}")
 	@Timed
-	public String getNextQuestion(@PathParam("userRef") String userRef) {
+	public String getNextQuestion(@PathParam("userRef") String userRef, @PathParam("tags") String tags ) {
 		
 		try {
 			//List<Question> questions = questionDao.findAllSortedBy("ref");
@@ -82,46 +180,29 @@ public class QuestionResource {
 					continue;
 				} else {
 					// GO FOR MOVIE QUESTIONS ONLY
-					if (toReturn.getTags().contains("fb.movies")) {
+					if (toReturn.getTags().contains(tags)) {
 						// Got a movie one
-						String movieHref = toReturn.getLinkByName("movie-data").getHref();
-						Movie movie = movieDao.findByRef(movieHref);
-						String movieImageUrl = movie.getPosterImageUrl();
-						if (movieImageUrl == null || movieImageUrl.equals("N/A")) {
-							continue;
+						if (tags.equals("fb.movies"))
+						{
+							String movieHref = toReturn.getLinkByName("movie-data").getHref();
+							boolean gotImage = conditionalGetMovieImage(movieHref);
+							if (!gotImage)
+								continue;
+							toReturn.get_Embedded().put("image-url", "/profile-img/users/" +  movieHref + ".jpg");
+							toReturn.setImg("/profile-img/users" +  movieHref + ".jpg");
+						} else if (tags.equals("fb.tlevision"))
+						{
+							String televisionHref = toReturn.getLinkByName("television-data").getHref();
+							conditionalGetTelevisionImage(televisionHref);
+
+							toReturn.get_Embedded().put("image-url", "/profile-img/users/" +  televisionHref + ".jpg");
+							toReturn.setImg("/profile-img/users" +  televisionHref + ".jpg");
 						}
-						toReturn.setType(movieImageUrl);	
-						// Get the MOVIES IMDB image and save it locally
-						 String dataDir = System.getProperty("dataDir");
-						 if (null == dataDir) {
-							 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
-						 }
-						String targetFileName = dataDir + movieHref + ".jpg";
-						File file = new File(targetFileName);
-						if (!file.exists()) {
-							System.out.println("Getting friends Image..");
-							 URL url = new URL(movieImageUrl);
-							 InputStream in = new BufferedInputStream(url.openStream());
-							 ByteArrayOutputStream out = new ByteArrayOutputStream();
-							 byte[] buf = new byte[1024];
-							 int n = 0;
-							 while (-1!=(n=in.read(buf)))
-							 {
-							    out.write(buf, 0, n);
-							 }
-							 out.close();
-							 in.close();
-							 byte[] response = out.toByteArray();
-							 FileOutputStream fos = new FileOutputStream(targetFileName);
-							 fos.write(response);
-							 fos.close();
-							 System.out.println("Saved friends Image.");
-						} else {
-							 // System.out.println("Skipping Image Load");
+						else
+						{
+							toReturn.get_Embedded().put("image-url", "/profile-img/users/blankImg.jpg");
+							toReturn.setImg("/profile-img/users/blankImg.jpg");						
 						}
-						
-						toReturn.get_Embedded().put("movie-image-url", "/profile-img/users/" +  movieHref + ".jpg");
-						toReturn.setType("/profile-img/users" +  movieHref + ".jpg");
 						
 						return Utilities.toJson(toReturn);
 					} else {
@@ -135,6 +216,21 @@ public class QuestionResource {
 			e.printStackTrace();
 			return e.getMessage();
 		}
+	}
+	
+
+	@GET
+	@Path("/tags/all")
+	@Timed
+	public Map<String,String> getTags()
+	{
+		Map<String,String> toReturn = new HashMap<String,String>();
+		toReturn.put("fb.movies", "movies");
+		toReturn.put("fb.televisions", "television");
+		toReturn.put("fb.books", "books");
+		toReturn.put("fb.checkin", "places");
+
+		return toReturn;
 	}
 
 //	public QuestionDao getQuestionDao() {

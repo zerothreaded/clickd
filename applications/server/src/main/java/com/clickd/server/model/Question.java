@@ -22,6 +22,7 @@ public class Question extends Resource {
 		this.source = source;
 	}
 
+	private String img;
 	protected String type;
 	protected String answerRule;
 
@@ -92,5 +93,13 @@ public class Question extends Resource {
 
 	public void setAnswerRule(String answerRule) {
 		this.answerRule = answerRule;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 }
