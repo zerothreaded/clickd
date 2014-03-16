@@ -77,7 +77,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 		Assert.assertEquals(0, connections.size());
 		
 		// GET CLIQUES
-		Response getCliquesResponse = userResource.getCliquesForUser(userRef1);
+		Response getCliquesResponse = userResource.getCliquesForUserAsResponse(userRef1);
 		Assert.assertEquals(200, getCliquesResponse.getStatus());
 		
 		String json2 = ((String)getCliquesResponse.getEntity());
@@ -105,7 +105,7 @@ public class RegisterUserTest extends AbstractResourceTest {
 		Assert.assertEquals(0, connections2.size());
 		
 		// Get Cliques for John
-		Response getCliquesResponse2 = userResource.getCliquesForUser(userRef2);
+		Response getCliquesResponse2 = userResource.getCliquesForUserAsResponse(userRef2);
 		Assert.assertEquals(200, getCliquesResponse2.getStatus());
 		
 		// Verify Cliques match choices

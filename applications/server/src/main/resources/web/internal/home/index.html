@@ -34,7 +34,12 @@ $(function() {
   
 </script>
 <script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
-
+<script>
+function timeRefresh(timeoutPeriod) 
+{
+	// setTimeout("location.reload(true);",timeoutPeriod);
+}
+</script>
 <!-- 1. Include the LinkedIn JavaScript API and define a onLoad callback function -->
 <!-- 
 <script type="text/javascript" src="http://platform.linkedin.com/in.js">/*
@@ -137,99 +142,30 @@ d3.select("div").style("height", diameter + "px");
 </style>
 
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    
-    <!-- 
-    <script>
-	function initialize() {
-    	$.ajax({
-			    type: "GET",
-			    url: "/places/map",
-			    dataType: "json",
-			    success: function(data) {
-					var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
-					var mapOptions = {
-					  zoom: 12,
-					  center: myLatlng
-					}
-					var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-					
-			    	var checkinsArray = data;
-		  			checkinsArray.forEach(function(checkin) {
-			  			console.log(JSON.stringify(checkin));
-			  			var user = checkin["_embedded"]["the-user"];
-			  			var userId = user["ref"].split("/")[2];
-			  			var place = checkin["_embedded"]["the-place"];
-		  				//var city = checkin["_embedded"]place["city"];
-		    			//console.log('City = ' + JSON.stringify(city));
-		    			addMarker(map, user["firstName"] + ' ' + user['lastName'] + ' was @ ' + place["name"], place["latitude"], place["longitude"], '/profile-img/users/' + userId + '.jpg');
-		  			});
-			    },
-			    failure: function(errMsg) {
-			    	alert('register movies failed');
-			    	console.log('ERROR=' + errMsg);
-			    }
-    		});	
-	}
-	
-	 // Function for adding a marker to the page.
-    function addMarker(location) {
-        marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-    }
-
-    // Testing the addMarker function
-    function addMarker(theMap, name, latitude, longitude, imageUrl) {
-		var placeIcon = {
-			    url: imageUrl,
-			    // This marker is 20 pixels wide by 32 pixels tall.
-			    size: new google.maps.Size(30, 30),
-			    scaledSize : new google.maps.Size(30, 30),
-			    // The origin for this image is 0,0.
-			    origin: new google.maps.Point(0,0),
-			    // The anchor for this image is the base of the flagpole at 0,32.
-			    anchor: new google.maps.Point(-40, 60)
-		};
-		var placePosition = new google.maps.LatLng(latitude, longitude);
-		
-		console.log('Place Position = ' + JSON.stringify(placePosition));
-		
-		var placeMarker = new google.maps.Marker({
-		    position: placePosition,
-		    map: theMap,
-		    icon : placeIcon,
-		    title: name
+   	 <script>
+   		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+   		
+   		var mapOptions = {
+   		  zoom: 14,
+   		  center: myLatlng
+   		}
+   		
+   	 	var map;
+		$(document).ready(function () {
+			alert('man');
+			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 		});
-		console.log('Marker = ' + placeMarker);
-    }
-    
-    
-	google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
-    	 -->
-    	 <script>
-    		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
-    		
-    		var mapOptions = {
-    		  zoom: 13,
-    		  center: myLatlng
-    		}
-    		
-    	 	var map;
-			$(document).ready(function () {
-				alert('man');
-				map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-			});
-    	 </script>
-    	 
+   	 </script>
+   	 
  
 </head>
-<body>
+<body onload="JavaScript:timeRefresh(30000);">
     <div id="fb-root"></div>
     <script src="/web/internal/home/fb.js"></script>
-    
+    <div align="center">
+
+	</div>
+
 <div ng-app="clickdApplication" ng-controller="AppController" ng-init="init()" >
 	<!-- SINGLE SCREEN -->
 	<div ng-if="!isUserLoggedIn()" id="home-wrapper" >
@@ -540,6 +476,7 @@ d3.select("div").style("height", diameter + "px");
 									&nbsp;<img class="member-md-image" ng-src="/profile-img/{{cliqueMember.ref}}.jpg" >
 									{{cliqueMember.firstName}} {{cliqueMember.lastName}}</a>
 								</div>	
+								
 						</div>
 						
 					</div>
@@ -604,6 +541,9 @@ d3.select("div").style("height", diameter + "px");
 										<span class="click-answer-span">{{answer}}</span>
 									</div>
 								</div>
+									<!--
+									<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
+									-->
 							</div>
 						</div>
 					</div>
@@ -626,7 +566,9 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 					</div>
 					<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
-				
+					<!--
+					<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
+					-->
 				</div>
 					<!--  end click panel -->
 			</div>

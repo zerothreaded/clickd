@@ -10,9 +10,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"selectedUser": {},
 		"selectedClique" : {},
 		"currentCandidateRef" : {},
+		"currentCliqueRef" : {},		
 		"selectedChatTab" : "map",
 		"selectedChatroom" : { "ref" : -1},
-		
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -123,6 +123,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		if ($scope.model.currentSelection == 'candidates.user') {
 			urlSelection = 'candidate=' + $scope.model.currentCandidateRef;
 		}
+		if ($scope.model.currentSelection == 'cliques.clique') {
+			urlSelection = 'clique=' + $scope.model.currentCliqueRef;
+		}
 		var mapUrl = '/users/places/map/' + $scope.model.currentUser.userRef + "/" +  urlSelection;
 		console.log("getting "+mapUrl);
 		// alert(mapUrl);
@@ -137,8 +140,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			  			var user = checkin["_embedded"]["the-user"];
 			  			var userId = user["ref"].split("/")[2];
 			  			var place = checkin["_embedded"]["the-place"];
-		  				//var city = checkin["_embedded"]place["city"];
-		    			//console.log('City = ' + JSON.stringify(city));
+		  				var city = checkin["_embedded"]["the-place"]["city"];
+		    			console.log('City = ' + JSON.stringify(city));
 		    			addMarker(map, user["firstName"] + ' ' + user['lastName'] + ' was @ ' + place["name"], place["latitude"], place["longitude"], '/profile-img/users/' + userId + '.jpg');
 		  			});
 			    },
@@ -154,8 +157,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		var placeIcon = {
 			    url: imageUrl,
 			    // This marker is 20 pixels wide by 32 pixels tall.
-			    size: new google.maps.Size(30, 30),
-			    scaledSize : new google.maps.Size(30, 30),
+			    size: new google.maps.Size(40, 40),
+			    scaledSize : new google.maps.Size(40, 40),
 			    // The origin for this image is 0,0.
 			    origin: new google.maps.Point(0,0),
 			    // The anchor for this image is the base of the flagpole at 0,32.
@@ -525,6 +528,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		
 		$http({ method  : 'GET', url : getComparisonUrl })
 		.success(function(data) { $scope.model.selectedUserComparison = data; });
+		$scope.loadMap();
 		
 		var getChatroomUrl = "/chatrooms/get/user/" + getRefParam($scope.model.currentUser.user.ref,2) + "/"+ getRefParam($scope.model.selectedUser.ref,2);
 
@@ -538,9 +542,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 	
 	$scope.onClickClique = function(clique) { 
-
 		$scope.model.currentSelection = "cliques.clique";
+		$scope.model.currentCliqueRef = getRefParam(clique.ref,2);
+		var getCliqueUrl = $scope.model.currentUser.user.ref + clique.ref;
 
+		console.log("get clique url: " + getCliqueUrl);
 
 		var getChatroomUrl = "/chatrooms/get/clique/" + encodeURIComponent(clique.name);
 		console.log("getting chatroom "+getChatroomUrl);
@@ -556,12 +562,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$http({ method  : 'GET', url : getCliqueUrl })
 		.success(function(data) { 
 			 $scope.model.selectedClique = data;
-			$scope.model.currentSelectionTitle =  $scope.model.selectedClique["_embedded"]["clique-name"];
+			 $scope.model.currentSelectionTitle =  $scope.model.selectedClique["_embedded"]["clique-name"];
 			 $scope.model.selectedClique.cliqueMembers = $scope.model.selectedClique["_embedded"]["clique-members"];
 			 
 			 console.log("clique data:");
 			 console.log(data);
 		});
+		$scope.loadMap();
 	}
 	
 	$scope.getUserNameForMessage = function(message)

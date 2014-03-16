@@ -15,8 +15,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -54,6 +57,7 @@ import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Session;
 import com.clickd.server.model.User;
+import com.clickd.server.utilities.Constants;
 import com.clickd.server.utilities.Utilities;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -751,11 +755,45 @@ public class UserResource {
 	
 	@GET
 	@Timed
+	@Path("/auth/response")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response handleResponse() {
+		System.out.println("\n\nhandleResponse() called with");
+
+		try {
+//			String url = "https://secure.meetup.com/oauth2/authorize?client_id=741959166e521922252746d4621964&response_type=token&redirect_uri=app.clickd.com/users/auth/response";
+//			String data = Utilities.getFromUrl(url);
+			return Response.status(200).entity(new String("ok")).build();
+
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+
+	@GET
+	@Timed
+	@Path("/auth")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response mSignIn() {
+		try {
+			String url = "https://secure.meetup.com/oauth2/authorize?client_id=741959166e521922252746d4621964&response_type=token&redirect_uri=app.clickd.com/users/auth/response";
+			String data = Utilities.getFromUrl(url);
+			return Response.status(200).entity(new String("ok")).build();
+
+		} catch (Exception e) {
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	@GET
+	@Timed
 	@Path("/places/map/{userRef}/{currentSelection}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCheckinsForMap(@PathParam("userRef") String userRef, @PathParam("currentSelection") String currentSelection) {
 		System.out.println("\n\ngetCheckinsForMap() called with [" + currentSelection + "]");
 		List<Checkin> results = new ArrayList<Checkin>();
+		
+		// Map for candidates
 		if (currentSelection.equals("candidates")) {
 			try {
 				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
@@ -798,16 +836,15 @@ public class UserResource {
 			String candidateRef = currentSelection.substring(currentSelection.indexOf("=") + 1);
 			candidateRef = "/users/" + candidateRef;
 			try {
-				List<CandidateResponse> responseList = (List<CandidateResponse>) getCandidates(userRef).getEntity();
 				List<Checkin> allCheckins = checkinDao.findAll();
-				
 				for (Checkin checkin : allCheckins) {
 					Link userLink = checkin.getLinkByName("user");
 					User user = userDao.findByRef(userLink.getHref());
 					// Only candidate(s) filter
 					boolean inCandidateCheckins = false;
 					// ONLY THE CANDIDATE AND ME
-					if (candidateRef.equals(checkin.getLinkByName("user").getHref()) || checkin.getLinkByName("user").getHref().equals("/users/" + userRef) ) {
+					if (candidateRef.equals(checkin.getLinkByName("user").getHref()) 
+						|| checkin.getLinkByName("user").getHref().equals("/users/" + userRef) ) {
 						inCandidateCheckins = true;
 					}
 					if (!inCandidateCheckins) {
@@ -832,9 +869,119 @@ public class UserResource {
 			}
 		}
 		
+		// Map for cliques
+		if (currentSelection.equals("cliques")) {
+			try {
+				Set<Checkin> cliqueCheckins = new HashSet<Checkin>();
+				List<Clique> myCliques = getCliquesForUser(userRef);
+				Set<String> myCliqueMembers = new TreeSet<String>();
+				for (Clique clique : myCliques) {
+					List<Choice> matchingChoices = (List<Choice>)clique.get_Embedded().get("matching-choices");
+					for (Choice choice : matchingChoices) {
+						// Extract the clique members 
+						Link userLink = choice.getLinkByName("user");
+						String choiceUserRef = userLink.getHref();
+						myCliqueMembers.add(choiceUserRef);
+					}
+				}
+				System.out.println("User " + userRef + " has " + myCliqueMembers.size() + " total clique members");
+				
+				// For each person
+				for (String cliqueUserRef : myCliqueMembers) {
+					// Find checkins per person
+					List<Checkin> cliqueMemberCheckins = checkinDao.findForUserRef(cliqueUserRef);
+					
+					// Embed PLACE + USER for front end
+					// TODO: Revisit. This is inefficient
+					for (Checkin checkin : cliqueMemberCheckins) {
+						Link userLink = checkin.getLinkByName("user");
+						User user = userDao.findByRef(userLink.getHref());
+
+						Link placeLink = checkin.getLinkByName("place");
+						Place place = placeDao.findByRef(placeLink.getHref());
+						// DONT RETURN EMPTY PLACES
+						if (place != null) {
+							// EMBED THE USER AND PLACE - TUT TUT TUT!!!!
+							checkin.get_Embedded().put("the-user", user);
+							checkin.get_Embedded().put("the-place", place);
+							results.add(checkin);
+						}
+					}
+					// Store in checkin set
+					cliqueCheckins.addAll(cliqueMemberCheckins);
+				}
+				
+				List<Checkin> clippedResults = results.subList(0, Math.min(200, results.size()));
+				System.out.println("getMap(cliques) returning " + cliqueCheckins.size() + " checkins");
+				return Response.status(200).entity(Utilities.toJson(cliqueCheckins)).build();
+			} catch(Exception e) {
+				e.printStackTrace();
+				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+			}
+		}
+		
+		
+		// Map for cliques
+		if (currentSelection.startsWith("clique=")) {
+			String cliqueRef = currentSelection.substring(currentSelection.indexOf("=") + 1);
+			// cliqueRef = "/cliques/" + cliqueRef;
+
+			try {
+				Set<Checkin> cliqueCheckins = new HashSet<Checkin>();
+				Clique clique = getClique(userRef, cliqueRef);
+				Set<String> myCliqueMembers = new TreeSet<String>();
+				
+				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+				
+				
+				List<Choice> matchingChoices = (List<Choice>)clique.get_Embedded().get("matching-choices");
+				for (Choice choice : matchingChoices) {
+					// Extract the clique members 
+					Link userLink = choice.getLinkByName("user");
+					String choiceUserRef = userLink.getHref();
+					myCliqueMembers.add(choiceUserRef);
+				}
+				System.out.println("User " + userRef + " has " + myCliqueMembers.size() + " total clique members");
+				
+				// For each person
+				for (String cliqueUserRef : myCliqueMembers) {
+					// Find checkins per person
+					List<Checkin> cliqueMemberCheckins = checkinDao.findForUserRef(cliqueUserRef);
+					
+					// Embed PLACE + USER for front end
+					// TODO: Revisit. This is inefficient
+					for (Checkin checkin : cliqueMemberCheckins) {
+						Link userLink = checkin.getLinkByName("user");
+						User user = userDao.findByRef(userLink.getHref());
+
+						Link placeLink = checkin.getLinkByName("place");
+						Place place = placeDao.findByRef(placeLink.getHref());
+						// DONT RETURN EMPTY PLACES
+						if (place != null) {
+							// EMBED THE USER AND PLACE - TUT TUT TUT!!!!
+							checkin.get_Embedded().put("the-user", user);
+							checkin.get_Embedded().put("the-place", place);
+							results.add(checkin);
+						}
+					}
+					// Store in checkin set
+					cliqueCheckins.addAll(cliqueMemberCheckins);
+				}
+				
+				List<Checkin> clippedResults = results.subList(0, Math.min(200, results.size()));
+				System.out.println("getMap(cliques) returning " + cliqueCheckins.size() + " checkins");
+				return Response.status(200).entity(Utilities.toJson(cliqueCheckins)).build();
+			} catch(Exception e) {
+				e.printStackTrace();
+				return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+			}
+		}
+				
+		// KILL THIS WITH AN ELSE
 		return Response.status(200).entity(Utilities.toJson(results)).build();
 		
 	}
+
 	@GET
 	@Path("/{userRef}/candidates")
 	@Timed
@@ -1082,14 +1229,22 @@ public class UserResource {
 	@GET
 	@Path("/{userRef}/cliques")
 	@Timed
-	public Response getCliquesForUser(@PathParam("userRef") String userRef) {
+	public Response getCliquesForUserAsResponse(@PathParam("userRef") String userRef) {
+		try {
+			List<Clique> myCliques = getCliquesForUser(userRef);
+			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
+		}
+	}
+	
+	public List<Clique> getCliquesForUser(String userRef) {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
 			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-			List<Choice> allChoices = choiceDao.findAll();
-			
 			for (Choice myChoice : myChoices)
 			{
 				//now get list of users who made that choice
@@ -1099,11 +1254,9 @@ public class UserResource {
 				
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
-				
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
-				
-				
-				
+				thisClique.get_Embedded().put("matching-choices", matchingChoices);
+				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
 				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
 				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
@@ -1116,47 +1269,49 @@ public class UserResource {
 					return cl2.getCliqueSize() - cl1.getCliqueSize();
 				}
 			});
-			
-			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
+			return myCliques;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 
+			return null;
+		}
+	}
+	
+	
+	public Clique getClique(String userRef, String cliqueRef) {
+		try {
+			ArrayList <User> cliqueUsers = new ArrayList();
+			Choice myChoice = choiceDao.findByRef("/choices/"+cliqueRef);
+			Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
+			User me = userDao.findByRef("/users/"+userRef);
+			Clique thisClique = new Clique(me, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
+			thisClique.get_Embedded().put("clique-choice", myChoice);
+			
+			List<Choice> usersWithSameChoice = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), question.getRef());
+			for (Choice userChoice : usersWithSameChoice)
+			{
+				if (!userChoice.getLinkByName("user").getHref().equals("/users/"+userRef))
+				{
+					User thisUser = userDao.findByRef(userChoice.getLinkByName("user").getHref());
+					cliqueUsers.add(thisUser);
+				}
+			}
+			String cliqueName = getProcessedCliqueName(question, myChoice);
+			thisClique.get_Embedded().put("clique-members", cliqueUsers);
+			thisClique.get_Embedded().put("clique-name", cliqueName);
+			thisClique.setRef(question.getRef());
+			return thisClique;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	
 	@GET
 	@Path("/{userRef}/cliques/{cliqueRef}")
 	@Timed
-	public Response getClique(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
+	public Response getCliqueResponse(@PathParam("userRef") String userRef, @PathParam("cliqueRef") String cliqueRef) {
 		try {
-			ArrayList <User> cliqueUsers = new ArrayList();
-				Choice myChoice = choiceDao.findByRef("/choices/"+cliqueRef);
-				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
-				
-				User me = userDao.findByRef("/users/"+userRef);
-				
-				Clique thisClique = new Clique(me, new Date(), new Date(), "system", question.getTags().toString()+" "+myChoice.getAnswerText());
-				thisClique.get_Embedded().put("clique-choice", myChoice);
-				
-				
-				
-				List<Choice> usersWithSameChoice = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), question.getRef());
-				
-				for (Choice userChoice : usersWithSameChoice)
-				{
-					if (!userChoice.getLinkByName("user").getHref().equals("/users/"+userRef))
-					{
-						User thisUser = userDao.findByRef(userChoice.getLinkByName("user").getHref());
-						cliqueUsers.add(thisUser);
-					}
-				}
-
-				String cliqueName = getProcessedCliqueName(question, myChoice);
-
-				thisClique.get_Embedded().put("clique-members", cliqueUsers);
-				thisClique.get_Embedded().put("clique-name", cliqueName);
-				
-				thisClique.setRef(question.getRef());
+			Clique thisClique = getClique(userRef, cliqueRef);
 			return Response.status(200).entity(Utilities.toJson(thisClique)).build();
 		} catch (Exception e) {
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build(); 

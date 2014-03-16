@@ -1,5 +1,6 @@
 package com.clickd.server.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,17 @@ public class CheckinDao implements InitializingBean {
 
 	public Checkin findByRef(String ref) {
 		return cache.get(ref);
+	}
+	
+	public List<Checkin> findForUserRef(String userRef) {
+		List<Checkin> results = new ArrayList<Checkin>();
+		for (String key : cache.keySet()) {
+			Checkin checkin = cache.get(key);
+			if (checkin.getLinkByName("user").getHref().equals(userRef)) {
+				results.add(checkin);
+			}
+		}
+		return results;
 	}
 
 	@Override
