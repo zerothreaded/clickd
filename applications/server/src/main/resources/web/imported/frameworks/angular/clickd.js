@@ -526,7 +526,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$http({ method  : 'GET', url : getComparisonUrl })
 		.success(function(data) { $scope.model.selectedUserComparison = data; });
 		
-		var getChatroomUrl = "/chatrooms/get/user/" + userRef + "/"+ getRefParam($scope.model.selectedUser.ref,2);
+		var getChatroomUrl = "/chatrooms/get/user/" + getRefParam($scope.model.currentUser.user.ref,2) + "/"+ getRefParam($scope.model.selectedUser.ref,2);
 
 		$http({ method  : 'POST', url : getChatroomUrl })
 		.success(function(data) { 
