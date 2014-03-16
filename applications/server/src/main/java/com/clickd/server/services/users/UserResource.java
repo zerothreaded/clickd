@@ -994,7 +994,16 @@ public class UserResource {
 			ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
 
 			
+			System.out.println("getCandidates() searching [" + myChoices.size() + "]");
 			for (Choice choice : myChoices) {
+				Question choiceQuestion = questionDao.findByRef(choice.getLinkByName("question").getHref());
+				if (choiceQuestion != null) {
+					System.out.println(choiceQuestion.getQuestionText() );
+				} else {
+					System.out.println("NO CHOICE QUESTION for choice :" + choice.getRef());
+					
+				}
+
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
 
@@ -1007,9 +1016,6 @@ public class UserResource {
 						continue;
 					
 					boolean toSkip = false;
-					/*if (otherUser.getGender().equals(user.getGender()))
-						toSkip = true;*/
-						
 						boolean alreadyExists = false;
 						for (CandidateResponse responseRow : responseList) {
 							if (responseRow.getUser().getRef().equals(otherUserLink.getHref())) {
@@ -1049,7 +1055,6 @@ public class UserResource {
 					return cr2.getScore() - cr1.getScore();
 				}
 			});
-			
 			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 13))).build();
 		} catch (Exception e) {
 			e.printStackTrace();
