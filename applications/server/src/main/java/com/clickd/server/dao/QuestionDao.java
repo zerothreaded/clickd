@@ -70,7 +70,8 @@ public class QuestionDao implements InitializingBean {
 //	}
 
 	public Question findByRef(String ref) {
-		return cache.get(ref);
+		Question question =  cache.get(ref);
+		return question;
 	}
 	
 	public Question findByTags(String tag)

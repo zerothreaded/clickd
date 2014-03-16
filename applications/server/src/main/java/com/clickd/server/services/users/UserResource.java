@@ -994,10 +994,19 @@ public class UserResource {
 			ArrayList<Connection> myConnections = (ArrayList<Connection>)connectionDao.findAllByUserRef("/users/" + userRef);
 
 			
+			System.out.println("getCandidates() searching [" + myChoices.size() + "]");
 			for (Choice choice : myChoices) {
+				Question choiceQuestion = questionDao.findByRef(choice.getLinkByName("question").getHref());
+				if (choiceQuestion != null) {
+					System.out.println(choiceQuestion.getQuestionText() );
+				} else {
+					System.out.println("NO CHOICE QUESTION for choice :" + choice.getRef());
+					
+				}
+
 				ArrayList<Choice> sameAnswerChoices = new ArrayList<Choice>();
 				sameAnswerChoices.addAll(choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(choice.getAnswerText(), choice.getLinkByName("question").getHref()));
-				System.out.println("Same Answer Choices Count = [" + sameAnswerChoices.size() + "]");
+				// System.out.println("Same Answer Choices Count = [" + sameAnswerChoices.size() + "]");
 
 				// Now we have all the choices that gave the same answer
 				// Get the users that gave them, filter out ourself and score candidates
