@@ -294,7 +294,7 @@ img.connect-profile-img {
 
 .click-question-img
 {
-	height:390px;
+	height:calc(100% - 220px);
 }
 
 .click-panel {
