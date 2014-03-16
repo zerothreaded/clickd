@@ -1047,8 +1047,7 @@ public class UserResource {
 					return cr2.getScore() - cr1.getScore();
 				}
 			});
-			
-			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 200))).build();
+			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 13))).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
@@ -1151,7 +1150,8 @@ public class UserResource {
 				}
 			}
 			
-			return Response.status(200).entity(Utilities.toJson(userConnectionsResponse)).build();
+			
+			return Response.status(200).entity(Utilities.toJson( userConnectionsResponse.subList(0, Math.min(13, userConnectionsResponse.size())))).build();
 		}
 		catch (Exception e)
 		{
@@ -1229,6 +1229,8 @@ public class UserResource {
 	public Response getCliquesForUserAsResponse(@PathParam("userRef") String userRef) {
 		try {
 			List<Clique> myCliques = getCliquesForUser(userRef);
+			myCliques = myCliques.subList(0, Math.min(13, myCliques.size()));
+
 			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
 		} catch (Exception e) {
 			e.printStackTrace();

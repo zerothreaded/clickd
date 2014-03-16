@@ -25,11 +25,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			// Users Connections
 			"connections" : [ ],
-			"connectionsShowMenu" : true,
+			"connectionsShowMenu" : false,
 			
 			// Users Cliques
 			"cliques" : [ ],
-			"cliquesShowMenu" : true,
+			"cliquesShowMenu" : false,
 			
 			// Questions and Answers
 			"currentQuestion" : { },
@@ -77,7 +77,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$timeout(function(){
 				$scope.updateChatroom();
 			},90000);	
-	}
+	};
 	
 	
 	// Form Data

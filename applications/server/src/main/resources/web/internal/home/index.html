@@ -353,7 +353,10 @@ d3.select("div").style("height", diameter + "px");
 			<div class="row">
 				<div class="col-sm-2 sidebar">
 					<!-- NAVIGATOR -->
-					<a href="" ng-click="onClickCandidates()"><h4>Candidates</h4></a>
+					<a href="" ng-click="onClickCandidates()"  ><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isCandidatesMenuOn()}" >Candidates</h4></a>
+					<a href="" ng-click="onClickConnections()"><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isConnectionsMenuOn()}">Connections</h4></a>
+					<a href="" ng-click="onClickCliques()"><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isCliquesMenuOn()}">Cliques</h4></a>
+		
 					<div ng-if="isCandidatesMenuOn()" class="list-group">
 							<a class="list-group-item" ng-repeat="candidate in model.currentUser.candidates"
 							ng-click="onClickCandidate({{candidate.user}})" href="#"
@@ -362,8 +365,6 @@ d3.select("div").style("height", diameter + "px");
 								&nbsp;<img class="small-profile-img" ng-src="/profile-img{{candidate.user.ref}}.jpg">
 								{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
 					</div>	
-					<hr/>
-					<a href="" ng-click="onClickConnections()"><h4>Connections</h4></a>
 					<div ng-if="isConnectionsMenuOn()"  class="list-group">
 						<a class="list-group-item"  ng-repeat="connection in model.currentUser.connections"
 						ng-click="onClickConnection({{connection}})" href="#"
@@ -373,8 +374,6 @@ d3.select("div").style("height", diameter + "px");
 								{{connection.firstName}}
 							</a>
 					</div>
-					<hr/>
-					<a href="" ng-click="onClickCliques()"><h4>Cliques</h4></a>
 					<div ng-if="isCliquesMenuOn()"  class="list-group">
 						<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
 						ng-click="onClickClique({{clique}})" href="#"
@@ -382,7 +381,6 @@ d3.select("div").style("height", diameter + "px");
 									&nbsp;{{clique.name}}  <span class="badge small-badge">{{clique.cliqueSize-1}}</span>
 						</a>
 					</div>
-					<hr/>
 				
 				<div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 524.2330623306233px;" ></div>
 				<div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;" ></div>
@@ -531,7 +529,7 @@ d3.select("div").style("height", diameter + "px");
 						</div>
 						
 						<br/>
-						<img ng-src="{{model.currentUser.currentQuestion.type}}" width="300" height="450"/>
+						<img ng-src="{{model.currentUser.currentQuestion.type}}" class="click-question-img"/>
 						
 						<div class="panel-body click-panel-body" id="click-panel-answers">
 							<!--  Answers for this question -->
@@ -541,6 +539,12 @@ d3.select("div").style("height", diameter + "px");
 										<span class="click-answer-span">{{answer}}</span>
 									</div>
 								</div>
+									<div class="col-sm-4" >
+									<div align="center"  class="click-answer-panel" ng-click="loadNextQuestion()" >
+										<span class="click-answer-span">Skip</span>
+									</div>
+								</div>
+								
 									<!--
 									<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
 									-->
@@ -565,7 +569,6 @@ d3.select("div").style("height", diameter + "px");
 							</div>
 						</div>
 					</div>
-					<button class="btn btn-large" id="button-skip-question" ng-click="loadNextQuestion()">Skip Question</button>
 					<!--
 					<iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ&view=coverart"  seamless="seamless" width="80px" height="80px" frameborder="0" allowtransparency="true"></iframe>
 					-->
