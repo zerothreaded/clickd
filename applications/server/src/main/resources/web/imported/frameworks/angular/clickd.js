@@ -519,13 +519,22 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 		});
 		
-		var getComparisonUrl = $scope.model.currentUser.user.ref + "/candidates/comparison/"+ getRefParam(otherUserRef,2);
+		var getComparisonUrl = $scope.model.currentUser.user.ref + "/candidates/comparison/"+ getRefParam($scope.model.selectedUser.ref,2);
 		
 		console.log(getComparisonUrl);
 		
 		$http({ method  : 'GET', url : getComparisonUrl })
 		.success(function(data) { $scope.model.selectedUserComparison = data; });
 		
+		var getChatroomUrl = "/chatrooms/get/user/" + userRef + "/"+ getRefParam($scope.model.selectedUser.ref,2);
+
+		$http({ method  : 'POST', url : getChatroomUrl })
+		.success(function(data) { 
+			console.log("got chatroom "+data.ref);
+			data.messages = data["_embedded"]["message-list"];
+
+			$scope.model.selectedChatroom = data; 
+			});
 	}
 	
 	$scope.onClickClique = function(clique) { 
