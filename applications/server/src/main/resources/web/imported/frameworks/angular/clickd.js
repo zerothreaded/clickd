@@ -76,8 +76,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$timeout(function(){
 				$scope.updateChatroom();
-			},3000);	
-	};
+			},90000);	
+	}
 	
 	
 	// Form Data

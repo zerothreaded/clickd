@@ -1008,9 +1008,6 @@ public class UserResource {
 						continue;
 					
 					boolean toSkip = false;
-					/*if (otherUser.getGender().equals(user.getGender()))
-						toSkip = true;*/
-						
 						boolean alreadyExists = false;
 						for (CandidateResponse responseRow : responseList) {
 							if (responseRow.getUser().getRef().equals(otherUserLink.getHref())) {
@@ -1051,7 +1048,7 @@ public class UserResource {
 				}
 			});
 			
-			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 15))).build();
+			return Response.status(200).entity(responseList.subList(0, Math.min(responseList.size(), 200))).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
