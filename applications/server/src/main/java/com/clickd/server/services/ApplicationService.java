@@ -6,7 +6,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.clickd.server.dao.ChatroomDao;
 import com.clickd.server.services.answers.AnswerResource;
+import com.clickd.server.services.chatrooms.ChatroomResource;
 import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.integration.facebook.UserImportResource;
 import com.clickd.server.services.places.PlaceResource;
@@ -74,10 +76,8 @@ public class ApplicationService extends Service<UserConfiguration> {
 		ChoiceResource choiceResource = context.getBean(ChoiceResource.class);
 		environment.addResource(choiceResource);
 		
-//		// /chatrooms/*
-//		ChatroomResource chatroomResource = new ChatroomResource();
-//		chatroomResource.setChatroomDao(chatroomDao);
-//		environment.addResource(chatroomResource);
+		ChatroomResource chatroomResource = context.getBean(ChatroomResource.class);
+		environment.addResource(chatroomResource);
 		
 		PlaceResource placeResource = context.getBean(PlaceResource.class);
 		environment.addResource(placeResource);

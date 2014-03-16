@@ -11,6 +11,7 @@ public class Chatroom extends Resource {
 	protected String id;
 	protected String ref;
 	protected String chatroomType;
+	private String name;
 
 	public Chatroom() {
 		super();
@@ -21,7 +22,7 @@ public class Chatroom extends Resource {
 		this.chatroomType = chatroomType;
 		createRef();
 		this.addLinkLists("member-list", new ArrayList<Link>());
-		this.get_Embedded().put("post-list", new ArrayList<Post>());
+		this.get_Embedded().put("message-list", new ArrayList<ChatMessage>());
 	}
 
 	private void createRef() {
@@ -53,6 +54,14 @@ public class Chatroom extends Resource {
 
 	public void setRef(String ref) {
 		this.ref = ref;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

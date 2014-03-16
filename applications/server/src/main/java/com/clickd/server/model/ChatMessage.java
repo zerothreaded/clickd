@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class Post extends Resource {
+public class ChatMessage extends Resource {
 
 	@Id
 	protected String id;
@@ -16,6 +16,7 @@ public class Post extends Resource {
 	protected String postText;
 	
 	protected Date dateCreated;
+	protected User userFrom;
 
 	public Date getDateCreated() {
 		return dateCreated;
@@ -25,13 +26,13 @@ public class Post extends Resource {
 		this.dateCreated = dateCreated;
 	}
 
-	public Post() {
+	public ChatMessage() {
 		super();
 		createRef();
 	}
 
-	public Post(String userRef, String postText, Date date) {
-		this.userRef = userRef;
+	public ChatMessage(User user, String postText, Date date) {
+		this.userFrom = user;
 		this.postText = postText;
 		this.dateCreated = date;
 		// TODO Auto-generated constructor stub

@@ -54,7 +54,7 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
-	<bean id="postDao" class="com.clickd.server.dao.PostDao">
+	<bean id="chatMessageDao" class="com.clickd.server.dao.ChatMessageDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
@@ -101,5 +101,7 @@
 	<bean id="televisionResource" class="com.clickd.server.services.television.TelevisionResource" />
 
 	<bean id="likeResource" class="com.clickd.server.services.likes.LikeResource" />
+
+	<bean id="chatroomResource" class="com.clickd.server.services.chatrooms.ChatroomResource" />
 
 </beans>
