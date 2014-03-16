@@ -414,12 +414,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'candidates';
         $scope.model.currentSelectionTitle = "Your candidates";
+		$scope.model.currentUser.candidatesShowMenu = true;
+		$scope.model.currentUser.connectionsShowMenu = false;
+		$scope.model.currentUser.cliquesShowMenu = false;
 
-		if ($scope.model.currentUser.candidatesShowMenu == true) {
-			$scope.model.currentUser.candidatesShowMenu = true;
-		} else {
-			$scope.model.currentUser.candidatesShowMenu = true;
-		}
 		$scope.loadMap();
 	}
 	
@@ -427,12 +425,11 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	{
 		$scope.model.currentSelection = 'connections';
         $scope.model.currentSelectionTitle = "Your connections";
-
-		if ($scope.model.currentUser.connectionsShowMenu == true) {
-			$scope.model.currentUser.connectionsShowMenu = true;
-		} else {
-			$scope.model.currentUser.connectionsShowMenu = true;
-		}
+        
+		$scope.model.currentUser.candidatesShowMenu = false;
+		$scope.model.currentUser.connectionsShowMenu = true;
+		$scope.model.currentUser.cliquesShowMenu = false;
+		
 		$scope.loadMap();
 	}
 	
@@ -441,11 +438,10 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.currentSelection = 'cliques';
         $scope.model.currentSelectionTitle = "Your cliques";
 
-		if ($scope.model.currentUser.cliquesShowMenu == true) {
-			$scope.model.currentUser.cliquesShowMenu = true;
-		} else {
-			$scope.model.currentUser.cliquesShowMenu = true;
-		}
+		$scope.model.currentUser.candidatesShowMenu = false;
+		$scope.model.currentUser.connectionsShowMenu = false;
+		$scope.model.currentUser.cliquesShowMenu = true;
+		
 		$scope.loadMap();
 	}
 	
