@@ -102,10 +102,10 @@ public class QuestionResource {
 	{
 		try
 		{
-			Television movie = televisionDao.findByRef(televisionHref);
-			String movieImageUrl = movie.getPosterImageUrl();
+			Television television = televisionDao.findByRef(televisionHref);
+			String televisionImageUrl = television.getPosterImageUrl();
 			
-			if (movieImageUrl == null)
+			if (televisionImageUrl == null)
 				return false;
 			
 			// Get the MOVIES IMDB image and save it locally
@@ -113,11 +113,13 @@ public class QuestionResource {
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
 			 }
-			String targetFileName = dataDir + televisionHref + ".jpg";
+			String targetFileName = dataDir + televisionHref.substring(1) + ".jpg";
+			if (targetFileName.contains("\\"))
+				targetFileName = targetFileName.replace("television/", "television\\");
 			File file = new File(targetFileName);
 			if (!file.exists()) {
 				System.out.println("Getting friends Image..");
-				 URL url = new URL(movieImageUrl);
+				 URL url = new URL(televisionImageUrl);
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();
 				 byte[] buf = new byte[1024];
@@ -190,13 +192,17 @@ public class QuestionResource {
 								continue;
 							toReturn.get_Embedded().put("image-url", "/profile-img/users/" +  movieHref + ".jpg");
 							toReturn.setImg("/profile-img/users" +  movieHref + ".jpg");
-						} else if (tags.equals("fb.tlevision"))
+						} else if (tags.equals("fb.televisions"))
 						{
 							String televisionHref = toReturn.getLinkByName("television-data").getHref();
-							conditionalGetTelevisionImage(televisionHref);
-
+							boolean gotImage = conditionalGetTelevisionImage(televisionHref);
+							if (!gotImage)
+								continue;
+							else
+							{
 							toReturn.get_Embedded().put("image-url", "/profile-img/users/" +  televisionHref + ".jpg");
 							toReturn.setImg("/profile-img/users" +  televisionHref + ".jpg");
+							}
 						}
 						else
 						{
