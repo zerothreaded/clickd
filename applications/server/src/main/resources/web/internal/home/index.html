@@ -523,7 +523,7 @@ d3.select("div").style("height", diameter + "px");
 					<!-- If there are questions -->
 					<div ng-if="moreQuestionsToAsk()" class="panel click-panel">
 						<div class="panel-heading click-panel-heading"">
-							<h3 class="click-panel-heading-h2">{{model.currentUser.currentQuestion.questionText}}
+							<h3 class="click-panel-heading-h2"><img src="/web/internal/home/images/countdown.gif" id="countdown-img" width=50px height=50px align=left>{{model.currentUser.currentQuestion.questionText}}
 							</h3>
 							
 						</div>
@@ -540,7 +540,7 @@ d3.select("div").style("height", diameter + "px");
 									</div>
 								</div>
 									<div class="col-sm-4" >
-									<div align="center"  class="click-answer-panel" ng-click="loadNextQuestion()" >
+									<div align="center"  class="click-answer-panel" ng-click="onSelectAnswer({{model.currentUser.currentQuestion}}, 'skip')" >
 										<span class="click-answer-span">Skip</span>
 									</div>
 								</div>

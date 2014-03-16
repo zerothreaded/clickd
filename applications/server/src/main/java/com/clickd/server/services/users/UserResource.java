@@ -1250,6 +1250,9 @@ public class UserResource {
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			for (Choice myChoice : myChoices)
 			{
+				if (myChoice.getAnswerText().equals("skip"))
+					continue;
+				
 				//now get list of users who made that choice
 				Question question = questionDao.findByRef(myChoice.getLinkByName("question").getHref());
 				

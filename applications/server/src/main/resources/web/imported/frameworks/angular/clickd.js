@@ -32,7 +32,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			"cliquesShowMenu" : false,
 			
 			// Questions and Answers
-			"currentQuestion" : { },
+			"currentQuestion" : { "ref": -1 },
 			"currentAnswers" : [ ]
 		},
 		
@@ -45,6 +45,22 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.init = function () {
 			$scope.updateChatroom();
+			$scope.nextQuestionTimer();
+			
+			$scope.questionTimer = $timeout(function(){
+				$scope.nextQuestionTimer();
+			},10000);
+	}
+	
+	$scope.nextQuestionTimer = function()
+	{ 
+		console.log("nextQuestionTimer");
+		if ($scope.model.currentUser.currentQuestion.ref != -1)
+		{
+			$scope.onSelectAnswer($scope.model.currentUser.currentQuestion, 'skip');
+		}
+			
+
 	}
 	
 	$scope.updateChatroom = function() {
@@ -223,7 +239,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 					});
 			
 			// Load Google Maps
-			$scope.loadMap();
+		//	$scope.loadMap();
 			
 			
 		}
@@ -281,6 +297,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		.success(function(msg) {
 			$scope.loadNextQuestion();
 			$scope.controlFlags.blockSelectAnswer = false;
+			
+			$("#countdown-img").attr("src", "/web/internal/home/images/countdown.gif?x="+Math.random());
+
+			$timeout.cancel($scope.questionTimer);
+			$scope.questionTimer = $timeout(function(){
+				$scope.nextQuestionTimer();
+			},10000);	
 		});
 	}
 	
