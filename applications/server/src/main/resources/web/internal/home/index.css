@@ -268,7 +268,7 @@ img.connect-profile-img {
 
 .chat-well {
 	height: 100%;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 .click-well {
@@ -277,7 +277,7 @@ img.connect-profile-img {
 
 .content-row {
 	height: 40%;
-	padding: 10px;
+	padding: 0px;
 	padding-right: 0px;
 	padding-bottom: 0px;
 }
@@ -289,12 +289,18 @@ img.connect-profile-img {
 }
 
 .click-col {
-	padding: 10px;
+	padding: 0px;
+}
+
+.click-question-img
+{
+	height:390px;
 }
 
 .click-panel {
 	border-radius: 4px;
 	padding: 5px;
+	text-align:center;
 }
 
 .click-panel-heading {
@@ -320,7 +326,7 @@ img.connect-profile-img {
 }
 
 .click-answer-panel {
-	height:70px;
+	height:40px;
 	border: 1px solid rgb(201, 201, 201);
 	padding: 5px;
 	border-radius: 4px;
@@ -369,7 +375,7 @@ img.connect-profile-img {
 #content-window
 {
 	padding-top:4px;
-	overflow-y:scroll;
+	overflow-y:hidden;
 }
 
  #content-window h4
@@ -443,8 +449,10 @@ a.list-group-item:hover, a.list-group-item:focus
 
 .list-group
 {
-	overflow-y:scroll;
-	max-height:300px;
+	overflow-y:hidden;
+	height: calc(100% - 140px);
+	background-color:#495B6C;
+	border-radius:4px;
 }
 
 .login-error
@@ -1707,3 +1715,24 @@ body .ui-tooltip {
 }
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.highlightMenuBtn
+{
+	background-color:#428bca;
+	border-radius:3px;
+	color:white;
+}
+.menu-open-btn
+{
+		padding:5px;
+}
+
+.sidebar a:hover
+{
+	text-decoration:none;
+}
+
+.click-well
+{
+	padding:0px;
+}
