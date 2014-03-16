@@ -617,7 +617,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(200, response.getStatus());
 		
 		// Get Cliques for Ralph
-		Response getCliquesResponse = userResource.getCliquesForUser(userRefRalph);
+		Response getCliquesResponse = userResource.getCliquesForUserAsResponse(userRefRalph);
 		Assert.assertEquals(200, getCliquesResponse.getStatus());
 		
 		// Verify Cliques match choices

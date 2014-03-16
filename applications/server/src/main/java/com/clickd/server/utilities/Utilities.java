@@ -134,8 +134,7 @@ public class Utilities {
 	
 	public static String getFromUrl(String urlStr) throws IOException {
 		  URL url = new URL(urlStr);
-		  HttpURLConnection conn =
-		      (HttpURLConnection) url.openConnection();
+		  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		  if (conn.getResponseCode() != 200) {
 			  //throw new IOException(conn.getResponseMessage());

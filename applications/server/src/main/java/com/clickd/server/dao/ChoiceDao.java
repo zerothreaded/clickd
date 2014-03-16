@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -14,10 +13,6 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
-import com.clickd.server.model.Question;
-import com.clickd.server.model.Resource;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class ChoiceDao implements InitializingBean {
 
