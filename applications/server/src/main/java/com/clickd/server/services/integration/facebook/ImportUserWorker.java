@@ -548,7 +548,9 @@ public class ImportUserWorker implements Runnable {
 	public User createUserFromFacebookData(String facebookData)
 	{
 		try {
-			//System.out.println("createUserFromFacebookData() Starting for " + facebookData);
+			if (userDao.findByRef("/users/" +this.friendId) != null) {
+				return null;
+			}
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
 
 			// Create the new user
@@ -565,7 +567,7 @@ public class ImportUserWorker implements Runnable {
 			}
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
 			newUser.setPassword("fb99");
-			newUser.setRef("/users/"+(String)map.get("id"));
+			newUser.setRef("/users/" + (String)map.get("id"));
 			getUserDao().create(newUser);
 			
 			// Get the Users FB image and save it locally
@@ -651,10 +653,13 @@ public class ImportUserWorker implements Runnable {
 		try {
 			this.facebookUserData = Utilities.getFromUrl(meUrl);
 			User newUser = createUserFromFacebookData(this.facebookUserData);
-			importUserData(this.friendId, this.facebookUserData, this.accessToken, newUser);
-			System.out.println("imported "+newUser.getFirstName()+" "+newUser.getLastName());
+			if (newUser != null) {
+				importUserData(this.friendId, this.facebookUserData, this.accessToken, newUser);
+				System.out.println("imported "+newUser.getFirstName()+" "+newUser.getLastName());
+			} else {
+				System.out.println("Not Importing User Id : " + this.friendId);
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

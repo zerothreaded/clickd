@@ -124,22 +124,25 @@ public class UserImportResource {
 			String accesssTokenExpiry = dataArray[1].substring(dataArray[1].indexOf("=")+1); //access expiry
 
 			// STEP 1 : Get $ME data
-	
 			
 			// Check if the user exists
-				// New imported user
-				ImportUserWorker worker = new ImportUserWorker("me", accessToken);
-				worker.setUserDao(userDao);
-				worker.setQuestionDao(questionDao);
-				worker.setChoiceDao(choiceDao);
-				worker.setCheckinDao(checkinDao);
-				worker.setBookDao(bookDao);
-				worker.setTelevisionDao(televisionDao);
-				worker.setPlaceDao(placeDao);
-				worker.setMovieDao(movieDao);
-				worker.setLikeDao(likeDao);
-				Thread t = new Thread(worker);
-				t.start();
+			// New imported user
+			String myUrl  = "https://graph.facebook.com/me/?access_token="+accessToken;
+			String myData = Utilities.getFromUrl(myUrl);
+			Map<String,Object> myDataMap = Utilities.fromJson(myData);
+			ImportUserWorker worker = new ImportUserWorker((String)myDataMap.get("id"), accessToken);
+			
+			worker.setUserDao(userDao);
+			worker.setQuestionDao(questionDao);
+			worker.setChoiceDao(choiceDao);
+			worker.setCheckinDao(checkinDao);
+			worker.setBookDao(bookDao);
+			worker.setTelevisionDao(televisionDao);
+			worker.setPlaceDao(placeDao);
+			worker.setMovieDao(movieDao);
+			worker.setLikeDao(likeDao);
+			Thread t = new Thread(worker);
+			t.start();
 			
 		//	importUserData("me", meData, accessToken, user);
 				
@@ -150,7 +153,7 @@ public class UserImportResource {
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			System.out.println("gotFriendsList() with : " + friendsListData.size());
 			
-			int thread_limit = 1;
+			int thread_limit = 50;
 	        ExecutorService executor = Executors.newFixedThreadPool(thread_limit);
 
 	        int maxFriends = 1;
