@@ -283,6 +283,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			if (typeof(msg["status"]) == 'undefined') {
 				var answerRule = msg["answerRule"];
 				questionRef = msg["ref"];
+				console.log('QQQQQQ=' + questionRef);
 				questionRef = questionRef.split("/")[2];
 				var answers = answerRule.split("|");
 				var questionText = msg.questionText;
