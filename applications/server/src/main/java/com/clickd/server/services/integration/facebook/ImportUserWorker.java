@@ -569,7 +569,11 @@ public class ImportUserWorker implements Runnable {
 			getUserDao().create(newUser);
 			
 			// Get the Users FB image and save it locally
-			String targetFileName = "C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg";
+			 String dataDir = System.getProperty("dataDir");
+			 if (null == dataDir) {
+				 dataDir = "C:\\sandbox\\data\\profile-img\\";
+			 }
+			String targetFileName = dataDir + (String)map.get("id").toString()+".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
 				System.out.println("Getting friends Image..");
