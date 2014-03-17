@@ -58,7 +58,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},10000);
+			},60000);
 	}
 	
 	$scope.nextQuestionTimer = function()
@@ -283,6 +283,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			if (typeof(msg["status"]) == 'undefined') {
 				var answerRule = msg["answerRule"];
 				questionRef = msg["ref"];
+				console.log(JSON.stringify(msg));
 				console.log('QQQQQQ=' + questionRef);
 				questionRef = questionRef.split("/")[2];
 				var answers = answerRule.split("|");
@@ -320,7 +321,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$timeout.cancel($scope.questionTimer);
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},10000);	
+			},60000);	
 			
 			$scope.updateCCC();
 		});

@@ -592,7 +592,7 @@ public class ImportUserWorker implements Runnable {
 				 out.close();
 				 in.close();
 				 byte[] response = out.toByteArray();
-				 FileOutputStream fos = new FileOutputStream(dataDir + "/profile-img/users/" + (String)map.get("id").toString()+".jpg");
+				 FileOutputStream fos = new FileOutputStream(dataDir + "/users/" + (String)map.get("id").toString()+".jpg");
 				 fos.write(response);
 				 fos.close();
 				 System.out.println("Saved friends Image.");
