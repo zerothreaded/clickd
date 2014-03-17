@@ -47,7 +47,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.init = function () {
 			$scope.updateChatroom();
-			$scope.nextQuestionTimer();
+			$scope.loadNextQuestion();
 			
 			var getQuestionTagsUrl = "/questions/tags/all";
 			$http({ method  : 'GET', url : getQuestionTagsUrl })
