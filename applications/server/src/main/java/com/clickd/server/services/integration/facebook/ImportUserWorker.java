@@ -572,6 +572,9 @@ public class ImportUserWorker implements Runnable {
 			 String dataDir = System.getProperty("dataDir");
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\";
+				 System.out.println("\n\nData Directory = " + dataDir);
+			 } else {
+				 System.out.println("\n\nData Directory = " + dataDir);
 			 }
 			String targetFileName = dataDir + (String)map.get("id").toString()+".jpg";
 			File file = new File(targetFileName);
@@ -589,7 +592,7 @@ public class ImportUserWorker implements Runnable {
 				 out.close();
 				 in.close();
 				 byte[] response = out.toByteArray();
-				 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg");
+				 FileOutputStream fos = new FileOutputStream(dataDir + "/profile-img/users" + (String)map.get("id").toString()+".jpg");
 				 fos.write(response);
 				 fos.close();
 				 System.out.println("Saved friends Image.");

@@ -155,7 +155,7 @@ public class UserResource {
 			 } else {
 				 System.out.println("\n\nData Directory = " + dataDir);
 			 }
-			 FileOutputStream fos = new FileOutputStream(dataDir + "/profile-img/users"+ (String)map.get("id").toString() + ".jpg");
+			 FileOutputStream fos = new FileOutputStream(dataDir + "/profile-img/users" + (String)map.get("id").toString() + ".jpg");
 			 fos.write(response);
 			 fos.close();
 			
