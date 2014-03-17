@@ -151,8 +151,11 @@ public class UserResource {
 			 String dataDir = System.getProperty("dataDir");
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\";
+				 System.out.println("\n\nData Directory = " + dataDir);
+			 } else {
+				 System.out.println("\n\nData Directory = " + dataDir);
 			 }
-			 FileOutputStream fos = new FileOutputStream(dataDir + (String)map.get("id").toString() + ".jpg");
+			 FileOutputStream fos = new FileOutputStream(dataDir + "/profile-img/users"+ (String)map.get("id").toString() + ".jpg");
 			 fos.write(response);
 			 fos.close();
 			
