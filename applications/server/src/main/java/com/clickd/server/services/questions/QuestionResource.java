@@ -64,7 +64,7 @@ public class QuestionResource {
 				return false;
 			
 			// Get the MOVIES IMDB image and save it locally
-			 String dataDir = System.getProperty("dataDir");
+			 String dataDir = System.getProperty("dataDir")+"/users";
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
 			 }
@@ -109,7 +109,7 @@ public class QuestionResource {
 				return false;
 			
 			// Get the MOVIES IMDB image and save it locally
-			 String dataDir = System.getProperty("dataDir");
+			 String dataDir = System.getProperty("dataDir")+"/users";
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
 			 }
