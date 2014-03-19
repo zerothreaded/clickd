@@ -83,16 +83,18 @@ public class ChoiceDao implements InitializingBean {
 	}
 	
 	public List<Choice> findByUserRef(String userRef) {
-		if (userChoicesCache.get(userRef) == null) {
-			userChoicesCache.put(userRef, new ArrayList<Choice>());
-		}
+//		if (userChoicesCache.get(userRef) == null) {
+//			userChoicesCache.put(userRef, new ArrayList<Choice>());
+//		}
 //		for (String key : userChoicesCache.keySet()) {
 //			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
 //		}
 		
-		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
-		return result;
+//		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
+//		return result;
 //		return userChoicesCache.get(userRef);
+		
+		return findByUserRefOLD(userRef);
 	}
 
 	public List<Choice> findByUserRefOLD(String userRef) {

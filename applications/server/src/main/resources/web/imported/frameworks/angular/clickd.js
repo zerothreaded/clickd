@@ -118,8 +118,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.resetModel = function ()
 	{
 		$scope.model.currentUser.candidatesShowMenu = true;
-		$scope.model.currentUser.connectionsShowMenu = true;
-		$scope.model.currentUser.cliquesShowMenu = true;
+		$scope.model.currentUser.connectionsShowMenu = false;
+		$scope.model.currentUser.cliquesShowMenu = false;
         $scope.model.currentSelection = "candidates";
         $scope.model.currentSelectionTitle = "Your candidates";
 		$scope.model.currentUser.isLoggedIn = false;
@@ -152,7 +152,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			urlSelection = 'clique=' + $scope.model.currentCliqueRef;
 		}
 		var mapUrl = '/users/places/map/' + $scope.model.currentUser.userRef + "/" +  urlSelection;
-		console.log("getting "+mapUrl);
+		//console.log("getting "+mapUrl);
 		// alert(mapUrl);
     	$.ajax({
 			    type: "GET",
@@ -161,12 +161,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			    success: function(data) {
 			    	var checkinsArray = data;
 		  			checkinsArray.forEach(function(checkin) {
-			  			console.log(JSON.stringify(checkin));
+			  		//	console.log(JSON.stringify(checkin));
 			  			var user = checkin["_embedded"]["the-user"];
 			  			var userId = user["ref"].split("/")[2];
 			  			var place = checkin["_embedded"]["the-place"];
 		  				var city = checkin["_embedded"]["the-place"]["city"];
-		    			console.log('City = ' + JSON.stringify(city));
+		    		//	console.log('City = ' + JSON.stringify(city));
 		    			addMarker(map, user["firstName"] + ' ' + user['lastName'] + ' was @ ' + place["name"], place["latitude"], place["longitude"], '/profile-img/users/' + userId + '.jpg');
 		  			});
 			    },
@@ -191,15 +191,15 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		};
 		var placePosition = new google.maps.LatLng(latitude, longitude);
 		
-		console.log('Place Position = ' + JSON.stringify(placePosition));
-		
+	//	console.log('Place Position = ' + JSON.stringify(placePosition));
+	
 		var placeMarker = new google.maps.Marker({
 		    position: placePosition,
 		    map: theMap,
 		    icon : placeIcon,
 		    title: name
 		});
-		console.log('Marker = ' + placeMarker);
+	//	console.log('Marker = ' + placeMarker);
 		
 		// CIRCLE
 	    var circleOptions = {
@@ -226,10 +226,12 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		var userRef = $scope.model.currentUser.userRef;
 		if (userRef != false) {
 			// alert('WTF');
+			console.log("updating ccc");
 			var getCandidatesUrl = "/users/" + userRef + "/candidates";
-			
+			console.log(getCandidatesUrl);
 			$http({ method  : 'GET', url     : getCandidatesUrl })
-			.success(function(data) { $scope.model.currentUser.candidates = data; });
+			.success(function(data) { $scope.model.currentUser.candidates = data; 
+			console.log(data);});
 			
 			$scope.model.currentUser.connections = [];
 			// REST call to get connections
