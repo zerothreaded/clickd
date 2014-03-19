@@ -64,10 +64,12 @@ public class QuestionResource {
 				return false;
 			
 			// Get the MOVIES IMDB image and save it locally
-			 String dataDir = System.getProperty("dataDir")+"/users";
+			 String dataDir = System.getProperty("dataDir");
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
 			 }
+			 else
+				 dataDir += "/users";
 			String targetFileName = dataDir + movieHref + ".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
@@ -109,10 +111,12 @@ public class QuestionResource {
 				return false;
 			
 			// Get the MOVIES IMDB image and save it locally
-			 String dataDir = System.getProperty("dataDir")+"/users";
+			 String dataDir = System.getProperty("dataDir");
 			 if (null == dataDir) {
 				 dataDir = "C:\\sandbox\\data\\profile-img\\users\\";
 			 }
+			 else
+				 dataDir += "/users";
 			String targetFileName = dataDir + televisionHref.substring(1) + ".jpg";
 			if (targetFileName.contains("\\"))
 				targetFileName = targetFileName.replace("television/", "television\\");
