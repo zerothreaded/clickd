@@ -227,9 +227,9 @@ public class ChoiceDao implements InitializingBean {
 		for (Choice choice : allChoices) {
 			cache.put(choice.getRef(), choice);
 			Link choiceUser = choice.getLinkByName("user");
-			if (userChoicesCache.get(choiceUser.getHref()) == null) {
-				userChoicesCache.put(choiceUser.getHref(), new ArrayList<Choice>());
-			}
+//			if (userChoicesCache.get(choiceUser.getHref()) == null) {
+//				userChoicesCache.put(choiceUser.getHref(), new ArrayList<Choice>());
+//			}
 			userChoicesCache.get(choiceUser.getHref()).add(choice);
 		}
 		System.out.println("Choice cache has " + cache.size() + " choices. Loaded in " + (new Date().getTime() - now) + "ms");
