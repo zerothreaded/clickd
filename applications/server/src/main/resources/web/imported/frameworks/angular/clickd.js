@@ -58,7 +58,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},10000);
+			},30000);
 	}
 	
 	$scope.nextQuestionTimer = function()
@@ -319,7 +319,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$timeout.cancel($scope.questionTimer);
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},10000);	
+			},30000);	
 			
 			$scope.updateCCC();
 		});

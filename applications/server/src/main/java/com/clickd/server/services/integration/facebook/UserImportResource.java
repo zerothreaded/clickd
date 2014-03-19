@@ -150,7 +150,7 @@ public class UserImportResource {
 			Map<String,Object> friendsListData = (Map<String,Object>)friendsList.get("data");
 			System.out.println("gotFriendsList() with : " + friendsListData.size());
 			
-			int thread_limit = 50;
+			int thread_limit = 1;
 	        ExecutorService executor = Executors.newFixedThreadPool(thread_limit);
 
 	        int maxFriends = 50;
