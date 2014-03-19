@@ -8,6 +8,11 @@
   <classpathentry kind="var" path="M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/jongo/jongo/1.0/jongo-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.2.3/jackson-core-2.2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.2.3/jackson-databind-2.2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.2.3/jackson-annotations-2.2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/de/undercouch/bson4jackson/2.2.3/bson4jackson-2.2.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/dropwizard/dropwizard-views/0.6.2/dropwizard-views-0.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/dropwizard/dropwizard-core/0.6.2/dropwizard-core-0.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.17.1/jersey-core-1.17.1.jar"/>
@@ -17,9 +22,6 @@
   <classpathentry kind="var" path="M2_REPO/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.1/slf4j-api-1.7.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/metrics/metrics-servlet/2.2.0/metrics-servlet-2.2.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.1.4/jackson-databind-2.1.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.1.4/jackson-annotations-2.1.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.1.4/jackson-core-2.1.4.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/yammer/metrics/metrics-jetty/2.2.0/metrics-jetty-2.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/jetty-server/8.1.10.v20130312/jetty-server-8.1.10.v20130312.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/eclipse/jetty/orbit/javax.servlet/3.0.0.v201112011016/javax.servlet-3.0.0.v201112011016.jar"/>
@@ -51,7 +53,7 @@
   <classpathentry kind="var" path="M2_REPO/com/github/spullara/mustache/java/compiler/0.8.10/compiler-0.8.10.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/4.0.0.RELEASE/spring-context-4.0.0.RELEASE.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/4.0.0.RELEASE/spring-aop-4.0.0.RELEASE.jar"/>
-  <classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/4.0.0.RELEASE/spring-beans-4.0.0.RELEASE.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/4.0.0.RELEASE/spring-core-4.0.0.RELEASE.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar"/>
@@ -100,7 +102,7 @@
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-test-framework/jersey-test-framework-core/1.17.1/jersey-test-framework-core-1.17.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.17.1/jersey-client-1.17.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-test-framework/jersey-test-framework-inmemory/1.17.1/jersey-test-framework-inmemory-1.17.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/easytesting/fest-assert-core/2.0M10/fest-assert-core-2.0M10.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/easytesting/fest-util/1.2.5/fest-util-1.2.5.jar"/>
 </classpath>

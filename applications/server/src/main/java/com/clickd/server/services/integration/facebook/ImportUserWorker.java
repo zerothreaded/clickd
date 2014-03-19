@@ -548,7 +548,9 @@ public class ImportUserWorker implements Runnable {
 	public User createUserFromFacebookData(String facebookData)
 	{
 		try {
-			//System.out.println("createUserFromFacebookData() Starting for " + facebookData);
+			if (userDao.findByRef("/users/" +this.friendId) != null) {
+				return null;
+			}
 			HashMap<String, Object> map = Utilities.fromJson(facebookData);
 
 			// Create the new user
@@ -565,14 +567,21 @@ public class ImportUserWorker implements Runnable {
 			}
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
 			newUser.setPassword("fb99");
-			newUser.setRef("/users/"+(String)map.get("id"));
+			newUser.setRef("/users/" + (String)map.get("id"));
 			getUserDao().create(newUser);
 			
 			// Get the Users FB image and save it locally
-			String targetFileName = "C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg";
+			 String dataDir = System.getProperty("dataDir");
+			 if (null == dataDir) {
+				 dataDir = "C:\\sandbox\\data\\profile-img\\";
+				 System.out.println("\n\nData Directory = " + dataDir);
+			 } else {
+				 System.out.println("\n\nData Directory = " + dataDir);
+			 }
+			String targetFileName = dataDir + (String)map.get("id").toString()+".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
-				System.out.println("Getting friends Image..");
+				// System.out.println("Getting friends Image..");
 				 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=160&height=160");
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -585,7 +594,7 @@ public class ImportUserWorker implements Runnable {
 				 out.close();
 				 in.close();
 				 byte[] response = out.toByteArray();
-				 FileOutputStream fos = new FileOutputStream("C:\\sandbox\\data\\profile-img\\users\\"+(String)map.get("id").toString()+".jpg");
+				 FileOutputStream fos = new FileOutputStream(dataDir + "/users/" + (String)map.get("id").toString()+".jpg");
 				 fos.write(response);
 				 fos.close();
 				 System.out.println("Saved friends Image.");
@@ -644,10 +653,13 @@ public class ImportUserWorker implements Runnable {
 		try {
 			this.facebookUserData = Utilities.getFromUrl(meUrl);
 			User newUser = createUserFromFacebookData(this.facebookUserData);
-			importUserData(this.friendId, this.facebookUserData, this.accessToken, newUser);
-			System.out.println("imported "+newUser.getFirstName()+" "+newUser.getLastName());
+			if (newUser != null) {
+				importUserData(this.friendId, this.facebookUserData, this.accessToken, newUser);
+				System.out.println("imported "+newUser.getFirstName()+" "+newUser.getLastName());
+			} else {
+				System.out.println("Not Importing User Id : " + this.friendId);
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

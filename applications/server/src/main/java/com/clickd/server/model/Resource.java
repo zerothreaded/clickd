@@ -14,17 +14,17 @@ public abstract class Resource {
 	public static final String KEY_LINK_USER = "user";
 	public static final String KEY_LINK_QUESTION = "question";
 	
-	private Map<String, Link> _links = new HashMap<String, Link>();
+	private Map<String, Link> links = new HashMap<String, Link>();
 	private Map<String, List<Link>> _linkLists = new HashMap<String, List<Link>>();
 	
 	private Map<String, Object> _embedded = new HashMap<String, Object>();
 
-	public Map<String, Link> get_Links() {
-		return _links;
+	public Map<String, Link> getLinks() {
+		return links;
 	}
 
 	public void set_Links(Map<String, Link> links) {
-		this._links = links;
+		this.links = links;
 	}
 
 	public Map<String, Object> get_Embedded() {
@@ -35,15 +35,12 @@ public abstract class Resource {
 		this._embedded = embedded;
 	}
 	
-
-	
-
 	public Link getLinkByName(String name) {
-		return (Link)_links.get(name);
+		return (Link)links.get(name);
 	}
 
 	public void addLink(String name, Link link) {
-		_links.put(name, link);
+		links.put(name, link);
 	}
 
 	

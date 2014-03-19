@@ -46,9 +46,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 
 	
 	$scope.init = function () {
-			$scope.updateChatroom();
-			$scope.nextQuestionTimer();
-			
+//			$scope.updateChatroom();
+//			$scope.loadNextQuestion();
+//			
 			var getQuestionTagsUrl = "/questions/tags/all";
 			$http({ method  : 'GET', url : getQuestionTagsUrl })
 			.success(function(data) { 
@@ -58,7 +58,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},30000);
+			},60000);
 	}
 	
 	$scope.nextQuestionTimer = function()
@@ -187,7 +187,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			    // The origin for this image is 0,0.
 			    origin: new google.maps.Point(0,0),
 			    // The anchor for this image is the base of the flagpole at 0,32.
-			    anchor: new google.maps.Point(-40, 60)
+			    anchor: new google.maps.Point(0, 0)
 		};
 		var placePosition = new google.maps.LatLng(latitude, longitude);
 		
@@ -200,6 +200,20 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		    title: name
 		});
 		console.log('Marker = ' + placeMarker);
+		
+		// CIRCLE
+	    var circleOptions = {
+	    	      strokeColor: '#FF0000',
+	    	      strokeOpacity: 0.5,
+	    	      strokeWeight: 1,
+	    	      fillColor: '#FF0000',
+	    	      fillOpacity: 0.35,
+	    	      map: theMap,
+	    	      center: placePosition,
+	    	      radius: 200
+	    	    };
+	    	    // Add the circle for this city to the map.
+	    	    cityCircle = new google.maps.Circle(circleOptions);
     }
     
     
@@ -283,6 +297,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			if (typeof(msg["status"]) == 'undefined') {
 				var answerRule = msg["answerRule"];
 				questionRef = msg["ref"];
+				console.log(JSON.stringify(msg));
+				console.log('QQQQQQ=' + questionRef);
 				questionRef = questionRef.split("/")[2];
 				var answers = answerRule.split("|");
 				var questionText = msg.questionText;
@@ -319,7 +335,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$timeout.cancel($scope.questionTimer);
 			$scope.questionTimer = $timeout(function(){
 				$scope.nextQuestionTimer();
-			},30000);	
+			},60000);	
 			
 			$scope.updateCCC();
 		});
@@ -612,7 +628,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	
 	$scope.getUserNameForMessage = function(message)
 	{
-		var userRef = message["_links"]["user"]["href"];
+		var userRef = message["links"]["user"]["href"];
 		
 		var getUserUrl = userRef;
 		$http({ method  : 'GET', url : getUserUrl })
