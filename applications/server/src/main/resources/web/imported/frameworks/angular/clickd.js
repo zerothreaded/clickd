@@ -15,6 +15,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"selectedChatTab" : "map",
 		"selectedChatroom" : { "ref" : -1},
 		"questionTags" : {"fb.movies" : "movies"},
+		"showFbLoginLabel" : false,
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -48,6 +49,8 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.init = function () {
 //			$scope.updateChatroom();
 //			$scope.loadNextQuestion();
+		
+		$scope.model.showFbLoginLabel = window.location.hash == '#fbsuccess';
 //			
 			var getQuestionTagsUrl = "/questions/tags/all";
 			$http({ method  : 'GET', url : getQuestionTagsUrl })

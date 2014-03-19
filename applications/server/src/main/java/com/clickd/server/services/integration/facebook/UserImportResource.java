@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -186,7 +187,8 @@ public class UserImportResource {
 	        long difference = end-startImportTime;
 	        System.out.println("Finished importing users. Took " + (difference/1000)+" seconds.");
 
-			return Response.status(200).entity(Utilities.toJson("success")).build();
+	        return Response.temporaryRedirect(URI.create("/clickd#fbsuccess")).build();
+			//return Response.status(200).entity(Utilities.toJson("success")).build();
 		}
 		catch (Exception E)
 		{

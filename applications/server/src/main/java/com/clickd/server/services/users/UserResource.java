@@ -1044,8 +1044,11 @@ public class UserResource {
 						
 						if (!alreadyExists && !isAConnection && !toSkip) {
 							User otherUser = userDao.findByRef(otherUserLink.getHref());
-							CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
-							responseList.add(responseRow);
+							if (otherUser != null && otherUser.getGender()!= null && !otherUser.getGender().equals(user.getGender()))
+							{							
+								CandidateResponse responseRow = new CandidateResponse(otherUser, 1);
+								responseList.add(responseRow);
+							}
 						}
 					}
 				}

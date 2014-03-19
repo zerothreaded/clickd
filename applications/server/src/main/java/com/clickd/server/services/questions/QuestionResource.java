@@ -71,7 +71,7 @@ public class QuestionResource {
 			String targetFileName = dataDir + movieHref + ".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
-				System.out.println("Getting friends Image..");
+				System.out.println("Getting movie Image.."+movieImageUrl+" to "+targetFileName);
 				 URL url = new URL(movieImageUrl);
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -118,7 +118,7 @@ public class QuestionResource {
 				targetFileName = targetFileName.replace("television/", "television\\");
 			File file = new File(targetFileName);
 			if (!file.exists()) {
-				System.out.println("Getting friends Image..");
+				System.out.println("Getting television Image.."+televisionImageUrl+" to "+targetFileName);
 				 URL url = new URL(televisionImageUrl);
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();

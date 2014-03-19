@@ -176,8 +176,10 @@ d3.select("div").style("height", diameter + "px");
 			<!-- /brand -->
 			<div class="navbar-right">
 				<div class="label label-danger pull-right login-error" ng-if="signInFormData.signInFailed">Your login failed.</div>
+				
 			</div>
 			<div class="navbar-right">
+			
 				<form ng-submit="signInFormSubmit()" class="form-group login-form">
 					<div class="form-group-navbar">
 						<div class="col-md-4 col-sm-5 form-group navbar-form-group" id="login-email-group">
@@ -211,7 +213,9 @@ d3.select("div").style("height", diameter + "px");
 		
 		</div> -->
 			<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
-				<form ng-submit="processRegisterForm()">
+			<div class="label label-success pull-right login-error" ng-if="model.showFbLoginLabel">You have signed up with facebook. Login using your FB details</div>
+			
+				<form ng-submit="processRegisterForm()"  ng-if="!model.showFbLoginLabel">
 					<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
 						<h2>
 							Sign Up<small> to see who you click with</small>
