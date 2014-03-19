@@ -581,7 +581,7 @@ public class ImportUserWorker implements Runnable {
 			String targetFileName = dataDir + (String)map.get("id").toString()+".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
-				System.out.println("Getting friends Image..");
+				// System.out.println("Getting friends Image..");
 				 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=160&height=160");
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -727,7 +727,7 @@ public class UserResource {
 				String targetFileName = dataDir + "\\movies\\" + tokens[2] + ".jpg";
 				File file = new File(targetFileName);
 				if (!file.exists()) {
-					System.out.println("Getting friends Image..");
+					// System.out.println("Getting friends Image..");
 					 URL url = new URL(movieImageUrl);
 					 InputStream in = new BufferedInputStream(url.openStream());
 					 ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -826,7 +826,7 @@ public class UserResource {
 						results.add(checkin);
 					}
 				}
-				List<Checkin> clippedResults = results.subList(0, Math.min(20, results.size()));
+				List<Checkin> clippedResults = results.subList(0, Math.min(200, results.size()));
 				System.out.println("getMap() returning " + clippedResults.size() + " out of " +  results.size() + " possible checkins");
 				return Response.status(200).entity(Utilities.toJson(clippedResults)).build();
 			} catch(Exception e) {
@@ -1001,9 +1001,9 @@ public class UserResource {
 			for (Choice choice : myChoices) {
 				Question choiceQuestion = questionDao.findByRef(choice.getLinkByName("question").getHref());
 				if (choiceQuestion != null) {
-					System.out.println(choiceQuestion.getQuestionText() );
+					// System.out.println(choiceQuestion.getQuestionText() );
 				} else {
-					System.out.println("NO CHOICE QUESTION for choice :" + choice.getRef());
+					System.out.println("\n\nALERT\nNO CHOICE QUESTION for choice :" + choice.getRef());
 					
 				}
 
@@ -1276,8 +1276,10 @@ public class UserResource {
 			List<Clique> myCliques = new ArrayList<Clique>();	
 			// Add CHOICE based cliques
 			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+			System.out.println("getCliques() looping over " + myChoices.size() + " choices for userRef " + userRef);
 			for (Choice myChoice : myChoices)
 			{
+				// System.out.println("getCliques() testing " + myChoice.getAnswerText());
 				if (myChoice.getAnswerText().equals("skip"))
 					continue;
 				
@@ -1289,20 +1291,25 @@ public class UserResource {
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
-				thisClique.get_Embedded().put("matching-choices", matchingChoices);
+				//thisClique.get_Embedded().put("matching-choices", new ArrayList());
 				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
 				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
 				thisClique.setCliqueSize(matchingChoices.size());
+				//thisClique.setCliqueSize(0);
 				myCliques.add(thisClique);
 			}
 			
 			// Sort the responses	
+			long startSort = new Date().getTime();
 			Collections.sort(myCliques, new Comparator<Clique>() {
 				@Override
 				public int compare(Clique cl1, Clique cl2) {
 					return cl2.getCliqueSize() - cl1.getCliqueSize();
 				}
 			});
+			long endSort = new Date().getTime();
+			System.out.println("Sorting " + myCliques.size() + " took " + (endSort - startSort)/1000 + " secs");
+			
 			return myCliques;
 		} catch (Exception e) {
 			e.printStackTrace();

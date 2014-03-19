@@ -1,11 +1,15 @@
 package com.clickd.server.dao;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jongo.Jongo;
+import org.jongo.MongoCollection;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Link;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
 
 public class ChoiceDao implements InitializingBean {
 
@@ -21,6 +27,8 @@ public class ChoiceDao implements InitializingBean {
 	
 	private MongoOperations mongoOperations;
 	private String collectionName;
+	private DB db;
+	private Jongo jongo;
 
 	public ChoiceDao() {
 		System.out.println("ChoiceDao() called.");
@@ -82,8 +90,9 @@ public class ChoiceDao implements InitializingBean {
 //			System.out.println("User " + key + " has " + userChoicesCache.get(key).size() + " choices");
 //		}
 		
-		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
-		return result;
+//		ArrayList<Choice> result = new ArrayList<Choice>(userChoicesCache.get(userRef));
+//		return result;
+		return userChoicesCache.get(userRef);
 	}
 
 	public List<Choice> findByUserRefOLD(String userRef) {
@@ -139,6 +148,28 @@ public class ChoiceDao implements InitializingBean {
 		return answerChoices;
 	}
 	
+	public List<Choice> DB_findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) throws UnknownHostException {
+		
+		
+
+		MongoCollection friends = jongo.getCollection("choices");
+
+		Iterable<Choice> all = friends.find("{ answerText: '" + answerText + "' } , {  links.question.href : '" + questionRef + "' } ").as(Choice.class);
+		List<Choice> toReturn = new ArrayList<Choice>();
+		Iterator<Choice> iterator = all.iterator();
+		while (iterator.hasNext()) {
+			Choice choice = iterator.next();
+			// System.out.println("Choice : " + choice.getAnswerText());
+			toReturn.add(choice);
+		}
+		//	Friend one = friends.findOne("{name: 'Joe'}").as(Friend.class);
+		
+//		Query query = Query.query(Criteria.where("answerText").is(answerText).and("links.question.href").is(questionRef));
+//		List<Choice> toReturn = mongoOperations.find(query, Choice.class);
+		return toReturn;
+	}
+	
+	
 
 	public List<Choice> findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(String answerText, String questionRef) {
 		try {
@@ -149,6 +180,8 @@ public class ChoiceDao implements InitializingBean {
 			
 			List<Choice> answerChoices = new ArrayList<Choice>();
 			List<Choice> allChoices = findAll();
+			// System.out.println("findSameChoices() looping over " + allChoices.size() + " choices");
+			
 			for (Choice choice : allChoices) {
 				if (choice == null) {
 					// HMMMMMMM - WTF
@@ -173,7 +206,7 @@ public class ChoiceDao implements InitializingBean {
 					}
 				}
 			}
-			// System.out.println("findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef() returnd [" + answerChoices.size() + "] choices for Answer " + answerText);
+			//System.out.println("findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef() returnd [" + answerChoices.size() + "] choices for Answer " + answerText);
 			return answerChoices;
 		}
 		 catch(Exception e) {
@@ -185,6 +218,9 @@ public class ChoiceDao implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		db = new MongoClient().getDB("clickd");
+
+		jongo = new Jongo(db);
 		long now = new Date().getTime();
 		System.out.println("afterPropertiesSet() called. Loading cache..");
 		List<Choice> allChoices = mongoOperations.findAll(Choice.class, collectionName);
