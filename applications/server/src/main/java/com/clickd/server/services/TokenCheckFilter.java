@@ -1,5 +1,6 @@
 package com.clickd.server.services;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -10,6 +11,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tools.ant.util.FileUtils;
 
 public class TokenCheckFilter implements Filter {
 
@@ -33,13 +36,31 @@ public class TokenCheckFilter implements Filter {
 
 		
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
-		String path = servletRequest.getPathTranslated();
+		String path = servletRequest.getRequestURI();
 		if (path != null) {
 			if (!path.contains("img")) {
 				servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
 				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 			} else {
+				if(path.contains("profile-img")) {
+					int pathWait = 1;
+					 String dataDir = System.getProperty("dataDir");
+					 if (null == dataDir) {
+						 dataDir = "C:\\sandbox\\data\\profile-img\\";
+						 System.out.println("\n\nData Directory = " + dataDir);
+					 } else {
+						 System.out.println("\n\nData Directory = " + dataDir);
+					 }
+					String targetFileName = path.substring(12);
+					// Image files - serve these from disk
+					byte[] fileContents;
+					File imageFile = new File(dataDir, targetFileName);
+					fileContents = org.apache.commons.io.FileUtils.readFileToByteArray(imageFile);
+					response.getOutputStream().write(fileContents);
+				} else {
+					// All others
+				}
 				int wait  = 1;
 				
 			}
