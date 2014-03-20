@@ -39,7 +39,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		bootstrap.addBundle(new ViewBundle());
 	//	bootstrap.addBundle(new AssetsBundle("/resources", "/web2"));
 
-		bootstrap.addBundle(new AssetsBundle("/assets/profile-img", "/profile-img"));
+		bootstrap.addBundle(new AssetsBundle("/profile-img", "/profile-img"));
 		
 		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
