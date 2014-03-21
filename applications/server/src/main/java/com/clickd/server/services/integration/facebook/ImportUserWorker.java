@@ -637,7 +637,7 @@ public class ImportUserWorker implements Runnable {
 			
 			Question likeFaceQuestion = new Question();
 			List<String> likeFaceQuestionTags = new ArrayList<String>();
-			likeFaceQuestionTags.add("clickd.members.profile-img");
+			likeFaceQuestionTags.add("clickd.members.face");
 			likeFaceQuestion.setQuestionText("Do you like "+newUser.getFirstName());
 			likeFaceQuestion.setTags(likeFaceQuestionTags);
 			likeFaceQuestion.setImg("/profile-img/users/"+(String)map.get("id")+"-big.jpg");

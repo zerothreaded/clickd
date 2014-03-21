@@ -218,7 +218,7 @@ public class QuestionResource {
 							toReturn.setImg("/profile-img/users" +  televisionHref + ".jpg");
 							}
 						}
-						else if (tags.equals("clickd.members.profile-img"))
+						else if (tags.equals("clickd.members.face"))
 						{
 							String userHref = toReturn.getLinkByName("user").getHref();
 							User thisUser = userDao.findByRef("/users/"+userRef);
@@ -263,7 +263,7 @@ public class QuestionResource {
 		toReturn.put("fb.televisions", "television");
 		toReturn.put("fb.books", "books");
 		toReturn.put("fb.checkin", "places");
-		toReturn.put("clickd.members.profile-img", "members");
+		toReturn.put("clickd.members.face", "members");
 
 
 		return toReturn;
