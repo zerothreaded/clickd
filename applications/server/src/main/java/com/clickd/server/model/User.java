@@ -2,7 +2,9 @@ package com.clickd.server.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -28,7 +30,8 @@ public class User extends Resource {
 	protected String email;
 	protected String password;
 	
-
+	protected Map<String, Object> location = new HashMap<String, Object>();
+	
 	public User() {
 		super();
 		createRef();
@@ -40,7 +43,7 @@ public class User extends Resource {
 		this.ref = ref;
 	}
 
-	public User(String firstName, String lastName, Date dateOfBirth, String gender, String postCode, String email, String password) {
+	public User(String firstName, String lastName, Date dateOfBirth, String gender, String postCode, String email, String password, Map<String, Object> location) {
 		super();
 
 		createRef();
@@ -51,6 +54,7 @@ public class User extends Resource {
 		this.postCode = postCode;
 		this.email = email;
 		this.password = password;
+		this.location = location;
 	}
 
 	public String getId() {
@@ -123,5 +127,13 @@ public class User extends Resource {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Map<String, Object> getLocation() {
+		return location;
+	}
+
+	public void setLocation(Map<String, Object> location) {
+		this.location = location;
 	}
 }

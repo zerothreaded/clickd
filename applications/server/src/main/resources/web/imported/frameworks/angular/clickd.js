@@ -104,7 +104,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			$timeout(function(){
 				$scope.updateChatroom();
-			},90000);	
+			},500);	
 	};
 	
 	
@@ -154,9 +154,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		if ($scope.model.currentSelection == 'cliques.clique') {
 			urlSelection = 'clique=' + $scope.model.currentCliqueRef;
 		}
+		if ($scope.model.currentSelection == 'cliques') {
+			urlSelection = 'cliques';
+		}
+		// alert(urlSelection);
 		var mapUrl = '/users/places/map/' + $scope.model.currentUser.userRef + "/" +  urlSelection;
 		//console.log("getting "+mapUrl);
-		// alert(mapUrl);
+		//alert(mapUrl);
     	$.ajax({
 			    type: "GET",
 			    url: mapUrl,
@@ -174,7 +178,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		  			});
 			    },
 			    failure: function(errMsg) {
-			    	alert('register movies failed');
+			    	alert('Get Cliques Map failed!');
 			    	console.log('ERROR=' + errMsg);
 			    }
     		});	
@@ -505,7 +509,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.currentUser.candidatesShowMenu = false;
 		$scope.model.currentUser.connectionsShowMenu = false;
 		$scope.model.currentUser.cliquesShowMenu = true;
-		
+		// alert('onClickCliques');
 		$scope.loadMap();
 	}
 	

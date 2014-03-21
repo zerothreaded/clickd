@@ -560,6 +560,13 @@ public class ImportUserWorker implements Runnable {
 			newUser.setLastName((String)map.get("last_name"));
 			newUser.setGender((String)map.get("gender"));
 			
+			HashMap<String, Object >location = (HashMap<String, Object>) map.get("location");
+			if (location != null) {
+				System.out.println("Location : " + location.toString() + " for user " + location.toString());
+				newUser.setLocation(location);
+			} else {
+				System.out.println("NO LOCATION FOR " + newUser.getEmail());
+			}
 			if ((String)map.get("email") == null) {
 				newUser.setEmail(newUser.getFirstName().toLowerCase()+"."+newUser.getLastName().toLowerCase()+"@clickd.org");
 			} else {

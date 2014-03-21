@@ -48,16 +48,20 @@ public class TokenCheckFilter implements Filter {
 					 String dataDir = System.getProperty("dataDir");
 					 if (null == dataDir) {
 						 dataDir = "C:\\sandbox\\data\\profile-img\\";
-						 System.out.println("\n\nData Directory = " + dataDir);
+						 //System.out.println("\n\nData Directory = " + dataDir);
 					 } else {
-						 System.out.println("\n\nData Directory = " + dataDir);
+						 //System.out.println("\n\nData Directory = " + dataDir);
 					 }
 					String targetFileName = path.substring(12);
 					// Image files - serve these from disk
 					byte[] fileContents;
 					File imageFile = new File(dataDir, targetFileName);
+					System.out.println(imageFile.getAbsolutePath());
 					fileContents = org.apache.commons.io.FileUtils.readFileToByteArray(imageFile);
-					response.getOutputStream().write(fileContents);
+					
+					servletResponse.getOutputStream().write(fileContents);
+					servletResponse.flushBuffer();
+					return;
 				} else {
 					// All others
 				}

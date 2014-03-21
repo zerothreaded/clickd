@@ -914,7 +914,7 @@ public class UserResource {
 					cliqueCheckins.addAll(cliqueMemberCheckins);
 				}
 				
-				List<Checkin> clippedResults = results.subList(0, Math.min(200, results.size()));
+				List<Checkin> clippedResults = results.subList(0, Math.min(100, results.size()));
 				System.out.println("getMap(cliques) returning " + cliqueCheckins.size() + " checkins");
 				return Response.status(200).entity(Utilities.toJson(cliqueCheckins)).build();
 			} catch(Exception e) {
@@ -935,7 +935,6 @@ public class UserResource {
 				Set<String> myCliqueMembers = new TreeSet<String>();
 				
 				List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
-				
 				
 				List<Choice> matchingChoices = (List<Choice>)clique.get_Embedded().get("matching-choices");
 				for (Choice choice : matchingChoices) {
@@ -1283,7 +1282,7 @@ public class UserResource {
 			for (Choice myChoice : myChoices)
 			{
 				// System.out.println("getCliques() testing " + myChoice.getAnswerText());
-				if (myChoice.getAnswerText().equals("skip"))
+				if (myChoice.getAnswerText() != null && myChoice.getAnswerText().equals("skip"))
 					continue;
 				
 				//now get list of users who made that choice
@@ -1294,11 +1293,10 @@ public class UserResource {
 				Clique thisClique = new Clique(user, new Date(), new Date(), "system", cliqueName);
 				thisClique.get_Embedded().put("clique-choice", myChoice);
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
-				//thisClique.get_Embedded().put("matching-choices", new ArrayList());
+				thisClique.get_Embedded().put("matching-choices", matchingChoices);
 				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
 				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
 				thisClique.setCliqueSize(matchingChoices.size());
-				//thisClique.setCliqueSize(0);
 				myCliques.add(thisClique);
 			}
 			
@@ -1340,6 +1338,8 @@ public class UserResource {
 				}
 			}
 			String cliqueName = getProcessedCliqueName(question, myChoice);
+			thisClique.get_Embedded().put("matching-choices", usersWithSameChoice);
+			thisClique.setCliqueSize(usersWithSameChoice.size());
 			thisClique.get_Embedded().put("clique-members", cliqueUsers);
 			thisClique.get_Embedded().put("clique-name", cliqueName);
 			thisClique.setRef(question.getRef());

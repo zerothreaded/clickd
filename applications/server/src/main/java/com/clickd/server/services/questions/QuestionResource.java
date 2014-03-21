@@ -73,7 +73,7 @@ public class QuestionResource {
 			String targetFileName = dataDir + movieHref + ".jpg";
 			File file = new File(targetFileName);
 			if (!file.exists()) {
-				System.out.println("Getting movie Image.."+movieImageUrl+" to "+targetFileName);
+				 // System.out.println("Getting movie Image.."+movieImageUrl+" to "+targetFileName);
 				 URL url = new URL(movieImageUrl);
 				 InputStream in = new BufferedInputStream(url.openStream());
 				 ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -89,7 +89,7 @@ public class QuestionResource {
 				 FileOutputStream fos = new FileOutputStream(targetFileName);
 				 fos.write(response);
 				 fos.close();
-				 System.out.println("Saved friends Image.");
+				 // System.out.println("Saved Movie Image.");
 				 return true;
 			}
 			 return false;
