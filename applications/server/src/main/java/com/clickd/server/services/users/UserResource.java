@@ -1227,7 +1227,12 @@ public class UserResource {
 	public String getProcessedCliqueName(Question question, Choice myChoice)
 	{
 		String cliqueName = question.getQuestionText();
-		
+		if (null == myChoice) {
+			System.out.println("myChoice == null");
+		} else if(null == myChoice.getAnswerText()) {
+			int noway = 1;
+			System.out.println("myChoice == null");
+		}
 		String likeVerb = "Likes";
 		if (myChoice.getAnswerText().equals("no"))
 			likeVerb = "Doesn't Like";
@@ -1241,18 +1246,21 @@ public class UserResource {
 		if (question.getTags().get(0).equals("fb.checkin"))
 			cliqueName = "Been to "+question.getTags().get(1);
 		
-		if (question.getTags().get(1).equals("fb.movies"))
-			cliqueName = likeVerb+" movie "+question.getTags().get(0);
-
-		if (question.getTags().get(1).equals("fb.televisions"))
-			cliqueName = likeVerb+" TV show "+question.getTags().get(0);
-
-		if (question.getTags().get(1).equals("fb.book"))
-			cliqueName = likeVerb+" book "+question.getTags().get(0);
-		
 		if (question.getTags().get(0).equals("aboutme"))
 			cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
+	
+		if (question.getTags().size() > 1) {
+			if (question.getTags().get(1).equals("fb.movies"))
+				cliqueName = likeVerb+" movie "+question.getTags().get(0);
+	
+			if (question.getTags().get(1).equals("fb.televisions"))
+				cliqueName = likeVerb+" TV show "+question.getTags().get(0);
+	
+			if (question.getTags().get(1).equals("fb.book"))
+				cliqueName = likeVerb+" book "+question.getTags().get(0);
+		}
 		
+	
 		
 		return cliqueName;
 	}
@@ -1263,6 +1271,9 @@ public class UserResource {
 	public Response getCliquesForUserAsResponse(@PathParam("userRef") String userRef) {
 		try {
 			List<Clique> myCliques = getCliquesForUser(userRef);
+			if (null == myCliques) {
+				int wait = 1;
+			}
 			myCliques = myCliques.subList(0, Math.min(13, myCliques.size()));
 
 			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
