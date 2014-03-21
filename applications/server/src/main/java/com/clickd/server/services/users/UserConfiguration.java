@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 
-public class UserConfiguration extends Configuration {
+public class UserConfiguration extends Configuration  {
 	@NotEmpty
 	@JsonProperty
 	private String template;
@@ -22,6 +22,11 @@ public class UserConfiguration extends Configuration {
 	@JsonProperty
 	private String dataFolder = "\\sandbox\\data";
 	
+//	@Valid
+//	@NotNull
+//	@JsonProperty
+//	private final AssetsConfiguration assets = new AssetsConfiguration();
+	
 	public String getDataFolder() {
 		return dataFolder;
 	}
@@ -37,6 +42,11 @@ public class UserConfiguration extends Configuration {
 	public String getSpringContextFileName() {
 		return springContextFileName;
 	}
+
+//	@Override
+//	public AssetsConfiguration getAssetsConfiguration() {
+//		return assets;
+//	}
 
     
 }
