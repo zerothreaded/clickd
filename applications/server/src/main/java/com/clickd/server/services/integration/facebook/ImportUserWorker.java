@@ -602,6 +602,41 @@ public class ImportUserWorker implements Runnable {
 				 // System.out.println("Skipping Image Load");
 			}
 			
+			//get big picture
+			String targetFileNameBig = dataDir + (String)map.get("id").toString()+"-big.jpg";
+			File fileBig = new File(targetFileName);
+			if (!fileBig.exists()) {
+				// System.out.println("Getting friends Image..");
+				 URL url = new URL("http://graph.facebook.com/"+(String)map.get("id")+"/picture?width=400&height=400");
+				 InputStream in = new BufferedInputStream(url.openStream());
+				 ByteArrayOutputStream out = new ByteArrayOutputStream();
+				 byte[] buf = new byte[1024];
+				 int n = 0;
+				 while (-1!=(n=in.read(buf)))
+				 {
+				    out.write(buf, 0, n);
+				 }
+				 out.close();
+				 in.close();
+				 byte[] response = out.toByteArray();
+				 FileOutputStream fos = new FileOutputStream(dataDir + "/users/" + (String)map.get("id").toString()+"-big.jpg");
+				 fos.write(response);
+				 fos.close();
+				 System.out.println("Saved friends Image.");
+			} else {
+				 // System.out.println("Skipping Image Load");
+			}
+			
+			
+			Question likeFaceQuestion = new Question();
+			List<String> likeFaceQuestionTags = new ArrayList<String>();
+			likeFaceQuestionTags.add("clickd.members.profile-img");
+			likeFaceQuestion.setQuestionText("Do you like "+newUser.getFirstName());
+			likeFaceQuestion.setTags(likeFaceQuestionTags);
+			likeFaceQuestion.setImg("/profile-img/users/"+(String)map.get("id")+"-big.jpg");
+			likeFaceQuestion.addLink("user", new Link(newUser.getRef(), "question-user"));
+			likeFaceQuestion.setAnswerRule("yes|no");
+			questionDao.create(likeFaceQuestion);
 			
 			Question genderQuestion = getQuestionDao().findByTags("gender");
 			Choice genderChoice = new Choice();

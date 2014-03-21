@@ -11,11 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,13 +27,16 @@ import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.MovieDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.TelevisionDao;
+import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Answer;
 import com.clickd.server.model.Choice;
+import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
 import com.clickd.server.model.Movie;
 import com.clickd.server.model.Question;
 import com.clickd.server.model.Resource;
 import com.clickd.server.model.Television;
+import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -51,6 +57,9 @@ public class QuestionResource {
 	
 	@Autowired
 	private TelevisionDao televisionDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	
 	private boolean conditionalGetMovieImage(String movieHref)
@@ -117,7 +126,7 @@ public class QuestionResource {
 			 }
 			 else
 				 dataDir += "/users";
-			String targetFileName = dataDir + televisionHref.substring(1) + ".jpg";
+			String targetFileName = dataDir + televisionHref + ".jpg";
 			if (targetFileName.contains("\\"))
 				targetFileName = targetFileName.replace("television/", "television\\");
 			File file = new File(targetFileName);
@@ -149,11 +158,12 @@ public class QuestionResource {
 		}
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/next/{userRef}/{tags}")
 	@Timed
-	public String getNextQuestion(@PathParam("userRef") String userRef, @PathParam("tags") String tags ) {
+	public Response getNextQuestion(@PathParam("userRef") String userRef, @PathParam("tags") String tags ) {
 		
 		try {
 			//List<Question> questions = questionDao.findAllSortedBy("ref");
@@ -172,7 +182,7 @@ public class QuestionResource {
 					}
 				}
 			}
-				
+			
 			for (Question toReturn : questions)
 			{
 				boolean skip = false;
@@ -208,23 +218,37 @@ public class QuestionResource {
 							toReturn.setImg("/profile-img/users" +  televisionHref + ".jpg");
 							}
 						}
+						else if (tags.equals("clickd.members.profile-img"))
+						{
+							String userHref = toReturn.getLinkByName("user").getHref();
+							User thisUser = userDao.findByRef("/users/"+userRef);
+							User otherUser = userDao.findByRef(userHref);
+							
+							if (otherUser == null || otherUser.getGender() == null)
+								continue;
+							
+							if (otherUser.getGender().equals(thisUser.getGender()))
+								continue;
+
+							toReturn.get_Embedded().put("image-url", "/profile-img" +  userHref + "-big.jpg");
+						}
 						else
 						{
 							toReturn.get_Embedded().put("image-url", "/profile-img/users/blankImg.jpg");
 							toReturn.setImg("/profile-img/users/blankImg.jpg");						
 						}
 						
-						return Utilities.toJson(toReturn);
+						return Response.status(200).entity(Utilities.toJson(toReturn)).build();
 					} else {
 						continue;
 					}
 				}
 			}
-			
-			return "";
+			return Response.status(300).entity(new ErrorMessage("failed", "unknown")).build();
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			return e.getMessage();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
 		}
 	}
 	
@@ -239,6 +263,8 @@ public class QuestionResource {
 		toReturn.put("fb.televisions", "television");
 		toReturn.put("fb.books", "books");
 		toReturn.put("fb.checkin", "places");
+		toReturn.put("clickd.members.profile-img", "members");
+
 
 		return toReturn;
 	}
