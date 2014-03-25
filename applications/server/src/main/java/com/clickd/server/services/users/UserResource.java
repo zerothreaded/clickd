@@ -1227,7 +1227,12 @@ public class UserResource {
 	public String getProcessedCliqueName(Question question, Choice myChoice)
 	{
 		String cliqueName = question.getQuestionText();
-		
+		if (null == myChoice) {
+			System.out.println("myChoice == null");
+		} else if(null == myChoice.getAnswerText()) {
+			int noway = 1;
+			System.out.println("myChoice == null");
+		}
 		String likeVerb = "Likes";
 		if (myChoice.getAnswerText().equals("no"))
 			likeVerb = "Doesn't Like";
@@ -1253,6 +1258,7 @@ public class UserResource {
 		if (question.getTags().contains("aboutme"))
 			cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
 		
+	
 		
 		return cliqueName;
 	}
@@ -1263,6 +1269,9 @@ public class UserResource {
 	public Response getCliquesForUserAsResponse(@PathParam("userRef") String userRef) {
 		try {
 			List<Clique> myCliques = getCliquesForUser(userRef);
+			if (null == myCliques) {
+				int wait = 1;
+			}
 			myCliques = myCliques.subList(0, Math.min(13, myCliques.size()));
 
 			return Response.status(200).entity(Utilities.toJson(myCliques)).build();
@@ -1276,8 +1285,8 @@ public class UserResource {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
-			// Add CHOICE based cliques
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+					// Add CHOICE based cliques
+					List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			System.out.println("getCliques() looping over " + myChoices.size() + " choices for userRef " + userRef);
 			for (Choice myChoice : myChoices)
 			{
@@ -1295,7 +1304,7 @@ public class UserResource {
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
 				thisClique.get_Embedded().put("matching-choices", matchingChoices);
 				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
-				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
+				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);	
 				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
 			}
