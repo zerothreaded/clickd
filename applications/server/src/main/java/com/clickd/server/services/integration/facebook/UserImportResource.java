@@ -29,6 +29,7 @@ import org.fest.util.Strings.StringToAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.BookDao;
+import com.clickd.server.dao.CalendarDao;
 import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.LikeDao;
@@ -88,26 +89,9 @@ public class UserImportResource {
 	@Autowired
 	CheckinDao checkinDao;
 	
-	//	FacebookDataDao facebookTelevisionDao;
-//	FacebookDataDao facebookBooksDao;
+	@Autowired
+	CalendarDao calendarDao;
 	
-//	@GET
-//	@Path("/{ref}")
-//	@Timed
-//	public Response getFacebookResource(@PathParam("ref") String ref) {
-//		try {
-//			User user = facebookDao.findByRef("/facebook/" + ref);
-//			if (null != user) {
-//				return Response.status(200).entity(user).build();
-//			} else {
-//				return Response.status(300).entity(new ErrorMessage("failed", "User Not Found")).build();
-//			}
-//		} catch(Exception e) {
-//			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
-//		}
-//	}
-//	
-
 	@GET
 	@Timed
 	@Path("/authResponse")
@@ -142,6 +126,7 @@ public class UserImportResource {
 			worker.setPlaceDao(placeDao);
 			worker.setMovieDao(movieDao);
 			worker.setLikeDao(likeDao);
+			worker.setCalendarDao(calendarDao);
 			Thread t = new Thread(worker);
 			t.start();
 			
