@@ -1,20 +1,8 @@
 package com.clickd.server.services.integration.facebook;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -25,7 +13,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.fest.util.Strings.StringToAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.BookDao;
@@ -38,17 +25,7 @@ import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.Book;
-import com.clickd.server.model.Checkin;
-import com.clickd.server.model.Choice;
 import com.clickd.server.model.ErrorMessage;
-import com.clickd.server.model.Like;
-import com.clickd.server.model.Link;
-import com.clickd.server.model.Movie;
-import com.clickd.server.model.Place;
-import com.clickd.server.model.Question;
-import com.clickd.server.model.Television;
-import com.clickd.server.model.User;
 import com.clickd.server.utilities.Constants;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
@@ -59,8 +36,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 @Path("/integration/facebook/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserImportResource {
-//	FacebookDataDao facebookCheckinsDao;
-//	FacebookDataDao facebookLikesDao;
 
 	@Autowired 
 	UserDao userDao;
