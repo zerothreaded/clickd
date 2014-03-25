@@ -5,7 +5,6 @@ import javax.ws.rs.core.Response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.clickd.server.services.AbstractResourceTest;
 import com.clickd.server.services.choices.ChoiceResource;

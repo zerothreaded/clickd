@@ -2,8 +2,6 @@ package com.clickd.server.services.users;
 
 import java.util.ArrayList;
 
-import com.clickd.server.model.User;
-
 public class ComparisonResponse
 {
 	private ArrayList<String> agree;

@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.clickd.server.dao.BookDao;
 import com.clickd.server.dao.CalendarDao;
 import com.clickd.server.dao.CheckinDao;

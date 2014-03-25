@@ -12,7 +12,6 @@ import org.junit.Test;
 import com.clickd.server.model.Clique;
 import com.clickd.server.model.Connection;
 import com.clickd.server.model.Session;
-import com.clickd.server.model.User;
 import com.clickd.server.services.AbstractResourceTest;
 import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.users.CandidateResponse;

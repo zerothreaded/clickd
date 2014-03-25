@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.clickd.server.dao.LikeDao;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Like;
-import com.clickd.server.model.Like;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 

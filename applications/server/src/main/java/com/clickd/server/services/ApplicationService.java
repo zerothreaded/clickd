@@ -4,9 +4,7 @@ import javax.servlet.Filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import com.clickd.server.dao.ChatroomDao;
 import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.calendars.CalendarResource;
 import com.clickd.server.services.chatrooms.ChatroomResource;
