@@ -138,6 +138,7 @@ public class UserImportResource {
 				friendWorker.setPlaceDao(placeDao);
 				friendWorker.setMovieDao(movieDao);
 				friendWorker.setLikeDao(likeDao);
+				friendWorker.setCalendarDao(calendarDao);
 				executor.execute(friendWorker);
 			}
 			executor.shutdown();

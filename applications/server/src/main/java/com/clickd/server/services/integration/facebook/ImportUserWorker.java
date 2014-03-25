@@ -584,6 +584,9 @@ public class ImportUserWorker implements Runnable {
 			// Create the users dating calendar
 			Calendar calendar = new Calendar();
 			calendar.setName(newUser.getFirstName() + "-dating-calendar");
+			if (calendarDao == null) {
+				int wait = 1;
+			}
 			calendarDao.create(calendar);
 			
 			// Get the Users FB image and save it locally
