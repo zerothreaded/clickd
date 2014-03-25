@@ -1,8 +1,6 @@
 package com.clickd.server.services.calendars;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.CalendarDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Calendar;
+import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
