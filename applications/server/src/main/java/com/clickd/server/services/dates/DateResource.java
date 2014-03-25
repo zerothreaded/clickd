@@ -37,7 +37,7 @@ public class DateResource {
 			if (date != null) {
 				return Response.status(200).entity(Utilities.toJson(date)).build();
 			} else {
-				return Response.status(300).entity(new ErrorMessage("Not Found for reference : ", dateRef)).build();			
+				return Response.status(404).build();			
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
