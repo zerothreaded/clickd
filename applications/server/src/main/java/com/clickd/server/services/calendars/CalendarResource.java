@@ -30,11 +30,15 @@ public class CalendarResource {
 
 	@GET
 	@Timed
-	@Path("/{userRef}")
-	public Response get(@PathParam("userRef") String userRef) {
+	@Path("/{calendarRef}")
+	public Response get(@PathParam("calendarRef") String calendarRef) {
 		try {
-			Calendar calendar = calendarDao.findByRef("/calendars/" + userRef);
-			return Response.status(200).entity(Utilities.toJson(calendar)).build();
+			Calendar calendar = calendarDao.findByRef("/calendars/" + calendarRef);
+			if (calendar != null) {
+				return Response.status(200).entity(Utilities.toJson(calendar)).build();
+			} else {
+				return Response.status(404).build();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
