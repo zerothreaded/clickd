@@ -11,6 +11,7 @@ import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.calendars.CalendarResource;
 import com.clickd.server.services.chatrooms.ChatroomResource;
 import com.clickd.server.services.choices.ChoiceResource;
+import com.clickd.server.services.dates.DateResource;
 import com.clickd.server.services.integration.facebook.UserImportResource;
 import com.clickd.server.services.places.PlaceResource;
 import com.clickd.server.services.questions.QuestionResource;
@@ -91,6 +92,9 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		CalendarResource calendarResource = context.getBean(CalendarResource.class);
 		environment.addResource(calendarResource);
+		
+		DateResource dateResource = context.getBean(DateResource.class);
+		environment.addResource(dateResource);
 		
 		// TODO: Sort out healthchecks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
