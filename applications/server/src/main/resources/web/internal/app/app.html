@@ -1,0 +1,359 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dating @ Clickd</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<script src="/web/imported/frameworks/jquery/js/jquery-1.10.2.min.js"></script>
+<script src="/web/imported/frameworks/bootstrap/js/bootstrap.js"></script>
+<link href="/web/imported/frameworks/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/web/internal/app/app.css" rel="stylesheet">
+
+
+<!-- AngularJS and Boostrap JS files -->
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-resource-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-route-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-cookies.js"></script>
+
+
+
+<!-- Using the UI Bootstrap AngularJS directives for Bootstrap here. For more info see:
+http://angular-ui.github.io/bootstrap/ -->
+<script src="/web/imported/frameworks/angular/js/lib/ui-bootstrap-tpls-0.5.0.js"></script>
+
+<!-- Project specific JS files -->
+<script src="/web/internal/app/app.js"></script>
+
+<script> window["_GOOG_TRANS_EXT_VER"] = "1";
+
+$(function() {
+    $( "#dateOfBirth" ).datepicker();
+  });
+  
+</script>
+<script> window["_GOOG_TRANS_EXT_VER"] = "1"; </script>
+<script>
+function timeRefresh(timeoutPeriod) 
+{
+	// setTimeout("location.reload(true);",timeoutPeriod);
+}
+</script>
+
+
+
+<style>
+	html, body, #map-canvas {
+		height: 100%;
+		margin: 0px;
+		padding: 0px
+	}
+</style>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+   	 <script>
+   		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+   		
+   		var mapOptions = {
+   		  zoom: 14,
+   		  center: myLatlng
+   		}
+   		
+   	 	var map;
+		$(document).ready(function () {
+			alert('man');
+			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		});
+   	 </script>
+   	 
+ 
+</head>
+<body onload="JavaScript:timeRefresh(30000);">
+    <div id="fb-root"></div>
+    <script src="/web/internal/app/app.js"></script>
+    <div align="center">
+
+	</div>
+	<div ng-app="clickdApplication" ng-controller="AppController" ng-init="init()">
+		<!-- SINGLE SCREEN -->
+		<div ng-if="!isUserLoggedIn()" id="home-wrapper">
+			<div id="top-nav" class="navbar nav navbar-inverse">
+				<div class="container">
+					<a href="#" class="brand navbar-left"> <span>This is <strong>dating</strong> @ clickd
+					</span>
+					</a>
+					<!-- /brand -->
+					<div class="navbar-right">
+						<div class="label label-danger pull-right login-error" ng-if="signInFormData.signInFailed">Your login failed.</div>
+					</div>
+					<div class="navbar-right">
+						<form ng-submit="signInFormSubmit()" class="form-group login-form">
+							<div class="form-group-navbar">
+								<div class="col-md-4 col-sm-5 form-group navbar-form-group" id="login-email-group">
+									<input ng-model="signInFormData.email" type="text" class="form-control col-md-3 col-sm-3" placeholder="Email" name="email" id="login-email-input">
+								</div>
+								<div class="col-md-4 col-sm-5 form-group navbar-form-group" id="login-password-group">
+									<input ng-model="signInFormData.password" type="password" class="form-control" placeholder="Password" name="password" id="login-password-input">
+								</div>
+								<div class="col-md-1 col-sm-1 form-group navbar-form-group">
+									<button class="btn btn-default" type="submit">Sign In</button>
+								</div>
+								<div class="col-md-1 col-sm-1 form-group navbar-form-group"></div>
+								<div class="col-md-1 col-sm-1 form-group navbar-form-group">
+									<script type="IN/Login"></script>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div id="main-container-home">
+				<!-- <div class="col-md-7 signup-group">
+		    <div id="map-canvas"></div>
+		
+		</div> -->
+				<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-6 col-sm-offset-6 signup-group">
+					<div class="label label-success pull-right login-error" ng-if="model.showFbLoginLabel">You have signed up with facebook. Login using your FB details</div>
+					<form ng-submit="processRegisterForm()" ng-if="!model.showFbLoginLabel">
+						<div class="panel" ng-if="!requestMemberBio()" id="form-page-1">
+							<h2>
+								Sign Up<small> to see who you click with</small>
+							</h2>
+							<hr>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<div class="form-group">
+										<input ng-model="registerFormData.firstName" type="text" name="firstName" id="first_name" class="form-control" placeholder="First Name">
+									</div>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<div class="form-group">
+										<input ng-model="registerFormData.lastName" type="text" name="lastName" id="last_name" class="form-control" placeholder="Last Name">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input ng-model="registerFormData.email" type="email" name="email" id="email" class="form-control input-md" placeholder="Email Address">
+							</div>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<div class="form-group">
+										<input ng-model="registerFormData.password_confirmation" type="password" name="password_confirmation" id="password_confirmation"
+											class="form-control input-md" placeholder="Password"
+										>
+									</div>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6">
+									<div class="form-group">
+										<input ng-model="registerFormData.password" type="password" name="password" id="password" class="form-control input-md" placeholder="Confirm Password">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12">Click register to get started on clickd!</div>
+								<br /> &nbsp;&nbsp;&nbsp;
+								<div class="btn btn-default" id="facebook-login" onClick="doLoginFb2()">
+									<strong>Sign up with Facebook</strong>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-xs-6 col-md-12">
+									<button ng-click="showMemberBioRequest()" class="btn btn-primary btn-block btn-lg" type="button">Get Started</button>
+								</div>
+							</div>
+						</div>
+						<div ng-if="requestMemberBio()" class="panel" id="form-page-2">
+							<h2>Almost there...</h2>
+							<hr>
+							<span class="label label-danger pull-right signup-error" ng-if="registerFormData.registerFailed">Your registration failed.</span>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-12">
+									<div class="form-group">
+										<input type="text" ng-model="registerFormData.dateOfBirth" name="dateOfBirth" id="dateOfBirth" class="form-control input-md"
+											placeholder="When's your birthday?"
+										>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-12">
+									<div class="form-group">
+										<input type="text" ng-model="registerFormData.postcode" name="postcode" id="postcode" class="form-control input-md"
+											placeholder="What's your postcode?"
+										>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6 col-md-12">
+									<div class="form-group">
+										<select class="form-control" name="gender" id="gender" ng-model="registerFormData.gender">
+											<option value="" disabled="" selected="">What's your gender?</option>
+											<option>Male</option>
+											<option>Female</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12">
+									By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="http://localhost:8080/assets/app/home#"
+										data-toggle="modal" data-target="#t_and_c_m"
+									>Terms and Conditions</a> set out by this site, including our Cookie Use.
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-xs-6 col-md-12">
+									<input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
+								</div>
+								<br />
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- USER SCREEN -->
+		<div ng-if="isUserLoggedIn()" id="user-wrapper">
+			<div id="logoutConfirm_background" class="popup_background"
+				style="opacity: 0; visibility: hidden; background-color: black; position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; transition: all 0.3s; -webkit-transition: all 0.3s;"
+			></div>
+			<div id="logoutConfirm_wrapper" class="popup_wrapper"
+				style="opacity: 0; visibility: hidden; position: fixed; overflow: auto; z-index: 2001; transition: all 0.3s; -webkit-transition: all 0.3s; top: 0px; right: 0px; left: 0px; bottom: 0px; text-align: center; display: none;"
+			>
+				<div class="custom-popup width-100 popup_content" id="logoutConfirm" data-popup-initialized="true" aria-hidden="true" role="dialog"
+					aria-labelledby="open_67128750"
+					style="opacity: 0; visibility: hidden; display: inline-block; outline: none; transition: all 0.3s; -webkit-transition: all 0.3s; text-align: left; position: relative; vertical-align: middle;"
+				>
+					<div class="padding-md">
+						<h4 class="m-top-none">Do you want to logout?</h4>
+					</div>
+					<div class="text-center">
+						<a class="btn btn-success m-right-sm" href="login.html">Logout</a> <a class="btn btn-danger logoutConfirm_close">Cancel</a>
+					</div>
+				</div>
+				<div class="popup_align" style="display: inline-block; vertical-align: middle; height: 100%;"></div>
+			</div>
+			<!--  end user logout wrapper -->
+			<!-- Overlay Div -->
+			<div id="overlay" class="transparent" style="display: none;"></div>
+			<div id="top-nav" class="navbar nav navbar-inverse navbar-fixed-top">
+				<a href="#" class="navbar-brand">
+					<span> <img class="small-profile-img" ng-src="/profile-img{{model.currentUser.user.ref}}.jpg"> is dating @ clickd</span>
+				</a>
+				<ul class="nav-notification navbar-right nav">
+					<li class="profile dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span id="user-full-name"><strong>{{model.currentUser.user.firstName}}</strong></span>
+							<span><i class="fa fa-chevron-down"></i></span>
+					</a>
+						<ul class="dropdown-menu">
+							<li><a class="clearfix" href="#"> <span class="detail"> <strong>{{model.currentUser.user.firstName}}
+											{{model.currentUser.user.lastName}}</strong><br />
+									<span class="grey">{{model.currentUser.user.email}}</span>
+								</span>
+							</a></li>
+							<li><a tabindex="-1" href="profile.html" class="main-link"><i class="fa fa-edit fa-lg"></i> Edit profile</a></li>
+							<li><a tabindex="-1" href="gallery.html" class="main-link"><i class="fa fa-picture-o fa-lg"></i> Photo Gallery</a></li>
+							<li><a tabindex="-1" href="#" class="theme-setting"><i class="fa fa-cog fa-lg"></i> Setting</a></li>
+							<li class="divider"></li>
+							<li><a tabindex="-1" class="main-link logoutConfirm_open" href="#" data-popup-ordinal="0" id="link-sign-out" ng-click="signOut()"> <i
+									class="fa fa-lock fa-lg"
+								></i>Sign out
+							</a></li>
+						</ul></li>
+				</ul>
+			</div> <!-- /top-nav-->
+		</div> <!-- /user-wrapper -->
+		
+		<div class="main-container">
+			<div class="row"> 
+				
+				<div class="col-sm-2 timeline-title"> 
+					Time Line Title
+				</div>
+				
+				<div class="col-sm-1 timeline-weekday">
+					<a href="#monday">Monday</a>
+					    <div class="row">
+					      <div class="col-sm-6">
+					      	-
+					      </div>
+					      <div class="col-sm-6">
+					      	-
+					     </div>
+					    </div>
+				</div>
+				
+				<div class="col-sm-1 timeline-weekday">
+					Tuesday
+				</div>
+				<div class="col-sm-1 timeline-weekday">
+					Wednesday
+				</div>
+				<div class="col-sm-1 timeline-weekday">
+					Thursday
+				</div>
+				<div class="col-sm-1 timeline-weekday">
+					Friday
+				</div>
+				<div class="col-sm-1 timeline-weekend">
+					Saturday
+				</div>
+				<div class="col-sm-1 timeline-weekend">
+					Sunday
+				</div>
+				<div class="col-sm-3 timeline-content">
+					control
+				</div>
+			</div> 
+			<div class="row"> <!-- content -->
+				<div class="col-sm-2 game-controller">
+					game controller
+				</div>
+				<div class="col-sm-10 game-board">
+					
+					<div class="row board-top">
+						<div class="col-sm-2">
+							left
+						</div>
+						<div class="col-sm-8">
+							middle
+						</div>
+						<div class="col-sm-2">
+							right
+						</div>
+					</div>
+					
+					<div class="row board-middle">
+						<div class="col-sm-2">
+							left
+						</div>
+						<div class="col-sm-8">
+							middle
+						</div>
+						<div class="col-sm-2">
+							right
+						</div>
+					</div>
+					
+					<div class="row board-bottom">
+						<div class="col-sm-2">
+							left
+						</div>
+						<div class="col-sm-8">
+							middle
+						</div>
+						<div class="col-sm-2">
+							right
+						</div>
+					</div>
+				</div>
+			</div> <!-- /content -->
+			
+		</div>
+	</div> <!--  end click app -->
+</body>
+
+</html>
