@@ -56,7 +56,7 @@ public class CalendarDao implements InitializingBean {
 	}
 
 	public Calendar findByRef(String ref) {
-		Calendar Calendar =  cache.get(ref);
+		Calendar Calendar = cache.get(ref);
 		return Calendar;
 	}
 

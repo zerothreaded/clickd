@@ -33,7 +33,7 @@ public class CalendarResource {
 	@Path("/{userRef}")
 	public Response get(@PathParam("userRef") String userRef) {
 		try {
-			Calendar calendar = calendarDao.findByRef(userRef);
+			Calendar calendar = calendarDao.findByRef("/calendars/" + userRef);
 			return Response.status(200).entity(Utilities.toJson(calendar)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
