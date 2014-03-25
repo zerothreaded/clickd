@@ -1234,9 +1234,11 @@ public class UserResource {
 			System.out.println("myChoice == null");
 		}
 		String likeVerb = "Likes";
-		if (myChoice.getAnswerText().equals("no"))
-			likeVerb = "Doesn't Like";
 		
+		if(myChoice != null && null != myChoice.getAnswerText() ) {
+			if (myChoice.getAnswerText().equals("no"))
+			likeVerb = "Doesn't Like";
+		}
 		if (question.getTags().get(question.getTags().size()-1).equals("fb.likes"))
 			cliqueName = likeVerb+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
 	
