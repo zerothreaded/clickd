@@ -64,4 +64,6 @@
 
 	<bean id="choiceResource" class="com.clickd.server.services.choices.ChoiceResource" />
 
+	<bean id="calendarResource" class="com.clickd.server.services.calendars.CalendarResource" />
+
 </beans>
