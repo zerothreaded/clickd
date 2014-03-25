@@ -21,10 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.ChatroomDao;
 import com.clickd.server.dao.UserDao;
+import com.clickd.server.model.ChatMessage;
 import com.clickd.server.model.Chatroom;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
-import com.clickd.server.model.ChatMessage;
 import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;

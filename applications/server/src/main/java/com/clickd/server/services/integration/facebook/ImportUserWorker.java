@@ -14,9 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.clickd.server.dao.BookDao;
+import com.clickd.server.dao.CalendarDao;
 import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.LikeDao;
@@ -26,6 +25,7 @@ import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Book;
+import com.clickd.server.model.Calendar;
 import com.clickd.server.model.Checkin;
 import com.clickd.server.model.Choice;
 import com.clickd.server.model.Like;
@@ -50,6 +50,8 @@ public class ImportUserWorker implements Runnable {
 	protected PlaceDao placeDao;
 	protected BookDao bookDao;
 	protected CheckinDao checkinDao;
+	protected CalendarDao calendarDao;
+	
 	private String friendId;
 	private String facebookUserData;
 	
@@ -577,6 +579,14 @@ public class ImportUserWorker implements Runnable {
 			newUser.setRef("/users/" + (String)map.get("id"));
 			getUserDao().create(newUser);
 			
+			// Create the users dating calendar
+			Calendar calendar = new Calendar();
+			calendar.setName(newUser.getFirstName() + "-dating-calendar");
+			if (calendarDao == null) {
+				int wait = 1;
+			}
+			calendarDao.create(calendar);
+			
 			// Get the Users FB image and save it locally
 			 String dataDir = System.getProperty("dataDir");
 			 if (null == dataDir) {
@@ -793,5 +803,13 @@ public class ImportUserWorker implements Runnable {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+
+	public CalendarDao getCalendarDao() {
+		return calendarDao;
+	}
+
+	public void setCalendarDao(CalendarDao calendarDao) {
+		this.calendarDao = calendarDao;
 	}
 }

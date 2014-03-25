@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.clickd.server.model.Question;
 import com.clickd.server.model.User;
 
 public class UserDao implements InitializingBean {

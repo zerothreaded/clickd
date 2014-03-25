@@ -81,6 +81,14 @@
 	<bean id="likeDao" class="com.clickd.server.dao.LikeDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
+		
+	<bean id="calendarDao" class="com.clickd.server.dao.CalendarDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="dateDao" class="com.clickd.server.dao.DateDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 	
 	<bean id="userResource" class="com.clickd.server.services.users.UserResource" />
 
@@ -103,5 +111,11 @@
 	<bean id="likeResource" class="com.clickd.server.services.likes.LikeResource" />
 
 	<bean id="chatroomResource" class="com.clickd.server.services.chatrooms.ChatroomResource" />
+
+	<bean id="calendarResource" class="com.clickd.server.services.calendars.CalendarResource" />
+
+	<bean id="dateResource" class="com.clickd.server.services.dates.DateResource" />
+
+
 
 </beans>

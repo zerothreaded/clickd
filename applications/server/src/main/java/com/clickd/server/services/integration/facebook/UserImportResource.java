@@ -1,20 +1,8 @@
 package com.clickd.server.services.integration.facebook;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -25,10 +13,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.fest.util.Strings.StringToAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.BookDao;
+import com.clickd.server.dao.CalendarDao;
 import com.clickd.server.dao.CheckinDao;
 import com.clickd.server.dao.ChoiceDao;
 import com.clickd.server.dao.LikeDao;
@@ -37,17 +25,7 @@ import com.clickd.server.dao.PlaceDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.TelevisionDao;
 import com.clickd.server.dao.UserDao;
-import com.clickd.server.model.Book;
-import com.clickd.server.model.Checkin;
-import com.clickd.server.model.Choice;
 import com.clickd.server.model.ErrorMessage;
-import com.clickd.server.model.Like;
-import com.clickd.server.model.Link;
-import com.clickd.server.model.Movie;
-import com.clickd.server.model.Place;
-import com.clickd.server.model.Question;
-import com.clickd.server.model.Television;
-import com.clickd.server.model.User;
 import com.clickd.server.utilities.Constants;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
@@ -58,8 +36,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.Executors;
 @Path("/integration/facebook/user")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserImportResource {
-//	FacebookDataDao facebookCheckinsDao;
-//	FacebookDataDao facebookLikesDao;
 
 	@Autowired 
 	UserDao userDao;
@@ -88,26 +64,9 @@ public class UserImportResource {
 	@Autowired
 	CheckinDao checkinDao;
 	
-	//	FacebookDataDao facebookTelevisionDao;
-//	FacebookDataDao facebookBooksDao;
+	@Autowired
+	CalendarDao calendarDao;
 	
-//	@GET
-//	@Path("/{ref}")
-//	@Timed
-//	public Response getFacebookResource(@PathParam("ref") String ref) {
-//		try {
-//			User user = facebookDao.findByRef("/facebook/" + ref);
-//			if (null != user) {
-//				return Response.status(200).entity(user).build();
-//			} else {
-//				return Response.status(300).entity(new ErrorMessage("failed", "User Not Found")).build();
-//			}
-//		} catch(Exception e) {
-//			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
-//		}
-//	}
-//	
-
 	@GET
 	@Timed
 	@Path("/authResponse")
@@ -142,6 +101,7 @@ public class UserImportResource {
 			worker.setPlaceDao(placeDao);
 			worker.setMovieDao(movieDao);
 			worker.setLikeDao(likeDao);
+			worker.setCalendarDao(calendarDao);
 			Thread t = new Thread(worker);
 			t.start();
 			
@@ -178,6 +138,7 @@ public class UserImportResource {
 				friendWorker.setPlaceDao(placeDao);
 				friendWorker.setMovieDao(movieDao);
 				friendWorker.setLikeDao(likeDao);
+				friendWorker.setCalendarDao(calendarDao);
 				executor.execute(friendWorker);
 			}
 			executor.shutdown();
