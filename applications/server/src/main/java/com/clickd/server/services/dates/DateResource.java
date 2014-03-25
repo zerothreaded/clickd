@@ -34,7 +34,11 @@ public class DateResource {
 	public Response get(@PathParam("dateRef") String dateRef) {
 		try {
 			Date date = dateDao.findByRef("/dates/" + dateRef);
-			return Response.status(200).entity(Utilities.toJson(date)).build();
+			if (date != null) {
+				return Response.status(200).entity(Utilities.toJson(date)).build();
+			} else {
+				return Response.status(300).entity(new ErrorMessage("Not Found for reference : ", dateRef)).build();			
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
