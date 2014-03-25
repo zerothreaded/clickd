@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,6 +28,19 @@ public class CalendarResource {
 	@Autowired
 	private UserDao userDao;
 
+	@GET
+	@Timed
+	@Path("/{userRef}")
+	public Response get(@PathParam("userRef") String userRef) {
+		try {
+			Calendar calendar = calendarDao.findByRef(userRef);
+			return Response.status(200).entity(Utilities.toJson(calendar)).build();
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
 	@GET
 	@Timed
 	public Response getAll() {
