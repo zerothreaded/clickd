@@ -8,6 +8,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.clickd.server.dao.ChatroomDao;
 import com.clickd.server.services.answers.AnswerResource;
+import com.clickd.server.services.calendars.CalendarResource;
 import com.clickd.server.services.chatrooms.ChatroomResource;
 import com.clickd.server.services.choices.ChoiceResource;
 import com.clickd.server.services.integration.facebook.UserImportResource;
@@ -88,6 +89,8 @@ public class ApplicationService extends Service<UserConfiguration> {
 		UserImportResource facebookUserImportResource = context.getBean(UserImportResource.class);
 		environment.addResource(facebookUserImportResource);
 
+		CalendarResource calendarResource = context.getBean(CalendarResource.class);
+		environment.addResource(calendarResource);
 		
 		// TODO: Sort out healthchecks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
