@@ -40,6 +40,9 @@ public class TokenCheckFilter implements Filter {
 				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 			} else {
+				// Cache all images
+				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
+				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 				if(path.contains("profile-img")) {
 					 String dataDir = System.getProperty("dataDir");
 					 if (null == dataDir) {
@@ -48,17 +51,16 @@ public class TokenCheckFilter implements Filter {
 					 } else {
 						 //System.out.println("\n\nData Directory = " + dataDir);
 					 }
-					String targetFileName = path.substring(12);
 					// Image files - serve these from disk
 					byte[] fileContents;
+					String targetFileName = path.substring(12);
 					File imageFile = new File(dataDir, targetFileName);
 					fileContents = org.apache.commons.io.FileUtils.readFileToByteArray(imageFile);
-					
 					servletResponse.getOutputStream().write(fileContents);
 					servletResponse.flushBuffer();
 					return;
 				} else {
-					// All others
+					// All other images
 				}
 			}
 		}		
