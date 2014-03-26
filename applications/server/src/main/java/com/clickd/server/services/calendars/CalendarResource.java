@@ -68,7 +68,6 @@ public class CalendarResource {
 	
 				// get start of this week in milliseconds
 				cal.set(java.util.Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-				
 				for (int day = 0 ; day < 7; day++)
 				{
 					Date today = new Date();
