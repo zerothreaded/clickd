@@ -37,36 +37,28 @@ public class ApplicationService extends Service<UserConfiguration> {
 	public void initialize(Bootstrap<UserConfiguration> bootstrap) {
 		bootstrap.setName("application");
 		bootstrap.addBundle(new ViewBundle());
-	//	bootstrap.addBundle(new AssetsBundle("/resources", "/web2"));
 
+		// Static Resource URLS
 		bootstrap.addBundle(new AssetsBundle("/profile-img", "/profile-img"));
-		
 		bootstrap.addBundle(new AssetsBundle("/web", "/web"));
+
+		// Application URLS
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/d3", "d31.html"));
-		bootstrap.addBundle(new AssetsBundle("/web/internal/integration", "/int", "index.html"));
-
-		bootstrap.addBundle(new AssetsBundle("/web/data", "/data"));
-
 		bootstrap.addBundle(new AssetsBundle("/web/internal/app", "/app", "app.html"));
+		bootstrap.addBundle(new AssetsBundle("/web/internal/integration", "/int", "index.html"));
 
 	}
 
 	@Override
 	public void run(UserConfiguration configuration, Environment environment) {
 		final String springContextFileName = configuration.getSpringContextFileName();
-
-		// context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
-		
 		final String dataFolder = System.getProperty("dataFolder");
-		String fileName = dataFolder + "/" + springContextFileName;
 		
-		System.out.println("\n\nUSER CONFIG FileNme = " + dataFolder);
-		
+		System.out.println("ApplicationService run() called. Data Folder = " + dataFolder);
+		System.out.println("ApplicationService run() called. Spring Context File Name = " + springContextFileName);
 		context = new ClassPathXmlApplicationContext(new String[] { springContextFileName });
 
 		// Create REST End Points
-
 		UserResource userResource = context.getBean(UserResource.class);
 		environment.addResource(userResource);
 
