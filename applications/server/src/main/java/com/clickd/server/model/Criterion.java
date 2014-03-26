@@ -1,7 +1,6 @@
 package com.clickd.server.model;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;

@@ -1,5 +1,6 @@
 package com.clickd.server.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -16,15 +17,7 @@ public class MemberDate extends Resource {
 	
 	protected java.util.Date endDate;
 	
-	protected Criteria criteria;
-	
-	public Criteria getCriteria() {
-		return criteria;
-	}
-
-	public void setCriteria(Criteria criteria) {
-		this.criteria = criteria;
-	}
+	protected List<Criterion> criteria;
 
 	public MemberDate() {	
 		super();
@@ -75,6 +68,14 @@ public class MemberDate extends Resource {
 
 	public void setEndDate(java.util.Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public List<Criterion> getCriteria() {
+		return criteria;
+	}
+
+	public void setCriteria(List<Criterion> criteria) {
+		this.criteria = criteria;
 	}
 	
 }
