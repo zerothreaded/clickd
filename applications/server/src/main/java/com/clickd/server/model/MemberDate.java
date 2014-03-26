@@ -17,7 +17,7 @@ public class MemberDate extends Resource {
 	
 	protected java.util.Date endDate;
 	
-	protected List<Criterion> criteria;
+	protected List<Criteria> criteria;
 
 	public MemberDate() {	
 		super();
@@ -70,11 +70,11 @@ public class MemberDate extends Resource {
 		this.endDate = endDate;
 	}
 
-	public List<Criterion> getCriteria() {
+	public List<Criteria> getCriteria() {
 		return criteria;
 	}
 
-	public void setCriteria(List<Criterion> criteria) {
+	public void setCriteria(List<Criteria> criteria) {
 		this.criteria = criteria;
 	}
 	

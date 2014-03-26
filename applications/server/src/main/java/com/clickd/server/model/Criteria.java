@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class Criterion extends Resource {
+public class Criteria extends Resource {
 
 	public static enum Operator {
 		// EXISTENCE Operators
@@ -36,14 +36,14 @@ public class Criterion extends Resource {
 	
 	protected List<Object> values;
 	
-	public Criterion() {	
+	public Criteria() {	
 		super();
 		createRef();
 	}
 
 	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/criterion/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/criteria/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	

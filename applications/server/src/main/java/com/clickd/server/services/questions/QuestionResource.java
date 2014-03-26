@@ -35,6 +35,8 @@ import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 @Path("/questions")
 @Produces(MediaType.APPLICATION_JSON)
 public class QuestionResource {
@@ -152,6 +154,43 @@ public class QuestionResource {
 			return false;
 		}
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/all/{limit}/{tags}")
+	@Timed
+	public Response getQuestions(@PathParam("limit") int limit, @PathParam("tags") String tags ) {
+		
+		try {
+			String[] allowedTags = tags.split(",");
+			List<String> allowedTagsList = new ArrayList<String>(Arrays.asList(allowedTags));
+			//List<Question> questions = questionDao.findAllSortedBy("ref");
+			List<Question> questions = questionDao.findAll();
+			ArrayList<Question> toReturn = new ArrayList<Question>();
+
+			int count = 0;
+			for (Question thisQuestion : questions)
+			{
+				for (String tag : thisQuestion.getTags())
+				{
+					if (allowedTagsList.contains(tag))
+					{
+						toReturn.add(thisQuestion);
+						
+						if (count++ >= limit)
+							break;
+					}
+				}
+			}
+						
+
+			return Response.status(200).entity(Utilities.toJson(toReturn.subList(0, Math.min(toReturn.size(), limit)))).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();
+		}
+	} 
 	
 	
 	@SuppressWarnings("unchecked")
