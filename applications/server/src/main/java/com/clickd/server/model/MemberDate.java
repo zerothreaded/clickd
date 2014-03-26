@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class Date extends Resource {
+public class MemberDate extends Resource {
 
 	@Id
 	protected String id;
@@ -16,7 +16,7 @@ public class Date extends Resource {
 	
 	protected java.util.Date endDate;
 	
-	public Date() {	
+	public MemberDate() {	
 		super();
 		createRef();
 	}

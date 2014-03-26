@@ -86,7 +86,7 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
-	<bean id="dateDao" class="com.clickd.server.dao.DateDao">
+	<bean id="memberDateDao" class="com.clickd.server.dao.MemberDateDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
@@ -114,7 +114,7 @@
 
 	<bean id="calendarResource" class="com.clickd.server.services.calendars.CalendarResource" />
 
-	<bean id="dateResource" class="com.clickd.server.services.dates.DateResource" />
+	<bean id="memberDateResource" class="com.clickd.server.services.dates.MemberDateResource" />
 
 
 

@@ -8,18 +8,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import com.clickd.server.model.Date;
+import com.clickd.server.model.MemberDate;
 
-public class DateDao implements InitializingBean {
+public class MemberDateDao implements InitializingBean {
 
-	public Map<String, Date> cache;
+	public Map<String, MemberDate> cache;
 	
 	private MongoOperations mongoOperations;
 	private String collectionName;
 
-	public DateDao() {
-		System.out.println("DateDao() called.");
-		cache = new ConcurrentHashMap<String, Date>();
+	public MemberDateDao() {
+		System.out.println("MemberDateDao() called.");
+		cache = new ConcurrentHashMap<String, MemberDate>();
 		this.collectionName = "dates";
 	}
 
@@ -31,31 +31,31 @@ public class DateDao implements InitializingBean {
 		this.mongoOperations = mongoOperations;
 	}
 
-	public Date create(Date Date) {
+	public MemberDate create(MemberDate Date) {
 		mongoOperations.save(Date, collectionName);
 		cache.put(Date.getRef(), Date);
 		return Date;
 	}
 
-	public Date update(Date Date) {
+	public MemberDate update(MemberDate Date) {
 		delete(Date);
 		create(Date);
 		return Date;
 	}
 
-	public void delete(Date Date) {
+	public void delete(MemberDate Date) {
 		mongoOperations.remove(Date);
 		cache.remove(Date.getRef());
 	}
 
-	public List<Date> findAll() {
-		List<Date> results = new ArrayList<Date>();
+	public List<MemberDate> findAll() {
+		List<MemberDate> results = new ArrayList<MemberDate>();
 		results.addAll(cache.values());
 		return results;
 	}
 
-	public Date findByRef(String ref) {
-		Date Date = cache.get(ref);
+	public MemberDate findByRef(String ref) {
+		MemberDate Date = cache.get(ref);
 		return Date;
 	}
 
@@ -63,8 +63,8 @@ public class DateDao implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		long now = new java.util.Date().getTime();
 		System.out.println("afterPropertiesSet() called. Loading cache..");
-		List<Date> allDates = mongoOperations.findAll(Date.class, collectionName);
-		for (Date Date : allDates) {
+		List<MemberDate> allDates = mongoOperations.findAll(MemberDate.class, collectionName);
+		for (MemberDate Date : allDates) {
 			cache.put(Date.getRef(), Date);
 		}
 		System.out.println("Date cache has " + cache.size() + " Dates. Loaded in " + (new java.util.Date().getTime() - now) + "ms");

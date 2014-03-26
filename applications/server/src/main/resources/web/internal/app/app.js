@@ -17,6 +17,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"questionTags" : {"fb.movies" : "movies"},
 		"showFbLoginLabel" : false,
 		"calendarDays" : [],
+		"selectedDate" : "",
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -45,6 +46,20 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			
 			}
 	}; 
+	
+	$scope.createDateForm = {};
+	
+	$scope.createDate = function () {
+			$http({
+		        method  : 'POST',
+		        url     : '/dates/new',
+		        data    : $.param($scope.createDateForm),  // pass in data as strings
+		        headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
+		    })
+	        .success(function(data) {
+	        	console.log("create date: "+JSON.stringify(data));
+	       })
+	};
 
 	
 	$scope.init = function () {
@@ -76,6 +91,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 
 	}
 	
+	$scope.onSelectDate = function(date)
+	{
+		$scope.createDateForm.date = date;
+		$scope.model.selectedDate = date;
+		console.log(date);
+	}
+	
 	$scope.updateCalendar = function()
 	{
 		var getCalendarUrl = $scope.model.currentUser.user.links.calendar.href+"/thisweek";
@@ -88,6 +110,15 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				  'Friday',
 				  'Saturday'
 				);
+		var dayShort = new Array(
+				  'Sun',
+				  'Mon',
+				  'Tue',
+				  'Wed',
+				  'Thu',
+				  'Fri',
+				  'Sat'
+				);
 		
 		$http({ method  : 'GET', url : getCalendarUrl })
 		.success(function(data) { 
@@ -99,7 +130,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 				var thisDate = new Date(dayText);
 				var dayOfWeek = thisDate.getDay();
 
-				var dateObject = {"dayName" : dayNames[dayOfWeek], "date" : thisDate};
+				var dateObject = {"dayName" : dayNames[dayOfWeek], "dayShort" : dayShort[dayOfWeek], "date" : thisDate, "dateShort" : thisDate.getDate()+"/"+thisDate.getMonth()};
 				$scope.model.calendarDays[idx++] = dateObject;
 
 			}
