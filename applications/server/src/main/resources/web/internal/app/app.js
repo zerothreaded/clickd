@@ -16,6 +16,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"selectedChatroom" : { "ref" : -1},
 		"questionTags" : {"fb.movies" : "movies"},
 		"showFbLoginLabel" : false,
+		"calendarDays" : [],
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -73,6 +74,38 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		}
 			
 
+	}
+	
+	$scope.updateCalendar = function()
+	{
+		var getCalendarUrl = $scope.model.currentUser.user.links.calendar.href+"/thisweek";
+		var dayNames = new Array(
+				  'Sunday',
+				  'Monday',
+				  'Tuesday',
+				  'Wednesday',
+				  'Thursday',
+				  'Friday',
+				  'Saturday'
+				);
+		
+		$http({ method  : 'GET', url : getCalendarUrl })
+		.success(function(data) { 
+			var days = data.days;
+			$scope.model.calendarDays = new Array();
+			var idx = 0;
+			days.forEach(function (dayText) {
+			
+				var thisDate = new Date(dayText);
+				var dayOfWeek = thisDate.getDay();
+
+				var dateObject = {"dayName" : dayNames[dayOfWeek], "date" : thisDate};
+				$scope.model.calendarDays[idx++] = dateObject;
+
+			}
+			);
+			console.log("got calendar "+JSON.stringify($scope.calendarDays));
+		});
 	}
 	
 	$scope.updateChatroom = function() {
@@ -362,6 +395,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 			$scope.model.currentUser.isLoggedIn = true;
 			
 			$scope.updateCCC();
+			$scope.updateCalendar();
 		});
 	};
 	

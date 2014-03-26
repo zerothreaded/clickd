@@ -1,5 +1,7 @@
 package com.clickd.server.model;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -10,7 +12,16 @@ public class Calendar extends Resource {
 	protected String id;
 	protected String ref;
 	protected String name;
+	protected ArrayList<Date> days;
 	
+	public ArrayList<Date> getDays() {
+		return days;
+	}
+
+	public void setDays(ArrayList<Date> daysOfThisWeek) {
+		this.days = daysOfThisWeek;
+	}
+
 	public Calendar() {	
 		super();
 		createRef();
