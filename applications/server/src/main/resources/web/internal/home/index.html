@@ -357,14 +357,14 @@ d3.select("div").style("height", diameter + "px");
 			<div class="row">
 				<div class="col-sm-2 sidebar">
 					<!-- NAVIGATOR -->
-					<a href="" ng-click="onClickCandidates()"  ><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isCandidatesMenuOn()}" >Candidates</h4></a>
+					<a href="" ng-click="onClickCandidates()"  ><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isCandidatesMenuOn() }" >Candidates</h4></a>
 					<a href="" ng-click="onClickConnections()"><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isConnectionsMenuOn()}">Connections</h4></a>
 					<a href="" ng-click="onClickCliques()"><h4  class="menu-open-btn" ng-class="{highlightMenuBtn: isCliquesMenuOn()}">Cliques</h4></a>
 		
 					<div ng-if="isCandidatesMenuOn()" class="list-group">
 							<a class="list-group-item" ng-repeat="candidate in model.currentUser.candidates"
 							ng-click="onClickCandidate({{candidate.user}})" href="#"
-							ng-class="{active: isUserSelected('{{candidate.user.ref}}')}"
+							ng-class="{active: isUserSelected('{{candidate.user.ref}}') && model.currentSelection == 'candidates.user'}"
 							 >
 								&nbsp;<img class="small-profile-img" ng-src="/profile-img{{candidate.user.ref}}.jpg">
 								{{candidate.user.firstName}} <span class="badge small-badge">{{candidate.score}}</span></a>
@@ -372,7 +372,7 @@ d3.select("div").style("height", diameter + "px");
 					<div ng-if="isConnectionsMenuOn()"  class="list-group">
 						<a class="list-group-item"  ng-repeat="connection in model.currentUser.connections"
 						ng-click="onClickConnection({{connection}})" href="#"
-						ng-class="{active: isUserSelected('{{connection.ref}}')}"
+						ng-class="{active: isUserSelected('{{connection.ref}}' && model.currentSelection == 'connections.user')}"
 							 >
 								&nbsp;<img class="small-profile-img" ng-src="/profile-img/{{connection.ref}}.jpg">
 								{{connection.firstName}}
@@ -381,7 +381,7 @@ d3.select("div").style("height", diameter + "px");
 					<div ng-if="isCliquesMenuOn()"  class="list-group">
 						<a class="list-group-item"  ng-repeat="clique in model.currentUser.cliques"
 						ng-click="onClickClique({{clique}})" href="#"
-						ng-class="{active: isCliqueSelected({{'clique.ref'}})}">
+						ng-class="{active: isCliqueSelected('{{clique.ref}}') && model.currentSelection == 'cliques.clique'}">
 									&nbsp;{{clique.name}}  <span class="badge small-badge">{{clique.cliqueSize-1}}</span>
 						</a>
 					</div>
@@ -467,7 +467,7 @@ d3.select("div").style("height", diameter + "px");
 						
 						<!-- VIEW CLIQUES -->
 						<div ng-if="model.currentSelection == 'cliques'" class="panel candidates-panel">
-						<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique}})" href="#" ng-class="{active: isCliqueSelected('{{clique.ref}}')}" >
+						<div class="member-md-panel" ng-repeat="clique in model.currentUser.cliques" ng-click="onClickClique({{clique}})" href="#" ng-class="{active: isCliqueSelected('{{clique.ref}}') && model.currentSelection == 'cliques.clique'}" >
 									<div ng-if="clique.name.indexOf('like') != -1">
 										<img class="image" width="20px" height="20px" ng-src="/web/internal/home/images/fb_like.jpg">
 									 </div>

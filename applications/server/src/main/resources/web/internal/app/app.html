@@ -274,8 +274,8 @@ function timeRefresh(timeoutPeriod)
 					Time Line Title
 				</div>
 				
-				<div class="col-sm-1 timeline-weekday">
-					<a href="#monday">Monday</a>
+				<div class="col-sm-1 timeline-weekday" ng-repeat="day in model.calendarDays">
+					<a href="#{{day.dayName}}">{{day.dayName}}</a>
 					    <div class="row">
 					      <div class="col-sm-6">
 					      	-
@@ -284,25 +284,6 @@ function timeRefresh(timeoutPeriod)
 					      	-
 					     </div>
 					    </div>
-				</div>
-				
-				<div class="col-sm-1 timeline-weekday">
-					Tuesday
-				</div>
-				<div class="col-sm-1 timeline-weekday">
-					Wednesday
-				</div>
-				<div class="col-sm-1 timeline-weekday">
-					Thursday
-				</div>
-				<div class="col-sm-1 timeline-weekday">
-					Friday
-				</div>
-				<div class="col-sm-1 timeline-weekend">
-					Saturday
-				</div>
-				<div class="col-sm-1 timeline-weekend">
-					Sunday
 				</div>
 				<div class="col-sm-3 timeline-content">
 					control

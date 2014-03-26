@@ -133,7 +133,9 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		$scope.model.selectedUser = {};
 		$scope.controlFlags.requestMemberBio = false;
 		$scope.controlFlags.moreQuestionsToAsk = true;
-		
+		$scope.model.currentUser.candidates = {};
+		$scope.model.currentUser.connections = {};
+		$scope.model.currentUser.cliques = {};
 	}
 	
 	$scope.loadMap = function() {
@@ -666,7 +668,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	}
 	
 	$scope.isUserSelected = function (otherUser) { return otherUser == $scope.model.selectedUser.ref; }
-	$scope.isCliqueSelected = function (otherClique) { return otherClique == $scope.model.selectedClique.ref; }
+	$scope.isCliqueSelected = function (otherClique) { console.log('clique selected: '+otherClique+', '+$scope.model.selectedClique.ref); return otherClique == $scope.model.selectedClique.ref; }
 	$scope.isCandidatesMenuOn = function() { return $scope.model.currentUser.candidatesShowMenu == true; }
 	$scope.isConnectionsMenuOn = function() { return $scope.model.currentUser.connectionsShowMenu == true; }
 	$scope.isCliquesMenuOn = function() { return $scope.model.currentUser.cliquesShowMenu == true; }

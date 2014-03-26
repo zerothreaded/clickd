@@ -1229,28 +1229,27 @@ public class UserResource {
 			if (myChoice.getAnswerText().equals("no"))
 			likeVerb = "Doesn't Like";
 		}
-		if (question.getTags().get(question.getTags().size()-1).equals("fb.likes"))
+		
+		if (question.getTags().contains("fb.likes"))
 			cliqueName = likeVerb+question.getTags().get(0)+" ("+question.getTags().get(1)+")";
 	
-		if (question.getTags().get(0).equals("genre"))
+		if (question.getTags().contains("genre"))
 			cliqueName = likeVerb + " "+ question.getTags().get(1) + " movies";
 		
-		if (question.getTags().get(0).equals("fb.checkin"))
+		if (question.getTags().contains("fb.checkin"))
 			cliqueName = "Been to "+question.getTags().get(1);
 		
-		if (question.getTags().get(0).equals("aboutme"))
+		if (question.getTags().contains("fb.movies"))
+			cliqueName = likeVerb+" movie "+question.getTags().get(0);
+
+		if (question.getTags().contains("fb.televisions"))
+			cliqueName = likeVerb+" TV show "+question.getTags().get(0);
+
+		if (question.getTags().contains("fb.book"))
+			cliqueName = likeVerb+" book "+question.getTags().get(0);
+		
+		if (question.getTags().contains("aboutme"))
 			cliqueName = question.getTags().get(2)+": "+myChoice.getAnswerText();
-	
-		if (question.getTags().size() > 1) {
-			if (question.getTags().get(1).equals("fb.movies"))
-				cliqueName = likeVerb+" movie "+question.getTags().get(0);
-	
-			if (question.getTags().get(1).equals("fb.televisions"))
-				cliqueName = likeVerb+" TV show "+question.getTags().get(0);
-	
-			if (question.getTags().get(1).equals("fb.book"))
-				cliqueName = likeVerb+" book "+question.getTags().get(0);
-		}
 		
 	
 		
@@ -1279,8 +1278,8 @@ public class UserResource {
 		try {
 			User user = userDao.findByRef("/users/" + userRef);
 			List<Clique> myCliques = new ArrayList<Clique>();	
-			// Add CHOICE based cliques
-			List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
+					// Add CHOICE based cliques
+					List<Choice> myChoices = choiceDao.findByUserRef("/users/"+userRef);
 			System.out.println("getCliques() looping over " + myChoices.size() + " choices for userRef " + userRef);
 			for (Choice myChoice : myChoices)
 			{
@@ -1298,7 +1297,7 @@ public class UserResource {
 				List<Choice> matchingChoices = choiceDao.findChoicesWithTheSameAnswerByAnswerTextAndQuestionRef(myChoice.getAnswerText(), myChoice.getLinkByName("question").getHref());
 				thisClique.get_Embedded().put("matching-choices", matchingChoices);
 				thisClique.setRef("/cliques/" + myChoice.getRef().split("/")[2]);
-				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);
+				thisClique.setRef("/cliques/"+myChoice.getRef().split("/")[2]);	
 				thisClique.setCliqueSize(matchingChoices.size());
 				myCliques.add(thisClique);
 			}
@@ -1345,7 +1344,7 @@ public class UserResource {
 			thisClique.setCliqueSize(usersWithSameChoice.size());
 			thisClique.get_Embedded().put("clique-members", cliqueUsers);
 			thisClique.get_Embedded().put("clique-name", cliqueName);
-			thisClique.setRef(question.getRef());
+			thisClique.setRef("/cliques/"+cliqueRef);
 			return thisClique;
 		} catch (Exception e) {
 			e.printStackTrace();

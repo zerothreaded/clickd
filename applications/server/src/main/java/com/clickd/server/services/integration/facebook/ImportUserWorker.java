@@ -577,7 +577,6 @@ public class ImportUserWorker implements Runnable {
 			newUser.setDateOfBirth(Utilities.dateFromString((String)map.get("user_birthday")));
 			newUser.setPassword("fb99");
 			newUser.setRef("/users/" + (String)map.get("id"));
-			getUserDao().create(newUser);
 			
 			// Create the users dating calendar
 			Calendar calendar = new Calendar();
@@ -587,6 +586,10 @@ public class ImportUserWorker implements Runnable {
 				int wait = 1;
 			}
 			calendarDao.create(calendar);
+			
+			newUser.addLink("calendar", new Link(calendar.getRef(), "dating-calendar"));
+			
+			getUserDao().create(newUser);
 			
 			// Get the Users FB image and save it locally
 			 String dataDir = System.getProperty("dataDir");
