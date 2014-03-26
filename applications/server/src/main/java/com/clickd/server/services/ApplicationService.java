@@ -86,7 +86,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 		MemberDateResource dateResource = context.getBean(MemberDateResource.class);
 		environment.addResource(dateResource);
 		
-		// TODO: Sort out healthchecks
+		// TODO: Sort out health checks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));
 		
 		// FILTER
