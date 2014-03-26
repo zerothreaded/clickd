@@ -5,23 +5,23 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-public class MemberDateCriteria extends Resource {
+public class Criteria extends Resource {
 
 
 	@Id
 	protected String id;
 	protected String ref;
 	
-	protected List<MemberDateCriterion> criteria;
+	protected List<Criterion> criteria;
 	
-	public MemberDateCriteria() {	
+	public Criteria() {	
 		super();
 		createRef();
 	}
 
 	private void createRef() {
 		UUID uuid = UUID.randomUUID();
-		String ref = "/datecriteria/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
+		String ref = "/criteria/" + ((Long) Math.abs(uuid.getMostSignificantBits())).toString();
 		this.ref = ref;
 	}
 	
