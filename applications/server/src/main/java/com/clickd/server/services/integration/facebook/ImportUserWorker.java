@@ -582,6 +582,7 @@ public class ImportUserWorker implements Runnable {
 			// Create the users dating calendar
 			Calendar calendar = new Calendar();
 			calendar.setName(newUser.getFirstName() + "-dating-calendar");
+			calendar.addLink("user-link", new Link(newUser.getRef(), "user"));
 			if (calendarDao == null) {
 				int wait = 1;
 			}
