@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 
 public class Criteria extends Resource {
 
-
 	@Id
 	protected String id;
 	protected String ref;
@@ -39,5 +38,13 @@ public class Criteria extends Resource {
 	
 	public void setRef(String ref) {
 		this.ref = ref;
+	}
+
+	public List<Criterion> getCriteria() {
+		return criteria;
+	}
+
+	public void setCriteria(List<Criterion> criteria) {
+		this.criteria = criteria;
 	}
 }

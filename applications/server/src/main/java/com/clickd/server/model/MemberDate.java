@@ -16,6 +16,16 @@ public class MemberDate extends Resource {
 	
 	protected java.util.Date endDate;
 	
+	protected Criteria criteria;
+	
+	public Criteria getCriteria() {
+		return criteria;
+	}
+
+	public void setCriteria(Criteria criteria) {
+		this.criteria = criteria;
+	}
+
 	public MemberDate() {	
 		super();
 		createRef();

@@ -1,5 +1,6 @@
 package com.clickd.server.model;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,13 +34,8 @@ public class Criterion extends Resource {
 	protected String ref;
 	
 	protected Operator operator;
-
-	protected Object singleValue;
 	
-	protected Object binaryValue1;
-	protected Object binaryValue2;
-	
-	protected Set<Object> setValues;
+	protected List<Object> values;
 	
 	public Criterion() {	
 		super();
@@ -66,5 +62,21 @@ public class Criterion extends Resource {
 	
 	public void setRef(String ref) {
 		this.ref = ref;
+	}
+
+	public Operator getOperator() {
+		return operator;
+	}
+
+	public void setOperator(Operator operator) {
+		this.operator = operator;
+	}
+
+	public List<Object> getValues() {
+		return values;
+	}
+
+	public void setValues(List<Object> values) {
+		this.values = values;
 	}
 }
