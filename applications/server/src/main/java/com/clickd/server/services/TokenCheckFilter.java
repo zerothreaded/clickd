@@ -32,7 +32,6 @@ public class TokenCheckFilter implements Filter {
 		// servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
 		// servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 
-		
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
 		String path = servletRequest.getRequestURI();
 		if (path != null) {
@@ -42,7 +41,6 @@ public class TokenCheckFilter implements Filter {
 				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 			} else {
 				if(path.contains("profile-img")) {
-					int pathWait = 1;
 					 String dataDir = System.getProperty("dataDir");
 					 if (null == dataDir) {
 						 dataDir = "C:\\sandbox\\data\\profile-img\\";
@@ -54,7 +52,6 @@ public class TokenCheckFilter implements Filter {
 					// Image files - serve these from disk
 					byte[] fileContents;
 					File imageFile = new File(dataDir, targetFileName);
-					System.out.println(imageFile.getAbsolutePath());
 					fileContents = org.apache.commons.io.FileUtils.readFileToByteArray(imageFile);
 					
 					servletResponse.getOutputStream().write(fileContents);
@@ -63,8 +60,6 @@ public class TokenCheckFilter implements Filter {
 				} else {
 					// All others
 				}
-				int wait  = 1;
-				
 			}
 		}		
 		servletResponse.setHeader("Access-Control-Allow-Origin", "*");
