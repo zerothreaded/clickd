@@ -32,7 +32,6 @@ public class TokenCheckFilter implements Filter {
 		// servletResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
 		// servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 
-		
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
 		String path = servletRequest.getRequestURI();
 		if (path != null) {
@@ -41,8 +40,10 @@ public class TokenCheckFilter implements Filter {
 				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
 				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 			} else {
+				// Cache all images
+				servletResponse.setHeader("Cache-Control", "cache"); // HTTP// 1.1.
+				servletResponse.setHeader("Pragma", "cache"); // HTTP 1.0.
 				if(path.contains("profile-img")) {
-					int pathWait = 1;
 					 String dataDir = System.getProperty("dataDir");
 					 if (null == dataDir) {
 						 dataDir = "C:\\sandbox\\data\\profile-img\\";
@@ -50,21 +51,17 @@ public class TokenCheckFilter implements Filter {
 					 } else {
 						 //System.out.println("\n\nData Directory = " + dataDir);
 					 }
-					String targetFileName = path.substring(12);
 					// Image files - serve these from disk
 					byte[] fileContents;
+					String targetFileName = path.substring(12);
 					File imageFile = new File(dataDir, targetFileName);
-					System.out.println(imageFile.getAbsolutePath());
 					fileContents = org.apache.commons.io.FileUtils.readFileToByteArray(imageFile);
-					
 					servletResponse.getOutputStream().write(fileContents);
 					servletResponse.flushBuffer();
 					return;
 				} else {
-					// All others
+					// All other images
 				}
-				int wait  = 1;
-				
 			}
 		}		
 		servletResponse.setHeader("Access-Control-Allow-Origin", "*");
