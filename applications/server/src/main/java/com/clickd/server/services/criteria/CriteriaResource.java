@@ -63,14 +63,34 @@ public class CriteriaResource {
 	public Response create(@FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
 		try {
 				Criteria newCriteria = new Criteria();
-				Question question = questionDao.findByRef(questionRef);
 				Operator op = Operator.valueOf(operator);
 				newCriteria.getLinks().put("question", new Link(questionRef, "criteria-question"));
 				ArrayList<Object> newCriteriaValues = new ArrayList<Object>();
 				newCriteriaValues.add(value);
 				newCriteria.setValues(newCriteriaValues);
+				newCriteria.setOperator(op);
 				criteriaDao.create(newCriteria);
 				return Response.status(200).entity(Utilities.toJson(newCriteria)).build();			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	@POST
+	@Timed
+	@Path("/update/{criteriaRef}")
+	public Response update(@PathParam ("criteriaRef") String criteriaRef, @FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
+		try {
+				Criteria criteria = criteriaDao.findByRef("/criteria/"+criteriaRef);
+				Operator op = Operator.valueOf(operator);
+				criteria.getLinks().put("question", new Link(questionRef, "criteria-question"));
+				ArrayList<Object> newCriteriaValues = new ArrayList<Object>();
+				newCriteriaValues.add(value);
+				criteria.setValues(newCriteriaValues);
+				criteria.setOperator(op);
+				criteriaDao.update(criteria);
+				return Response.status(200).entity(Utilities.toJson(criteria)).build();			
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			

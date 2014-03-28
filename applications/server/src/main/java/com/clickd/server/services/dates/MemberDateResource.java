@@ -135,6 +135,55 @@ public class MemberDateResource {
 		}
 	}
 	
+	@POST
+	@Timed
+	@Path("/{dateRef}/criteria/add/{criteriaRef}")
+	public Response addCriteria(@PathParam("dateRef") String dateRef, @PathParam("criteriaRef") String criteriaRef) {
+		try {
+				MemberDate date = dateDao.findByRef("/memberDate/"+dateRef);
+				ArrayList<Criteria> criteria = new ArrayList<Criteria>();
+				criteria.addAll(date.getCriteria());
+				
+				Criteria newCriteria = criteriaDao.findByRef("/criteria/"+criteriaRef);
+				criteria.add(newCriteria);
+				
+				date.setCriteria(criteria);
+				dateDao.update(date);
+				return Response.status(200).entity(Utilities.toJson(date)).build();
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	@POST
+	@Timed
+	@Path("/{dateRef}/criteria/remove/{criteriaRef}")
+	public Response removeCriteria(@PathParam("dateRef") String dateRef, @PathParam("criteriaRef") String criteriaRef) {
+		try {
+				MemberDate date = dateDao.findByRef("/memberDate/"+dateRef);
+				ArrayList<Criteria> criteria = new ArrayList<Criteria>();
+				criteria.addAll(date.getCriteria());
+				
+				for (Criteria thisCriteria : criteria)
+				{
+					if (thisCriteria.getRef().equals("/criteria/"+criteriaRef))
+					{
+						criteria.remove(thisCriteria);
+						break;
+					}
+				}
+				
+				date.setCriteria(criteria);
+				dateDao.update(date);
+				return Response.status(200).entity(Utilities.toJson(date)).build();
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	
 	@GET
 	@Timed
 	public Response getAll() {
