@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.clickd.server.dao.CriteriaDao;
 import com.clickd.server.dao.MemberDateDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.UserDao;
@@ -40,6 +41,9 @@ public class MemberDateResource {
 	
 	@Autowired
 	private QuestionDao questionDao;
+	
+	@Autowired
+	private CriteriaDao criteriaDao;
 
 	@GET
 	@Timed
@@ -69,6 +73,8 @@ public class MemberDateResource {
 		Question ageQuestion = questionDao.findByTags("dateofbirth");
 		ageAtLeast.getLinks().put("question", new Link(ageQuestion.getRef(), "criteria-question"));
 		ageAtLeast.setValues(ageAtLeastValues);
+		criteriaDao.create(ageAtLeast);
+		toReturn.add(ageAtLeast);
 		
 		Criteria ageAtMost = new Criteria();
 		ageAtLeast.setOperator(Operator.LESS_THAN);
@@ -77,6 +83,8 @@ public class MemberDateResource {
 		Question ageQuestion2 = questionDao.findByTags("dateofbirth");
 		ageAtMost.getLinks().put("question", new Link(ageQuestion2.getRef(), "criteria-question"));
 		ageAtMost.setValues(ageAtMostValues);
+		criteriaDao.create(ageAtMost);
+		toReturn.add(ageAtMost);
 		
 		Criteria gender = new Criteria();
 		gender.setOperator(Operator.EQUAL);
@@ -85,6 +93,8 @@ public class MemberDateResource {
 		gender.getLinks().put("question", new Link(genderQuestion.getRef(), "criteria-question"));
 		genderValues.add("female");
 		gender.setValues(genderValues);
+		criteriaDao.create(gender);
+		toReturn.add(gender);
 		
 		Criteria location = new Criteria();
 		location.setOperator(Operator.EQUAL);
@@ -93,7 +103,8 @@ public class MemberDateResource {
 		Question locationQuestion = questionDao.findByTags("location");
 		location.getLinks().put("question", new Link(locationQuestion.getRef(), "criteria-question"));
 		location.setValues(locationValues);
-		
+		criteriaDao.create(location);
+		toReturn.add(location);
 		
 		
 		return toReturn;

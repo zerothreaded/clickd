@@ -89,6 +89,10 @@
 	<bean id="memberDateDao" class="com.clickd.server.dao.MemberDateDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
+		
+	<bean id="criteriaDao" class="com.clickd.server.dao.CriteriaDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
 	
 	<bean id="userResource" class="com.clickd.server.services.users.UserResource" />
 

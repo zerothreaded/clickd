@@ -1,6 +1,7 @@
 package com.clickd.server.services.criteria;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,13 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.CriteriaDao;
+import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Criteria;
+import com.clickd.server.model.Criteria.Operator;
 import com.clickd.server.model.ErrorMessage;
+import com.clickd.server.model.Link;
+import com.clickd.server.model.Question;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -31,6 +36,9 @@ public class CriteriaResource {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private QuestionDao questionDao;
 
 	@GET
 	@Timed
@@ -52,9 +60,17 @@ public class CriteriaResource {
 	@POST
 	@Timed
 	@Path("/new")
-	public Response create(@FormParam("criteria") String criteria, @FormParam("time") String time) {
+	public Response create(@FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
 		try {
-				return Response.status(300).entity(new ErrorMessage("failed", "")).build();			
+				Criteria newCriteria = new Criteria();
+				Question question = questionDao.findByRef(questionRef);
+				Operator op = Operator.valueOf(operator);
+				newCriteria.getLinks().put("question", new Link(questionRef, "criteria-question"));
+				ArrayList<Object> newCriteriaValues = new ArrayList<Object>();
+				newCriteriaValues.add(value);
+				newCriteria.setValues(newCriteriaValues);
+				criteriaDao.create(newCriteria);
+				return Response.status(200).entity(Utilities.toJson(newCriteria)).build();			
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
