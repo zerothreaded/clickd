@@ -299,10 +299,14 @@ function timeRefresh(timeoutPeriod)
 					<form ng-submit="createDate()">
 					Day: <input ng-model="createDateForm.date" name="date"><br/>
 					Time: <input ng-model="createDateForm.time" name="time"><br/>
-					Where: <input name="where"><br/>
-					Distance: <input name="distance" value="10"> km
 					<input type="submit" class="btn" value="Create">
 					</form>
+					<p>
+					<form ng-submit="updateDateCriteria(criteria)" ng-repeat="criteria in model.currentDateData.criteria">
+					{{criteria.name}} {{criteria.operator}} <input ng-model="criteria.values[0]">
+					<input type="submit" class="btn" value="save">
+					</form>
+					</p>
 					</div>
 					</div>
 					<!--  <div class="row board-top">

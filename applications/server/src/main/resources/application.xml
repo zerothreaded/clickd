@@ -120,6 +120,7 @@
 
 	<bean id="memberDateResource" class="com.clickd.server.services.dates.MemberDateResource" />
 
+	<bean id="criteriaResource" class="com.clickd.server.services.criteriax.CriteriaResource" />
 
 
 </beans>

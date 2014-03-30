@@ -17,17 +17,19 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.clickd.server.dao.CriteriaDao;
+import com.clickd.server.dao.MemberDateDao;
 import com.clickd.server.dao.QuestionDao;
 import com.clickd.server.dao.UserDao;
 import com.clickd.server.model.Criteria;
 import com.clickd.server.model.Criteria.Operator;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Link;
+import com.clickd.server.model.MemberDate;
 import com.clickd.server.model.Question;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
-@Path("/criterias")
+@Path("/criteria")
 @Produces(MediaType.APPLICATION_JSON)
 public class CriteriaResource {
 
@@ -39,6 +41,9 @@ public class CriteriaResource {
 	
 	@Autowired
 	private QuestionDao questionDao;
+	
+	@Autowired
+	private MemberDateDao memberDateDao;
 
 	@GET
 	@Timed
@@ -60,9 +65,10 @@ public class CriteriaResource {
 	@POST
 	@Timed
 	@Path("/new")
-	public Response create(@FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
+	public Response create(@FormParam ("dateRef") String dateRef, @FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
 		try {
 				Criteria newCriteria = new Criteria();
+				newCriteria.setDateRef(dateRef);
 				Operator op = Operator.valueOf(operator);
 				newCriteria.getLinks().put("question", new Link(questionRef, "criteria-question"));
 				ArrayList<Object> newCriteriaValues = new ArrayList<Object>();
@@ -70,6 +76,14 @@ public class CriteriaResource {
 				newCriteria.setValues(newCriteriaValues);
 				newCriteria.setOperator(op);
 				criteriaDao.create(newCriteria);
+				
+				
+				MemberDate date = memberDateDao.findByRef(newCriteria.getDateRef());
+				List<Criteria> criteriaList = criteriaDao.findByDateRef(newCriteria.getDateRef());
+				date.setCriteria(criteriaList);
+				memberDateDao.update(date);
+
+				
 				return Response.status(200).entity(Utilities.toJson(newCriteria)).build();			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -79,7 +93,7 @@ public class CriteriaResource {
 	
 	@POST
 	@Timed
-	@Path("/update/{criteriaRef}")
+	@Path("/{criteriaRef}/update")
 	public Response update(@PathParam ("criteriaRef") String criteriaRef, @FormParam("questionRef") String questionRef, @FormParam("operator") String operator, @FormParam("value") String value) {
 		try {
 				Criteria criteria = criteriaDao.findByRef("/criteria/"+criteriaRef);
@@ -90,6 +104,33 @@ public class CriteriaResource {
 				criteria.setValues(newCriteriaValues);
 				criteria.setOperator(op);
 				criteriaDao.update(criteria);
+				
+				MemberDate date = memberDateDao.findByRef(criteria.getDateRef());
+				List<Criteria> criteriaList = criteriaDao.findByDateRef(criteria.getDateRef());
+				date.setCriteria(criteriaList);
+				memberDateDao.update(date);
+				
+				return Response.status(200).entity(Utilities.toJson(criteria)).build();			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	@POST
+	@Timed
+	@Path("{criteriaRef}/delete")
+	public Response delete(@PathParam ("criteriaRef") String criteriaRef) {
+		try {
+				Criteria criteria = criteriaDao.findByRef("/criteria/"+criteriaRef);
+				criteriaDao.delete(criteria);
+				
+				MemberDate date = memberDateDao.findByRef(criteria.getDateRef());
+				List<Criteria> criteriaList = criteriaDao.findByDateRef(criteria.getDateRef());
+				date.setCriteria(criteriaList);
+				memberDateDao.update(date);
+
+				
 				return Response.status(200).entity(Utilities.toJson(criteria)).build();			
 		} catch(Exception e) {
 			e.printStackTrace();

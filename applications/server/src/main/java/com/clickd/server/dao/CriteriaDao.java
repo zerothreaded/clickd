@@ -1,5 +1,6 @@
 package com.clickd.server.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,17 @@ public class CriteriaDao implements InitializingBean {
 			cache.put(user.getRef(), user);
 		}
 		System.out.println("Criteria cache has " + cache.size() + " Criterias. Loaded in " + (new Date().getTime() - now) + "ms");
+	}
+
+	public List<Criteria> findByDateRef(String dateRef) {
+		List<Criteria> allCriteria = findAll();
+		ArrayList<Criteria> toReturn = new ArrayList<Criteria>();
+		for (Criteria criteria : allCriteria)
+		{
+			if (criteria.getDateRef().equals(dateRef))
+				toReturn.add(criteria);
+		}
+		return toReturn;
 	}	
 
 }

@@ -62,47 +62,55 @@ public class MemberDateResource {
 		}
 	}
 	
-	public List<Criteria> getDefaultCriteria()
+	public List<Criteria> getDefaultCriteria(String dateRef)
 	{
 		ArrayList<Criteria> toReturn = new ArrayList<Criteria>();
-		Criteria ageAtLeast = new Criteria();
 		
+		Criteria ageAtLeast = new Criteria();
+		ageAtLeast.setName("age");
 		ageAtLeast.setOperator(Operator.GREATER_THAN);
 		List<Object> ageAtLeastValues = new ArrayList<Object>();
 		ageAtLeastValues.add(18);
 		Question ageQuestion = questionDao.findByTags("dateofbirth");
 		ageAtLeast.getLinks().put("question", new Link(ageQuestion.getRef(), "criteria-question"));
 		ageAtLeast.setValues(ageAtLeastValues);
+		ageAtLeast.setDateRef(dateRef);
 		criteriaDao.create(ageAtLeast);
 		toReturn.add(ageAtLeast);
 		
 		Criteria ageAtMost = new Criteria();
-		ageAtLeast.setOperator(Operator.LESS_THAN);
+		ageAtMost.setName("age");
+		ageAtMost.setOperator(Operator.LESS_THAN);
 		List<Object> ageAtMostValues = new ArrayList<Object>();
 		ageAtMostValues.add(50);
 		Question ageQuestion2 = questionDao.findByTags("dateofbirth");
 		ageAtMost.getLinks().put("question", new Link(ageQuestion2.getRef(), "criteria-question"));
 		ageAtMost.setValues(ageAtMostValues);
+		ageAtMost.setDateRef(dateRef);
 		criteriaDao.create(ageAtMost);
 		toReturn.add(ageAtMost);
 		
 		Criteria gender = new Criteria();
+		gender.setName("gender");
 		gender.setOperator(Operator.EQUAL);
 		List<Object> genderValues = new ArrayList<Object>();
 		Question genderQuestion = questionDao.findByTags("gender");
 		gender.getLinks().put("question", new Link(genderQuestion.getRef(), "criteria-question"));
 		genderValues.add("female");
 		gender.setValues(genderValues);
+		gender.setDateRef(dateRef);
 		criteriaDao.create(gender);
 		toReturn.add(gender);
 		
 		Criteria location = new Criteria();
+		location.setName("location");
 		location.setOperator(Operator.EQUAL);
 		List<Object> locationValues = new ArrayList<Object>();
 		locationValues.add("London");
 		Question locationQuestion = questionDao.findByTags("location");
 		location.getLinks().put("question", new Link(locationQuestion.getRef(), "criteria-question"));
 		location.setValues(locationValues);
+		location.setDateRef(dateRef);
 		criteriaDao.create(location);
 		toReturn.add(location);
 		
@@ -121,11 +129,11 @@ public class MemberDateResource {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 				Date dateStartTime = dateFormat.parse(dateTime);
 				
-				newDate.setCriteria(getDefaultCriteria());
+				newDate.setCriteria(getDefaultCriteria(newDate.getRef()));
 				
 				newDate.setStartDate(dateStartTime);
 				dateDao.create(newDate);
-				return Response.status(200).entity(Utilities.toJson(date)).build();
+				return Response.status(200).entity(Utilities.toJson(newDate)).build();
 			} else {
 				return Response.status(300).entity(new ErrorMessage("failed", "")).build();			
 			}
@@ -135,53 +143,6 @@ public class MemberDateResource {
 		}
 	}
 	
-	@POST
-	@Timed
-	@Path("/{dateRef}/criteria/add/{criteriaRef}")
-	public Response addCriteria(@PathParam("dateRef") String dateRef, @PathParam("criteriaRef") String criteriaRef) {
-		try {
-				MemberDate date = dateDao.findByRef("/memberDate/"+dateRef);
-				ArrayList<Criteria> criteria = new ArrayList<Criteria>();
-				criteria.addAll(date.getCriteria());
-				
-				Criteria newCriteria = criteriaDao.findByRef("/criteria/"+criteriaRef);
-				criteria.add(newCriteria);
-				
-				date.setCriteria(criteria);
-				dateDao.update(date);
-				return Response.status(200).entity(Utilities.toJson(date)).build();
-		} catch(Exception e) {
-			e.printStackTrace();
-			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
-		}
-	}
-	
-	@POST
-	@Timed
-	@Path("/{dateRef}/criteria/remove/{criteriaRef}")
-	public Response removeCriteria(@PathParam("dateRef") String dateRef, @PathParam("criteriaRef") String criteriaRef) {
-		try {
-				MemberDate date = dateDao.findByRef("/memberDate/"+dateRef);
-				ArrayList<Criteria> criteria = new ArrayList<Criteria>();
-				criteria.addAll(date.getCriteria());
-				
-				for (Criteria thisCriteria : criteria)
-				{
-					if (thisCriteria.getRef().equals("/criteria/"+criteriaRef))
-					{
-						criteria.remove(thisCriteria);
-						break;
-					}
-				}
-				
-				date.setCriteria(criteria);
-				dateDao.update(date);
-				return Response.status(200).entity(Utilities.toJson(date)).build();
-		} catch(Exception e) {
-			e.printStackTrace();
-			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
-		}
-	}
 	
 	
 	@GET

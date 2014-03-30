@@ -18,6 +18,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		"showFbLoginLabel" : false,
 		"calendarDays" : [],
 		"selectedDate" : "",
+		"currentDateData" : {},
 		// Current User view of domain
 		"currentUser" : {
 			"isLoggedIn" : false,
@@ -56,10 +57,25 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		        data    : $.param($scope.createDateForm),  // pass in data as strings
 		        headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
 		    })
-	        .success(function(data) {
-	        	console.log("create date: "+JSON.stringify(data));
+	        .success(function(returnData) {
+	        	$scope.model.currentDateData = returnData;
+	        	console.log("create date: "+JSON.stringify(returnData));
 	       })
 	};
+	
+	$scope.updateDateCriteria = function(criteria)
+	{
+		criteria.value = criteria.values[0];
+		$http({
+	        method  : 'POST',
+	        url     : criteria.ref+'/update',
+	        data    : $.param(criteria),  // pass in data as strings
+	        headers : { 'Content-Type': 'application/x-www-form-urlencoded' } 
+	    })
+        .success(function(returnData) {
+        	console.log("update criteria: "+JSON.stringify(returnData));
+       })
+	}
 
 	
 	$scope.init = function () {

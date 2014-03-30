@@ -9,6 +9,7 @@ import com.clickd.server.services.answers.AnswerResource;
 import com.clickd.server.services.calendars.CalendarResource;
 import com.clickd.server.services.chatrooms.ChatroomResource;
 import com.clickd.server.services.choices.ChoiceResource;
+import com.clickd.server.services.criteria.CriteriaResource;
 import com.clickd.server.services.dates.MemberDateResource;
 import com.clickd.server.services.integration.facebook.UserImportResource;
 import com.clickd.server.services.places.PlaceResource;
@@ -85,6 +86,9 @@ public class ApplicationService extends Service<UserConfiguration> {
 		
 		MemberDateResource dateResource = context.getBean(MemberDateResource.class);
 		environment.addResource(dateResource);
+		
+		CriteriaResource criteriaResource = context.getBean(CriteriaResource.class);
+		environment.addResource(criteriaResource);
 		
 		// TODO: Sort out health checks
 		environment.addHealthCheck(new ApplicationHealthCheck("application"));

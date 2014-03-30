@@ -31,7 +31,10 @@ public class Criteria extends Resource {
 	@Id
 	protected String id;
 	protected String ref;
+	protected String dateRef;
+	protected String name;
 	
+
 	protected Operator operator;
 	
 	protected List<Object> values;
@@ -40,6 +43,25 @@ public class Criteria extends Resource {
 		super();
 		createRef();
 	}
+	
+
+	public String getDateRef() {
+		return dateRef;
+	}
+
+	public void setDateRef(String dateRef) {
+		this.dateRef = dateRef;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 
 	private void createRef() {
 		UUID uuid = UUID.randomUUID();
