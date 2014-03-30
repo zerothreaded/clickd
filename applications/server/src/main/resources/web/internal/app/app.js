@@ -66,6 +66,7 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 	$scope.updateDateCriteria = function(criteria)
 	{
 		criteria.value = criteria.values[0];
+		criteria.questionRef = criteria.links.question.href;
 		$http({
 	        method  : 'POST',
 	        url     : criteria.ref+'/update',
