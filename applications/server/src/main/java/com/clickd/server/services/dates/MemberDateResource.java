@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -26,6 +27,7 @@ import com.clickd.server.model.Link;
 import com.clickd.server.model.MemberDate;
 import com.clickd.server.model.ErrorMessage;
 import com.clickd.server.model.Question;
+import com.clickd.server.model.User;
 import com.clickd.server.utilities.Utilities;
 import com.yammer.metrics.annotation.Timed;
 
@@ -49,6 +51,23 @@ public class MemberDateResource {
 	@Timed
 	@Path("/{dateRef}")
 	public Response get(@PathParam("dateRef") String dateRef) {
+		try {
+			MemberDate date = dateDao.findByRef("/dates/" + dateRef);
+			if (date != null) {
+				return Response.status(200).entity(Utilities.toJson(date)).build();
+			} else {
+				return Response.status(404).build();			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
+	@GET
+	@Timed
+	@Path("/{dateRef}")
+	public Response getCandidates(@PathParam("dateRef") String dateRef) {
 		try {
 			MemberDate date = dateDao.findByRef("/dates/" + dateRef);
 			if (date != null) {
@@ -132,6 +151,48 @@ public class MemberDateResource {
 				newDate.setCriteria(getDefaultCriteria(newDate.getRef()));
 				
 				newDate.setStartDate(dateStartTime);
+				
+				// Calculate candidates for date
+				List<User> allUsers = userDao.findAll();
+				List<User> dateCandidates = new ArrayList<User>();
+				List<Criteria> dateCriteria = newDate.getCriteria();
+				for (User user : allUsers) {
+					// Evaluate the user against the date criteria
+					for (Criteria criteria : dateCriteria) {
+						String criteriaName = criteria.getName();
+						List<Object> criteriaValues = criteria.getValues();
+						Operator criteriaOperator = criteria.getOperator();
+						// AGE, GENDER, LOCATION 
+						if (criteriaName.equals("age")) {
+							Date userDob = user.getDateOfBirth();
+							Date now = new Date();
+							long ageInYears = (now.getTime() - userDob.getTime()) / (365 * 24 * 60 * 60 * 1000);
+							if (matches(ageInYears, criteriaOperator, criteriaValues)) {
+								dateCandidates.add(user);							
+							}
+						}
+						if (criteriaName.equals("gender")) {
+							String userGender = user.getGender();
+							if (matches(userGender, criteriaOperator, criteriaValues)) {
+								dateCandidates.add(user);							
+							}
+						}						
+						if (criteriaName.equals("location")) {
+							Map<String, Object> userLocationMap = user.getLocation();
+							String userLocation = (String) userLocationMap.get("location");
+							if (matches(userLocation, criteriaOperator, criteriaValues)) {
+								dateCandidates.add(user);							
+							}
+						}						
+					}
+					
+				}
+				System.out.println("User has " + dateCandidates.size() + " candidate dates");
+				// Attach them to the user
+				for (User user : dateCandidates) {
+					Link dateLink = new Link(user.getRef(), "date-candidate");
+				}
+				
 				dateDao.create(newDate);
 				return Response.status(200).entity(Utilities.toJson(newDate)).build();
 			} else {
@@ -143,6 +204,37 @@ public class MemberDateResource {
 		}
 	}
 	
+	private boolean matches(Object value, Operator operator, List<Object> values) {
+		boolean matches = false;
+		if (operator.equals(Operator.EQUAL)) {
+			return value.equals(values.get(0));
+		}
+		if (operator.equals(Operator.LESS_THAN)) {
+			// Match as number
+			Long longValue  = (Long) value;
+			for (Object valueObject : values) {
+				// Convert To String then Long
+				String valueAsString = (String)valueObject;
+				Long valueAsLong = new Long(valueAsString);
+				return longValue < valueAsLong;
+			}
+			return value.equals(values.get(0));
+		}
+		if (operator.equals(Operator.GREATER_THAN)) {
+			// Match as number
+			Long longValue  = (Long) value;
+			for (Object valueObject : values) {
+				// Convert To String then Long
+				String valueAsString = (String)valueObject;
+				Long valueAsLong = new Long(valueAsString);
+				return longValue > valueAsLong;
+			}
+			return value.equals(values.get(0));
+		}
+		
+		return matches;
+		
+	}
 	
 	
 	@GET
