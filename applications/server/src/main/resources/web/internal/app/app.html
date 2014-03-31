@@ -271,10 +271,11 @@ function timeRefresh(timeoutPeriod)
 			<div class="row"> 
 				
 				<div class="col-sm-2 timeline-title"> 
-					Time Line Title
+					<small>Time to date</small>
+					<h3>1day 4hr 20 min</h3>
 				</div>
 				
-				<div class="col-sm-1 timeline-weekday" ng-repeat="day in model.calendarDays">
+				<div class="col-sm-1 timeline-weekday" ng-repeat="day in model.calendarDays" ng-class="{timelineWeekdayActive: isDateSelected('{{day.date}}')}">
 					<a href="#{{day.dayName}}" ng-click="onSelectDate('{{day.date}}')">{{day.dayShort}} {{day.dateShort}}</a>
 					    <div class="row">
 					      <div class="col-sm-6">
@@ -295,16 +296,19 @@ function timeRefresh(timeoutPeriod)
 				</div>
 				<div class="col-sm-10 game-board">
 					<div class="row">
-					<div class="col-sm-4">
+					<div class="well">
 					<form ng-submit="createDate()">
-					Day: <input ng-model="createDateForm.date" name="date"><br/>
-					Time: <input ng-model="createDateForm.time" name="time"><br/>
+					<div class="input-group input-group-sm">
+					<input ng-model="createDateForm.date" class="form-control" name="date" placeholder="Date"><br/>
+					<input ng-model="createDateForm.time" class="form-control" name="time" placeholder="Time"><br/>
+					</div>
 					<input type="submit" class="btn" value="Create">
 					</form>
 					<p>
 					<form ng-submit="updateDateCriteria(criteria)" ng-repeat="criteria in model.currentDateData.criteria">
-					{{criteria.name}} {{criteria.operator}} <input ng-model="criteria.values[0]">
-					<input type="submit" class="btn" value="save">
+					<div class="input-group input-group-sm">
+					{{criteria.name}} {{criteria.operator}}<br/><input ng-model="criteria.values[0]">
+					</div>
 					</form>
 					</p>
 					</div>

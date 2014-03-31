@@ -115,6 +115,13 @@ clickdApplication.controller('AppController', function($scope, $cookies, $resour
 		console.log(date);
 	}
 	
+	$scope.isDateSelected = function(date)
+	{
+		console.log("is "+date+" == "+$scope.model.selectedDate)
+		return $scope.model.selectedDate == date;
+	}
+	
+	
 	$scope.updateCalendar = function()
 	{
 		var getCalendarUrl = $scope.model.currentUser.user.links.calendar.href+"/thisweek";

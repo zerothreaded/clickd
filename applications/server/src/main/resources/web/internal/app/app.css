@@ -1672,13 +1672,17 @@ body .ui-tooltip {
 	color: white;
 }
 
-.timeline-weekday
+.timeline-weekday {
+height: 50px;
+padding-top: 0px;
+padding-left: 10px;
+background-color: #FFFFFF;
+color: rgb(98, 130, 255);
+}
+
+.timeline-title h3
 {
-	height : 50px;
-	padding-top:0px;
-	padding-left : 10px;
-	background-color: #65F283;
-	color: white;
+	margin-top:0px;
 }
 
 .timeline-weekend
@@ -1688,6 +1692,11 @@ body .ui-tooltip {
 	padding-left : 10px;
 	background-color: #357243;
 	color: white;
+}
+
+.timelineWeekdayActive
+{
+	background-color: rgb(185, 185, 206);
 }
 
 .game-controller
@@ -1702,10 +1711,7 @@ body .ui-tooltip {
 .game-board
 {
 	height : 100%;
-	padding-top:0px;
-	padding-left : 2px;
 	background-color: #551188;
-	color: white;
 }
 
 .board-top	
@@ -1784,7 +1790,7 @@ body .ui-tooltip {
 
 .navbar-inverse
 {
-	background-color: #336699;
+	background-color: #111316;
 	border-color: #ffffff
 }
 

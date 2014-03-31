@@ -64,17 +64,28 @@ public class MemberDateResource {
 		}
 	}
 	
-	@GET
-	@Timed
-	@Path("/{dateRef}")
-	public Response getCandidates(@PathParam("dateRef") String dateRef) {
+
+	@Path("/bydate/{date}")
+	public Response getByDay(@PathParam("date") String date) {
 		try {
-			MemberDate date = dateDao.findByRef("/dates/" + dateRef);
-			if (date != null) {
-				return Response.status(200).entity(Utilities.toJson(date)).build();
-			} else {
-				return Response.status(404).build();			
+			MemberDate newDate = new MemberDate();
+			String dateTime = date.substring(1, 11);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date dateStartTime = dateFormat.parse(dateTime);
+			
+			List<MemberDate> dates = dateDao.findAll();
+			
+			ArrayList<MemberDate> toReturn = new ArrayList<MemberDate>();
+			
+			for (MemberDate thisDate : dates)
+			{
+				if (dateFormat.format(thisDate.getStartDate()).equals(dateTime))
+				{
+					toReturn.add(thisDate);
+				}
 			}
+			
+			return Response.status(200).entity(Utilities.toJson(toReturn)).build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
