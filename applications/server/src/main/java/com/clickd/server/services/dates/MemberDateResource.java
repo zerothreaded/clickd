@@ -62,6 +62,35 @@ public class MemberDateResource {
 		}
 	}
 	
+	@GET
+	@Timed
+	@Path("/bydate/{date}")
+	public Response getByDay(@PathParam("date") String date) {
+		try {
+			MemberDate newDate = new MemberDate();
+			String dateTime = date.substring(1, 11);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date dateStartTime = dateFormat.parse(dateTime);
+			
+			List<MemberDate> dates = dateDao.findAll();
+			
+			ArrayList<MemberDate> toReturn = new ArrayList<MemberDate>();
+			
+			for (MemberDate thisDate : dates)
+			{
+				if (dateFormat.format(thisDate.getStartDate()).equals(dateTime))
+				{
+					toReturn.add(thisDate);
+				}
+			}
+			
+			return Response.status(200).entity(Utilities.toJson(toReturn)).build();
+		} catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(300).entity(new ErrorMessage("failed", e.getMessage())).build();			
+		}
+	}
+	
 	public List<Criteria> getDefaultCriteria(String dateRef)
 	{
 		ArrayList<Criteria> toReturn = new ArrayList<Criteria>();
