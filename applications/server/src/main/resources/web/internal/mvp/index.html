@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Dating @ Clickd</title>
+<meta name="generator" content="Bootply" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<script src="/web/imported/frameworks/jquery/js/jquery-1.10.2.min.js"></script>
+<script src="/web/imported/frameworks/bootstrap/js/bootstrap.js"></script>
+<link href="/web/imported/frameworks/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/web/internal/mvp/index.css" rel="stylesheet">
+
+
+<!-- AngularJS and Bootstrap JS files -->
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-resource-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-route-1.2.0rc1.js"></script>
+<script type="text/javascript" src="/web/imported/frameworks/angular/js/lib/angular-cookies.js"></script>
+<script src="/web/internal/mvp/index.js"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+   	 <script>
+   		var myLatlng = new google.maps.LatLng(51.537812325599, -0.14480018556184);
+   		
+   		var mapOptions = {
+   		  zoom: 14,
+   		  center: myLatlng
+   		}
+   		
+   	 	var map;
+		$(document).ready(function () {
+			map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+		});
+   	 </script>
+
+
+<!-- Using the UI Bootstrap AngularJS directives for Bootstrap here. For more info see:
+http://angular-ui.github.io/bootstrap/ -->
+</head>
+
+<body>
+
+
+	<div id="wrapper" ng-app="clickdApplication" ng-controller="AppController" ng-init="init()">
+		<div class="navbar navbar-default">
+			<div class="hidden-xs hidden-sm col-sm-1 col-md-1">
+				<a class="navbar-brand" href="#"> Clickd </a>
+			</div>
+			<div class="col-xs-8 col-sm-9 col-md-6 col-md-offset-2">
+				<div class="panel navbar-panel">
+					<div class="panel-body">My dinner date in NW1 on wednesday</div>
+				</div>
+			</div>
+			<div class="col-xs-4 col-sm-3 col-md-2">
+				<div class="panel navbar-panel">
+					<div class="panel-body">2days, 20min</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="sidebar-wrapper" class="col-sm-12 col-xs-12 hidden-md hidden-lg">
+
+
+			<ul class="nav nav-pills">
+				<li><a class="" ng-click="selectActiveTab(0)"></i>When</a></li>
+				<li><a class="" ng-click="selectActiveTab(1)"></i>Where</a></li>
+				<li><a class="" ng-click="selectActiveTab(2)"></i>What</a></li>
+				<li><a class="" ng-click="selectActiveTab(3)"></i>Who</a></li>
+				<li><a class="" ng-click="selectActiveTab(4)"></i>Why</a></li>
+			</ul>
+		</div>
+
+		<div id="sidebar-wrapper" class="hidden-sm hidden-xs col-md-3">
+
+
+			<ul class="nav nav-pills nav-stacked">
+				<li><a class="" ng-click="selectActiveTab(0)"></i>When</a></li>
+				<li><a class="" ng-click="selectActiveTab(1)"></i>Where</a></li>
+				<li><a class="" ng-click="selectActiveTab(2)"></i>What</a></li>
+				<li><a class="" ng-click="selectActiveTab(3)"></i>Who</a></li>
+				<li><a class="" ng-click="selectActiveTab(4)"></i>Why</a></li>
+			</ul>
+		</div>
+
+		<div id="when-tab" class="col-md-9 col-sm-12 col-xs-12 pull-right main-wrapper" ng-show="model.activeTab == '0'">
+			<div class="navbar navbar-default">
+				<ul class="nav nav-pills">
+					<li class="active"><a href="#"> Mon </a></li>
+					<li><a href="#"> Tue </a></li>
+					<li><a href="#"> Wed </a></li>
+					<li><a href="#"> Thu </a></li>
+					<li><a href="#"> Fri </a></li>
+					<li><a href="#"> Sat </a></li>
+					<li><a href="#"> Sun </a></li>
+				</ul>
+			</div>
+			<div id="when" class="tab-page">
+
+
+				<div class="panel" ng-show="model.dateView=='list'">
+					<div class="panel-body">
+						<div class="col-md-6">
+							<h3>When</h3>
+
+							You have no dates on monday.<br />
+							<button class="btn btn-large" ng-click="model.dateView='new-date'">Create new date</button>
+						</div>
+						<div class="col-md-6">
+							<h3>Dates for monday</h3>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 dinner dates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 movies dates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 music dates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 drinks dates</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel" ng-show="model.dateView=='new-date'">
+					<div class="panel-body" ng-show="model.dateView=='new-date'">
+						<form ng-submit="">
+
+							<div class="col-md-6">
+								<h3>Create Date</h3>
+
+								<div class="input-group input-group-lg">
+									<div class="form-group">
+										<input ng-model="createDateForm.date" class="form-control" name="date" placeholder="Date"><br />
+									</div>
+									<div class="form-group">
+
+										<input ng-model="createDateForm.time" class="form-control" name="time" placeholder="Time"><br />
+									</div>
+									<div class="form-group">
+
+										<input ng-model="createDateForm.location" class="form-control" name="location" placeholder="Location"><br />
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<h3>
+									What do you want to do?
+									</h4>
+									<div class="row">
+
+										<button class="btn btn-lg">Dinner</button>
+										<button class="btn btn-lg">Movies</button>
+										<button class="btn btn-lg">Music</button>
+										<button class="btn btn-lg">Drinks</button>
+									</div>
+
+									<div class="row">
+										<br />
+										<br />
+										<br /> <input type="submit" class="btn" value="Create">
+									</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="where-tab" class="col-sm-9 col-md-9 pull-right main-wrapper" ng-show="model.activeTab == '1'">
+			<div id="where" class="tab-page">
+				<div class="page-header">
+					<h3>Where</h3>
+				</div>
+			<div id="map-canvas" style="width:100%; height:100%" ng-show="model.activeTab == '1'"></div>
+				
+			</div>
+		</div>
+
+		<div id="what-tab" class="col-md-9 pull-right main-wrapper" ng-show="model.activeTab == '2'">
+			<div id="what" class="tab-page">
+				<div class="page-header">
+
+								<div class="col-md-6">
+					<h3>Dinner Choices</h3>
+					<h4>Food types:</h4>
+					<ul class="nav nav-pills">
+  <li class="active"><a href="#" ng-click="model.what.selectedFoodType['sushi']=!model.what.selectedFoodType['sushi']">Sushi <span ng-show="model.what.selectedFoodType['sushi']==true" class="glyphicon glyphicon-ok"></span></a>
+									
+								</li>
+  <li><a href="#" ng-click="model.what.selectedFoodType['italian']=!model.what.selectedFoodType['italian']">Italian <span ng-show="model.what.selectedFoodType['italian']==true" class="glyphicon glyphicon-ok"></span></a>
+									
+							</li>
+  <li><a href="#" ng-click="model.what.selectedFoodType['french']=!model.what.selectedFoodType['french']">French <span ng-show="model.what.selectedFoodType['french']==true" class="glyphicon glyphicon-ok"></span></a>
+									
+								</li>
+    <li><a href="#" ng-click="model.what.selectedFoodType['chinese']=!model.what.selectedFoodType['chinese']">Chinese <span ng-show="model.what.selectedFoodType['chinese']==true" class="glyphicon glyphicon-ok"></span></a>
+									
+								</li>
+    <li><a href="#" ng-click="model.what.selectedFoodType['indian']=!model.what.selectedFoodType['indian']">Indian <span ng-show="model.what.selectedFoodType['indian']==true" class="glyphicon glyphicon-ok"></span></a>
+									
+						</li>
+</ul>
+<h4>Top restauraunts</h4>
+
+
+<div class="list-group">
+							<a href="#" class="list-group-item active">
+								<h4 class="list-group-item-heading">1</h4>
+								Select first choice...
+							</a>
+
+<a href="#" class="list-group-item">
+								<h4 class="list-group-item-heading">2</h4>
+								Select second choice...
+							</a>
+							
+<a href="#" class="list-group-item ">
+								<h4 class="list-group-item-heading">3</h4>
+								Select third choice...
+							</a>
+
+				</div>
+				</div>
+								<div class="col-md-6">
+					<h3>Movie Choices</h3>
+					<h4>Camden Odeon:</h4>
+					<ul class="nav nav-stacked">
+  <li class="active"><a href="#">7:00PM - Transcendance <span class="glyphicon glyphicon-ok"></span></a>
+<li class=""><a href="#">8:00PM - Lucy <span class="glyphicon glyphicon-ok"></span></a>
+<li class=""><a href="#">12:00PM - Captain America <span class="glyphicon glyphicon-ok"></span></a>
+									
+								</li>
+</ul>
+<h4>Vue Shepherds Bush:</h4>
+					<ul class="nav nav-stacked">
+  <li class="active"><a href="#">9:00PM - Avatar <span class="glyphicon glyphicon-ok"></span></a>
+<li class=""><a href="#">6:00PM - The Expendables 3 <span class="glyphicon glyphicon-ok"></span></a>
+<li class=""><a href="#">12:00PM - Captain America <span class="glyphicon glyphicon-ok"></span></a>
+									
+								</li>
+</ul>
+
+				</div>
+			</div>
+		</div>
+		</div>
+
+		<div id="who-tab" class="col-md-9 pull-right main-wrapper" ng-show="model.activeTab == '3'">
+			<div id="when" class="tab-page">
+				<div class="page-header">
+					<h3>Who</h3>
+				</div>
+					<table class="table">
+					<tr>
+					<th></th>	
+					<th>Candidate</th>
+					<th>Dinner Choices</th>
+					<th>Movie Choices</th>
+					</tr>
+					<tr>
+					<td>
+						<img src="/profile-img/users/502524839.jpg" class="who-profile-img">
+					</td>
+					<td>
+						<h4>Julian</h4>
+						Age: 24<br />Location: NW1
+					</td>
+					</tr>
+					<tr>
+					<td>
+						<img src="/profile-img/users/1315973.jpg" class="who-profile-img">
+					</td>
+					<td>
+						<h4>Isaac</h4>
+						Age: 27<br />Location: NW1
+					</td>
+					</tr>
+					</table>
+
+				</div>
+			</div>
+
+		<div id="why-tab" class="col-md-9 pull-right main-wrapper" ng-show="model.activeTab == '4'">
+			<div id="why" class="tab-page">
+					<div class="col-md-6">
+						<h3>I Like</h3>
+						<div class="list-group">
+							<a href="#" class="list-group-item active">
+								<h4 class="list-group-item-heading">Food Types</h4>
+							</a> <a href="#" class="list-group-item" > Sushi
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Indian
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> French
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Italian 
+											    <button class="pull-right btn btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+							
+							</a>
+							
+							 <a href="#" class="list-group-item active">
+								<h4 class="list-group-item-heading">Movie Genres</h4>
+								
+							</a> <a href="#" class="list-group-item"> Action
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Adventure
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Drama
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Comedy
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+							</a>
+						</div>
+
+					</div>
+					<div class="col-md-6">
+						<h3>Candidate Should Like</h3>
+						
+												<div class="list-group">
+							<a href="#" class="list-group-item active">
+								<h4 class="list-group-item-heading">Food Types</h4>
+							</a> <a href="#" class="list-group-item"> Sushi
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a> <a href="#" class="list-group-item"> Indian
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> French
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+
+							</a> <a href="#" class="list-group-item"> Italian 
+											    <button class="pull-right btn btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+							<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a>
+							
+							 <a href="#" class="list-group-item active">
+								<h4 class="list-group-item-heading">Movie Genres</h4>
+								
+							</a> <a href="#" class="list-group-item"> Action
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a> <a href="#" class="list-group-item"> Adventure
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a> <a href="#" class="list-group-item"> Drama
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a> <a href="#" class="list-group-item"> Comedy
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-ok"></span>
+								</button>
+								<button class="pull-right btn btn-sm">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

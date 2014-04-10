@@ -45,7 +45,7 @@ public class ApplicationService extends Service<UserConfiguration> {
 
 		// Application URLS
 		bootstrap.addBundle(new AssetsBundle("/web/internal/home", "/clickd", "index.html"));
-		bootstrap.addBundle(new AssetsBundle("/web/internal/app", "/app", "app.html"));
+		bootstrap.addBundle(new AssetsBundle("/web/internal/mvp", "/mvp", "index.html"));
 		bootstrap.addBundle(new AssetsBundle("/web/internal/integration", "/int", "index.html"));
 
 	}
