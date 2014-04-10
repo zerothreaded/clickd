@@ -34,10 +34,10 @@ public abstract class AbstractResourceTest {
 		mongoOperations.dropCollection("collections");
 		
 		// STEP 2 : SETUP INITIAL DATA
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\answers.json" , "answers");
-		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\question_answers.json" , "question_answers");
+//		//Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\users.json" , "users");
+//		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\questions.json" , "questions");
+//		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\answers.json" , "answers");
+//		Utilities.importFixtureFromFile(mongoDb, "src\\test\\resources\\database\\question_answers.json" , "question_answers");
 	}
 
 	@After

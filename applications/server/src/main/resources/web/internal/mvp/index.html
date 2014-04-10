@@ -100,17 +100,30 @@ http://angular-ui.github.io/bootstrap/ -->
 				<div class="panel" ng-show="model.dateView=='list'">
 					<div class="panel-body">
 						<div class="col-md-6">
-							<h3>When</h3>
+							<h3>Your dates for Monday</h3>
 
 							You have no dates on monday.<br />
+							<br/>
 							<button class="btn btn-large" ng-click="model.dateView='new-date'">Create new date</button>
+							<br/><br/>
+							<h4>Your dinner date on monday:</h4>
+							<strong>Time:</strong> 8PM-11PM<br/>
+							<strong>Location:</strong> NW1<br/>
+							<strong>Radius:</strong> 5 Miles<br/>
+							<strong>Food Type:</strong> Italian<br/>
+							<strong>Top Restaurants: </strong>Bella Mia's, Palazio, Pastorium<br/>
+							<strong>Price range:</strong> Expensive<br/>
+							<strong>Candidates: <span style='color:green'>3</span>  <span style='color:orange'>4</span>  <span style='color:red'>20</span></strong><br/>
+							<strong>Messages Sent: </strong> 24<br/>
+							<strong>Messages Received</strong> 15
+							
 						</div>
 						<div class="col-md-6">
-							<h3>Dates for monday</h3>
-							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 dinner dates</button>
-							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 movies dates</button>
-							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 music dates</button>
-							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 drinks dates</button>
+							<h3>Everyone's dates on monday</h3>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 dinner dates, 128 candidates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 movies dates, 111 candidates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 music dates, 56 candidates</button>
+							<button class="btn btn-large btn-block" ng-click="model.dateView='new-date'">25 drinks dates, 200 candidates</button>
 						</div>
 					</div>
 				</div>
@@ -162,11 +175,11 @@ http://angular-ui.github.io/bootstrap/ -->
 		</div>
 
 		<div id="where-tab" class="col-sm-9 col-md-9 pull-right main-wrapper" ng-show="model.activeTab == '1'">
-			<div id="where" class="tab-page">
+			<div id="" class="tab-page">
 				<div class="page-header">
 					<h3>Where</h3>
 				</div>
-			<div id="map-canvas" style="width:100%; height:100%" ng-show="model.activeTab == '1'"></div>
+			<div id="map-canvas" style="width:90%; height:80%"></div>
 				
 			</div>
 		</div>
@@ -258,7 +271,19 @@ http://angular-ui.github.io/bootstrap/ -->
 					</td>
 					<td>
 						<h4>Julian</h4>
-						Age: 24<br />Location: NW1
+						Age: 24<br />Location: NW1<br/><br/>
+							Been on 6 dates<br/><br/>
+						Candidate for: 25 dates<br/><br/>
+												Offered: 5 dates
+						
+					</td>
+					<td>
+					<strong>Food Types:</strong> Italian, Indian<br/>
+					<strong>Top Restaurants:</strong> The Raj, Pasta Town, Mia Bella's
+					</td>
+					<td>
+					<strong>Movies: </strong>Captain America, Star Trek, Iron Man 3<br/>
+					<strong>Cinemas: </strong>Odeon Camden, Vue Westfield, Empire Leicester Square
 					</td>
 					</tr>
 					<tr>
@@ -267,7 +292,19 @@ http://angular-ui.github.io/bootstrap/ -->
 					</td>
 					<td>
 						<h4>Isaac</h4>
-						Age: 27<br />Location: NW1
+						Age: 27<br />Location: NW1<br/>
+						Been on 6 dates<br/>
+						Candidate for: 25 dates<br/>
+						Offered: 5 dates<br/>
+						Matches: 15/20 criteria
+					</td>
+					<td>
+					<strong>Food Types:</strong> Italian, Indian<br/>
+					<strong>Top Restaurants:</strong> The Raj, Pasta Town, Mia Bella's
+					</td>
+					<td>
+					<strong>Movies: </strong>Captain America, Star Trek, Iron Man 3<br/>
+					<strong>Cinemas: </strong>Odeon Camden, Vue Westfield, Empire Leicester Square
 					</td>
 					</tr>
 					</table>

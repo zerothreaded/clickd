@@ -26,6 +26,7 @@
 		<constructor-arg name="databaseName" value="clickd-test" />
 	</bean>
 
+	
 	<bean id="userDao" class="com.clickd.server.dao.UserDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
@@ -54,11 +55,43 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
-	<bean id="postDao" class="com.clickd.server.dao.PostDao">
+	<bean id="chatMessageDao" class="com.clickd.server.dao.ChatMessageDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
-	<bean id="dateDao" class="com.clickd.server.dao.DateDao">
+	<bean id="placeDao" class="com.clickd.server.dao.PlaceDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="checkinDao" class="com.clickd.server.dao.CheckinDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="movieDao" class="com.clickd.server.dao.MovieDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+		<bean id="televisionDao" class="com.clickd.server.dao.TelevisionDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="bookDao" class="com.clickd.server.dao.BookDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="likeDao" class="com.clickd.server.dao.LikeDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+		
+	<bean id="calendarDao" class="com.clickd.server.dao.CalendarDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+	
+	<bean id="memberDateDao" class="com.clickd.server.dao.MemberDateDao">
+		<property name="mongoOperations" ref="mongoTemplate" />
+	</bean>
+		
+	<bean id="criteriaDao" class="com.clickd.server.dao.CriteriaDao">
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
@@ -66,10 +99,29 @@
 
 	<bean id="questionResource" class="com.clickd.server.services.questions.QuestionResource" />
 
+	<bean id="answerResource" class="com.clickd.server.services.answers.AnswerResource" />
+
 	<bean id="choiceResource" class="com.clickd.server.services.choices.ChoiceResource" />
+	
+	<bean id="userImportResource" class="com.clickd.server.services.integration.facebook.UserImportResource" />
+
+	<bean id="placeResource" class="com.clickd.server.services.places.PlaceResource" />
+		
+	<bean id="movieResource" class="com.clickd.server.services.movies.MovieResource" />
+
+	<bean id="bookResource" class="com.clickd.server.services.books.BookResource" />
+
+	<bean id="televisionResource" class="com.clickd.server.services.television.TelevisionResource" />
+
+	<bean id="likeResource" class="com.clickd.server.services.likes.LikeResource" />
+
+	<bean id="chatroomResource" class="com.clickd.server.services.chatrooms.ChatroomResource" />
 
 	<bean id="calendarResource" class="com.clickd.server.services.calendars.CalendarResource" />
 
-	<bean id="dateResource" class="com.clickd.server.services.dates.DateResource" />
+	<bean id="memberDateResource" class="com.clickd.server.services.dates.MemberDateResource" />
+
+	<bean id="criteriaResource" class="com.clickd.server.services.criteria.CriteriaResource" />
+
 
 </beans>

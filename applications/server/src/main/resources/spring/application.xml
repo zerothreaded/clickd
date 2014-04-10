@@ -57,7 +57,4 @@
 		<property name="mongoOperations" ref="mongoTemplate" />
 	</bean>
 	
-	<bean id="postDao" class="com.clickd.server.dao.PostDao">
-		<property name="mongoOperations" ref="mongoTemplate" />
-	</bean>
 </beans>
